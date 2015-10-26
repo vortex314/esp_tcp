@@ -90,7 +90,7 @@ void IROM Tcp::disconnectCb(void *arg) {
 	Msg::publish(TCP_ID, SIG_DISCONNECTED);
 }
 
-void Tcp::send() { // send buffered data, max 100 bytes
+void IROM Tcp::send() { // send buffered data, max 100 bytes
 	uint8_t buffer[100];
 	uint32_t length = 0;
 	while (_txd.hasData() && length < sizeof(buffer)) {
@@ -173,6 +173,15 @@ IROM void Tcp::connect() {
 		espconn_gethostbyname(&_conn, _host, &_ip, Tcp::dnsFoundCb);
 	}
 	_connState = TCP_CONNECTING;
+	INFO(" Heap size : %d",system_get_free_heap_size());
+}
+
+IROM void Tcp::disconnect(){
+	espconn_disconnect(&_conn);
+}
+
+IROM bool Tcp::isConnected(){
+	return _connected;
 }
 //____________________________________________________________
 //
@@ -195,8 +204,8 @@ bool IROM Tcp::dispatch(Msg& msg) {
 			connect();
 			timeout(3000);
 			PT_YIELD_UNTIL(msg.is(TCP_ID, SIG_DISCONNECTED) || msg.is(TCP_ID, SIG_CONNECTED) || timeout());
-			if ( msg.is((void*)TCP_ID, SIG_CONNECTED) ) goto CONNECTED;
-			if ( msg.is((void*)TCP_ID, SIG_DISCONNECTED) ) {
+			if ( msg.is(TCP_ID, SIG_CONNECTED) ) goto CONNECTED;
+			if ( msg.is(TCP_ID, SIG_DISCONNECTED) ) {
 				timeout(1000);
 				PT_YIELD_UNTIL(timeout());
 				goto CONNECTING;

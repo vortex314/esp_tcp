@@ -53,8 +53,6 @@ extern "C" void MsgPump();
 extern "C" void MsgPublish(void* src, Signal signal);
 extern "C" void MsgInit();
 extern uint64_t SysWatchDog;
-
-
 os_event_t MsgQueue[MSG_TASK_QUEUE_SIZE];
 os_timer_t pumpTimer;
 extern uint64_t SysWatchDog;
@@ -65,13 +63,14 @@ inline void Post(const char* src, Signal signal) {
 }
 
 void IROM MSG_TASK(os_event_t *e) {
-	Msg::publish((const void*)e->par, (Signal) e->sig);
+	Msg::publish((const void*) e->par, (Signal) e->sig);
 	while (msg->receive()) {
+		if (msg->signal() != SIG_TICK)
 			INFO(">>>> %s , %s ",
 					(const char* )msg->src(), strSignal[msg->signal()]);
-			Handler::dispatchToChilds(*msg);
-			msg->free();
-		}
+		Handler::dispatchToChilds(*msg);
+		msg->free();
+	}
 	SysWatchDog = Sys::millis() + 1000; // if not called within 1 second calls dump_stack;
 }
 
@@ -91,37 +90,15 @@ extern "C" IROM void MsgInit() {
 	CreateMutex(&mutex);
 	flash = new Flash();
 	flash->init();
-	tcp =  new Tcp();
-	tcp->config("192.168.0.227",8008);
+	tcp = new Tcp();
+	tcp->config("192.168.0.227", 8008);
 //	tcp->config("iot.eclipse.org",1883);
 	mqttMsg = new MqttMsg(*tcp);
+	mqtt = new Mqtt(*tcp);
 
 	os_timer_disarm(&pumpTimer);
 	os_timer_setfn(&pumpTimer, (os_timer_func_t *) tick_cb, (void *) 0);
-	os_timer_arm(&pumpTimer, 100, 1);
+	os_timer_arm(&pumpTimer, 20, 1);
 	system_os_task(MSG_TASK, MSG_TASK_PRIO, MsgQueue, MSG_TASK_QUEUE_SIZE);
 }
-/*
-extern "C" IROM void MsgPump() {
-	while (msg->receive()) {
-		INFO(">>>> %s , %s ",
-				(const char* )msg->src(), strSignal[msg->signal()]);
-		Handler::dispatchToChilds(*msg);
-		msg->free();
-	}
-}*/
-/*
-extern "C" IROM void MsgPublish(void* src, Signal signal) {
-	if (GetMutex(&mutex)) {
-		Msg::publish(src, signal);
-		ReleaseMutex(&mutex);
-	} else {
-		conflicts++;
-	}
-}
-*/
-
-
-
-
 

@@ -1,4 +1,4 @@
-/*
+ /*
  * Tcp.h
  *
  *  Created on: Oct 24, 2015
@@ -70,6 +70,8 @@ public:
 	bool hasSpace();
 	uint8_t read();
 	bool dispatch(Msg& msg);
+	bool isConnected();
+	void disconnect();
 };
 
 #endif /* TCP_H_ */
