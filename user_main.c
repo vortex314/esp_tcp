@@ -48,21 +48,6 @@
 #include "gpio16.h"
 #include "Sys.h"
 
-MQTT_Client mqttClient;
-#define DELAY 100/* milliseconds */
-static os_timer_t hello_timer;
-
-uint32_t count = 0;
-disconnectCounter = 0;
-uint32_t messagesPublished = 0;
-uint32_t tcpConnectCounter = 0;
-uint32_t mqttConnectCounter = 0;
-uint32_t wifiConnectCounter = 0;
-char mqttPrefix[30];
-uint8_t mqttConnected = FALSE;
-
-#include "Msg.h"
-
 extern void MsgInit();
 
 const char* MQTT_ID = "MQTT";
@@ -70,19 +55,24 @@ const char* CLOCK_ID = "CLOCK";
 const char* TCP_ID = "TCP";
 const char* WIFI_ID = "WIFI";
 
+enum Src {
+	MQTT = 'MQTT',
+	SYS = 'SYS',
+	TCP = 'TCP',
+	CLOCK = 'CLOCK',
+	TCP0 = 'TCP0',
+	TCP1 = 'TCP1',
+	TCP2 = 'TCP2',
+	TCP3 = 'TCP3'
+};
 
+enum Src src = TCP;
 
 #include "util.h"
-#include "esp_coredump.h"
 
-
-#include "esp_exc.h"// implement for all timers, callbacks from OS,
-
-
-// in SysLog ???
-// in uart0Write ??
 IROM void user_init(void) {
 	ThreadLockInit();
+	SysLogInit();
 
 	uart_init(BIT_RATE_115200, BIT_RATE_115200);
 
@@ -92,10 +82,7 @@ IROM void user_init(void) {
 
 	INFO("*****************************************");
 	INFO("Starting version : " __DATE__ " " __TIME__);
-
-//	os_delay_us(1000000);
-//	ets_sprintf(mqttPrefix, "/limero314/ESP_%08X", system_get_chip_id());
-//	clockInit();
+	INFO(" Src : %s ", &src);
 
 	system_init_done_cb(MsgInit);
 }

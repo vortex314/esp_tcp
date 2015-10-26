@@ -23,7 +23,6 @@ extern "C" const char* MQTT_ID;
 extern "C" const char* TCP_ID;
 extern "C" const char* WIFI_ID;
 
-const char* LED_ID = "LED";
 #include "UartEsp8266.h"
 #include "mutex.h"
 #include "Flash.h"
@@ -32,6 +31,7 @@ const char* LED_ID = "LED";
 #include "Sys.h"
 #include "Tcp.h"
 #include "MqttMsg.h"
+#include "Mqtt.h"
 
 // uint32_t __count = 0;
 //Sender sender();
@@ -43,6 +43,7 @@ Msg* msg;
 Wifi* wifi;
 Tcp* tcp;
 MqttMsg* mqttMsg;
+Mqtt* mqtt;
 
 #define MSG_TASK_PRIO        		1
 #define MSG_TASK_QUEUE_SIZE    	100
@@ -56,6 +57,7 @@ extern uint64_t SysWatchDog;
 
 os_event_t MsgQueue[MSG_TASK_QUEUE_SIZE];
 os_timer_t pumpTimer;
+extern uint64_t SysWatchDog;
 
 inline void Post(const char* src, Signal signal) {
 	system_os_post((uint8_t) MSG_TASK_PRIO, (os_signal_t) signal,
@@ -63,8 +65,13 @@ inline void Post(const char* src, Signal signal) {
 }
 
 void IROM MSG_TASK(os_event_t *e) {
-	MsgPublish((void*)e->par, (Signal) e->sig);
-	MsgPump();
+	Msg::publish((const void*)e->par, (Signal) e->sig);
+	while (msg->receive()) {
+			INFO(">>>> %s , %s ",
+					(const char* )msg->src(), strSignal[msg->signal()]);
+			Handler::dispatchToChilds(*msg);
+			msg->free();
+		}
 	SysWatchDog = Sys::millis() + 1000; // if not called within 1 second calls dump_stack;
 }
 
@@ -94,7 +101,7 @@ extern "C" IROM void MsgInit() {
 	os_timer_arm(&pumpTimer, 100, 1);
 	system_os_task(MSG_TASK, MSG_TASK_PRIO, MsgQueue, MSG_TASK_QUEUE_SIZE);
 }
-
+/*
 extern "C" IROM void MsgPump() {
 	while (msg->receive()) {
 		INFO(">>>> %s , %s ",
@@ -102,8 +109,8 @@ extern "C" IROM void MsgPump() {
 		Handler::dispatchToChilds(*msg);
 		msg->free();
 	}
-}
-
+}*/
+/*
 extern "C" IROM void MsgPublish(void* src, Signal signal) {
 	if (GetMutex(&mutex)) {
 		Msg::publish(src, signal);
@@ -112,9 +119,9 @@ extern "C" IROM void MsgPublish(void* src, Signal signal) {
 		conflicts++;
 	}
 }
+*/
 
 
 
 
-extern uint64_t SysWatchDog;
 

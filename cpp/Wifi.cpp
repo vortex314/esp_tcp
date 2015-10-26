@@ -93,7 +93,7 @@ DISCONNECTED: {
 			v.addr = ipConfig.ip.addr;
 			INFO("  IP Address : %d.%d.%d.%d ",v.ip[0],v.ip[1],v.ip[2],v.ip[3]);
 			INFO(" CONNECTED ");
-			Msg::publish((void*)WIFI_ID,SIG_CONNECTED);
+			Msg::publish(WIFI_ID,SIG_CONNECTED);
 			_connected=true;
 			timeout(2000);
 			goto CONNECTED;

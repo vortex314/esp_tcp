@@ -80,15 +80,14 @@ void IROM Tcp::connectCb(void *arg) {
 	espconn_regist_sentcb(&pTcp->_conn, Tcp::sentCb);///////
 	INFO("TCP: Connected to %s:%d", pTcp->_host, pTcp->_dstPort);
 
-	Msg::publish((void*) TCP_ID, SIG_CONNECTED);
+	Msg::publish(TCP_ID, SIG_CONNECTED);
 }
 
 void IROM Tcp::disconnectCb(void *arg) {
 	Tcp *pTcp = getInstance(arg);
 	INFO("TCP: Disconnected %s:%d ", pTcp->_host, pTcp->_dstPort);
 	pTcp->_ip.addr = 0;
-	pTcp->connect();
-	Msg::publish((void*) TCP_ID, SIG_DISCONNECTED);
+	Msg::publish(TCP_ID, SIG_DISCONNECTED);
 }
 
 void Tcp::send() { // send buffered data, max 100 bytes
@@ -125,7 +124,6 @@ void IROM Tcp::reconnectCb(void *arg, int8_t err) {
 	Tcp *pTcp = getInstance(arg);
 	INFO("TCP: Reconnect %s:%d err : %d", pTcp->_host, pTcp->_dstPort, err);
 	Msg::publish((void*) TCP_ID, SIG_DISCONNECTED);
-	pTcp->connect();
 }
 
 void IROM Tcp::dnsFoundCb(const char *name, ip_addr_t *ipaddr, void *arg) {
@@ -184,21 +182,37 @@ bool IROM Tcp::dispatch(Msg& msg) {
 	INIT: {
 		PT_YIELD_UNTIL(msg.is(0, SIG_INIT));
 		INFO(" SIG_INIT");
-		goto DISCONNECTED;
+		goto WIFI_DISCONNECTED;
 	};
-	DISCONNECTED: {
+	WIFI_DISCONNECTED: {
 		while (true) {
 			PT_YIELD_UNTIL(msg.is((void*)WIFI_ID, SIG_CONNECTED));
-			connect();
-			PT_YIELD_UNTIL(msg.is((void*)TCP_ID, SIG_CONNECTED));
-			goto CONNECTED;
+			goto CONNECTING;
 		}
 	};
+	CONNECTING : {
+		while (true) {
+			connect();
+			timeout(3000);
+			PT_YIELD_UNTIL(msg.is(TCP_ID, SIG_DISCONNECTED) || msg.is(TCP_ID, SIG_CONNECTED) || timeout());
+			if ( msg.is((void*)TCP_ID, SIG_CONNECTED) ) goto CONNECTED;
+			if ( msg.is((void*)TCP_ID, SIG_DISCONNECTED) ) {
+				timeout(1000);
+				PT_YIELD_UNTIL(timeout());
+				goto CONNECTING;
+			}
+		}
+	}
 	CONNECTED: {
 		while (true) {
 			timeout(2000);
-			PT_YIELD_UNTIL(msg.is((void*)WIFI_ID, SIG_DISCONNECTED));
-			goto DISCONNECTED;
+			PT_YIELD_UNTIL(msg.is((void*)TCP_ID, SIG_DISCONNECTED) || msg.is((void*)WIFI_ID, SIG_DISCONNECTED));
+			if ( msg.is((void*)TCP_ID, SIG_DISCONNECTED) ) {
+				timeout(1000);
+				PT_YIELD_UNTIL(timeout());
+				goto CONNECTING;
+			}
+			if ( msg.is((void*)WIFI_ID, SIG_DISCONNECTED) ) goto WIFI_DISCONNECTED;
 		}
 	};
 	PT_END();

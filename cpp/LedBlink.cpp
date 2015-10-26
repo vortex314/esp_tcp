@@ -31,7 +31,7 @@ IROM bool LedBlink::dispatch(Msg& msg) {
 	while (true) {
 		timeout(_msecInterval);
 		PT_YIELD_UNTIL(
-				msg.is((void*)TCP_ID, SIG_CONNECTED) || msg.is((void*)TCP_ID, SIG_DISCONNECTED)
+				msg.is(TCP_ID, SIG_CONNECTED) || msg.is(TCP_ID, SIG_DISCONNECTED)
 						|| timeout());
 		switch (msg.signal()) {
 		case SIG_TICK: {

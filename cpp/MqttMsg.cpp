@@ -25,7 +25,7 @@ bool IROM MqttMsg::dispatch(Msg& msg) {
 	};
 	DISCONNECTED: {
 		while (true) {
-			PT_YIELD_UNTIL(msg.is((void*)TCP_ID, SIG_CONNECTED));
+			PT_YIELD_UNTIL(msg.is(TCP_ID, SIG_CONNECTED));
 			goto CONNECTED;
 		}
 	};
@@ -34,7 +34,7 @@ bool IROM MqttMsg::dispatch(Msg& msg) {
 			INFO(" MQTT:send ");
 			_tcp.write((uint8_t*)"BYE\n\r\n",6);
 			timeout(2000);
-			PT_YIELD_UNTIL(msg.is((void*)TCP_ID, SIG_DISCONNECTED) || timeout());
+			PT_YIELD_UNTIL(msg.is(TCP_ID, SIG_DISCONNECTED) || timeout());
 			if ( !timeout())goto DISCONNECTED;
 		}
 	};
