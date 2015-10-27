@@ -14,7 +14,6 @@
 
 #include "UartEsp8266.h"
 
-extern "C" uint32_t overflowTxd = 0;
 
 IROM UartEsp8266::UartEsp8266() :
 		_rxd(256), _txd(3000) {
@@ -37,7 +36,6 @@ IROM Erc UartEsp8266::write(Bytes& bytes) {
 	};
 	if (bytes.hasData()) {
 		_overflowTxd++;
-		overflowTxd++;
 	}
 	if (_txd.hasData()) {
 		uart0_tx_intr_enable();
@@ -45,14 +43,13 @@ IROM Erc UartEsp8266::write(Bytes& bytes) {
 	return E_OK;
 }
 
-IROM Erc UartEsp8266::write(uint8_t* pb,uint32_t length) {
-	uint32_t i=0;
-	while (_txd.hasSpace() && i<length) {
+IROM Erc UartEsp8266::write(uint8_t* pb, uint32_t length) {
+	uint32_t i = 0;
+	while (_txd.hasSpace() && i < length) {
 		_txd.write(pb[i++]);
 	};
-	if (i<length) {
+	if (i < length) {
 		_overflowTxd++;
-		overflowTxd++;
 	}
 	if (_txd.hasData()) {
 		uart0_tx_intr_enable();
@@ -65,7 +62,6 @@ IROM Erc UartEsp8266::write(uint8_t data) {
 		_txd.write(data);
 	else {
 		_overflowTxd++;
-		overflowTxd++;
 	}
 	if (_txd.hasData()) {
 		uart0_tx_intr_enable();
@@ -142,13 +138,15 @@ extern "C" void uart0WriteBytes(uint8_t *pb, uint32_t size) {
 			uart0Write(*(pb + i));
 	else {
 		uart0Write('#');
-		overflowTxd++;
 	}
 }
-/*
- extern "C" void uart0WriteWait(uint8_t b) {
- checkUart0();
- while (UartEsp8266::_uart0->write(b) != E_OK)
- ;
- }*/
+void UartEsp8266::connect() {
+
+}
+void UartEsp8266::disconnect() {
+
+}
+bool UartEsp8266::isConnected() {
+	return true;
+}
 

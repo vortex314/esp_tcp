@@ -61,8 +61,8 @@
 								<option id="gnu.cpp.compiler.option.preprocessor.def.730202308" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="ICACHE_FLASH"/>
 									<listOptionValue builtIn="false" value="__ESP8266__"/>
-									<listOptionValue builtIn="false" value="STA_SSID=&quot;Merckx&quot;"/>
-									<listOptionValue builtIn="false" value="STA_PASS=LievenMarletteEwoutRonald"/>
+									<listOptionValue builtIn="false" value="STA_SSID='&quot;Merckx&quot;'"/>
+									<listOptionValue builtIn="false" value="STA_PASS='&quot;LievenMarletteEwoutRonald&quot;'"/>
 									<listOptionValue builtIn="false" value="ESP_COREDUMP"/>
 								</option>
 								<option id="gnu.cpp.compiler.option.other.other.2047560662" name="Other flags" superClass="gnu.cpp.compiler.option.other.other" value="-c -fmessage-length=0 -ffunction-sections -fno-rtti -fno-exceptions -mlongcalls -mtext-section-literals -fno-jump-tables" valueType="string"/>
@@ -273,9 +273,6 @@
 		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cross.exe.debug.1105106795;cdt.managedbuild.config.gnu.cross.exe.debug.1105106795.1935819552;cdt.managedbuild.tool.gnu.cross.c.compiler.1804971944;cdt.managedbuild.tool.gnu.c.compiler.input.1719536773">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC"/>
 		</scannerConfigBuildInfo>
-		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cross.exe.debug.1105106795;cdt.managedbuild.config.gnu.cross.exe.debug.1105106795.396052726;cdt.managedbuild.tool.gnu.cross.cpp.compiler.749901429;cdt.managedbuild.tool.gnu.cpp.compiler.input.1352484431">
-			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileCPP"/>
-		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cross.exe.debug.1105106795;cdt.managedbuild.config.gnu.cross.exe.debug.1105106795.;cdt.managedbuild.tool.gnu.cross.c.compiler.1508331245;cdt.managedbuild.tool.gnu.c.compiler.input.1847501458">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC"/>
 			<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC">
@@ -288,6 +285,9 @@
 					<parser enabled="true"/>
 				</scannerInfoProvider>
 			</profile>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cross.exe.debug.1105106795;cdt.managedbuild.config.gnu.cross.exe.debug.1105106795.396052726;cdt.managedbuild.tool.gnu.cross.cpp.compiler.749901429;cdt.managedbuild.tool.gnu.cpp.compiler.input.1352484431">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileCPP"/>
 		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cross.exe.debug.1105106795;cdt.managedbuild.config.gnu.cross.exe.debug.1105106795.1986023217;cdt.managedbuild.tool.gnu.cross.cpp.compiler.750218579;cdt.managedbuild.tool.gnu.cpp.compiler.input.865653870">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileCPP"/>
@@ -308,19 +308,6 @@
 		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cross.exe.debug.1105106795;cdt.managedbuild.config.gnu.cross.exe.debug.1105106795.396052726;cdt.managedbuild.tool.gnu.cross.c.compiler.947105498;cdt.managedbuild.tool.gnu.c.compiler.input.394074117">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC"/>
 		</scannerConfigBuildInfo>
-		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cross.exe.debug.1105106795;cdt.managedbuild.config.gnu.cross.exe.debug.1105106795.;cdt.managedbuild.tool.gnu.cross.cpp.compiler.958934328;cdt.managedbuild.tool.gnu.cpp.compiler.input.1703538761">
-			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileCPP"/>
-			<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileCPP">
-				<buildOutputProvider>
-					<openAction enabled="true" filePath=""/>
-					<parser enabled="true"/>
-				</buildOutputProvider>
-				<scannerInfoProvider id="specsFile">
-					<runAction arguments="-E -P -v -dD &quot;${plugin_state_location}/specs.cpp&quot;" command="xtensa-lx106-elf-g++" useDefault="true"/>
-					<parser enabled="true"/>
-				</scannerInfoProvider>
-			</profile>
-		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cross.exe.release.500500752;cdt.managedbuild.config.gnu.cross.exe.release.500500752.;cdt.managedbuild.tool.gnu.cross.c.compiler.1982005712;cdt.managedbuild.tool.gnu.c.compiler.input.557804839">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC"/>
 			<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC">
@@ -330,6 +317,19 @@
 				</buildOutputProvider>
 				<scannerInfoProvider id="specsFile">
 					<runAction arguments="-E -P -v -dD &quot;${plugin_state_location}/specs.c&quot;" command="xtensa-lx106-elf-gcc" useDefault="true"/>
+					<parser enabled="true"/>
+				</scannerInfoProvider>
+			</profile>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cross.exe.debug.1105106795;cdt.managedbuild.config.gnu.cross.exe.debug.1105106795.;cdt.managedbuild.tool.gnu.cross.cpp.compiler.958934328;cdt.managedbuild.tool.gnu.cpp.compiler.input.1703538761">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileCPP"/>
+			<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileCPP">
+				<buildOutputProvider>
+					<openAction enabled="true" filePath=""/>
+					<parser enabled="true"/>
+				</buildOutputProvider>
+				<scannerInfoProvider id="specsFile">
+					<runAction arguments="-E -P -v -dD &quot;${plugin_state_location}/specs.cpp&quot;" command="xtensa-lx106-elf-g++" useDefault="true"/>
 					<parser enabled="true"/>
 				</scannerInfoProvider>
 			</profile>

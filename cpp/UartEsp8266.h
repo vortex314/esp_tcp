@@ -38,6 +38,9 @@ public:
 	 bool hasData();
 	 bool hasSpace();
 	 uint8_t read();
+	 void connect();
+	 void disconnect();
+	 bool isConnected();
 
 };
 

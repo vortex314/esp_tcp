@@ -36,7 +36,7 @@ extern "C" const char* WIFI_ID;
 // uint32_t __count = 0;
 //Sender sender();
 mutex_t mutex;
-extern "C" uint32_t conflicts;
+//extern "C" uint32_t conflicts;
 Flash* flash;
 LedBlink *led;
 Msg* msg;
@@ -85,7 +85,7 @@ extern "C" IROM void MsgInit() {
 	msg = new Msg(256);
 	led = new LedBlink();
 	wifi = new Wifi();
-	wifi->config("Merckx", "LievenMarletteEwoutRonald");
+	wifi->config(STA_SSID, STA_PASS);
 	led->init();
 	CreateMutex(&mutex);
 	flash = new Flash();
