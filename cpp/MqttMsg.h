@@ -59,7 +59,7 @@ public:
 	void prefix(Str& pr);
 public:
 
-	void Feed(uint8_t b);
+	bool feed(uint8_t b);
 
 	uint16_t messageId(); // if < 0 then not found
 	uint8_t type();

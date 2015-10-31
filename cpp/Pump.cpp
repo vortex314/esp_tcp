@@ -18,11 +18,6 @@ extern "C" {
 #include "espmissingincludes.h"
 }
 
-extern "C" const char* CLOCK_ID;
-extern "C" const char* MQTT_ID;
-extern "C" const char* TCP_ID;
-extern "C" const char* WIFI_ID;
-
 #include "UartEsp8266.h"
 #include "mutex.h"
 #include "Flash.h"
@@ -44,6 +39,7 @@ Wifi* wifi;
 Tcp* tcp;
 MqttMsg* mqttMsg;
 Mqtt* mqtt;
+MqttFramer* mqttFramer;
 
 #define MSG_TASK_PRIO        		1
 #define MSG_TASK_QUEUE_SIZE    	100
@@ -74,6 +70,8 @@ void IROM MSG_TASK(os_event_t *e) {
 	SysWatchDog = Sys::millis() + 1000; // if not called within 1 second calls dump_stack;
 }
 
+const char* CLOCK_ID = "CLOCK";
+
 void IROM tick_cb(void *arg) {
 	Post(CLOCK_ID, SIG_TICK);
 }
@@ -81,20 +79,26 @@ void IROM tick_cb(void *arg) {
 extern "C" IROM void MsgInit() {
 	INFO(" Start Message Pump ");
 	Msg::init();
-	msg = new Msg(256);
-	led = new LedBlink();
-	wifi = new Wifi();
-	wifi->config((const char*) STA_SSID, (const char*) STA_PASS);
-	led->init();
 	CreateMutex(&mutex);
+	msg = new Msg(256);
+
 	flash = new Flash();
 	flash->init();
+
+	wifi = new Wifi();
 	tcp = new Tcp(wifi);
-//	tcp->config("192.168.0.227", 8008);
+	mqttFramer = new MqttFramer(tcp);
+	mqtt = new Mqtt( mqttFramer);
+	led = new LedBlink(tcp);
+
+	wifi->config((const char*) STA_SSID, (const char*) STA_PASS);
 	tcp->config("iot.eclipse.org", 1883);
-//	mqttMsg = new MqttMsg(*tcp);
-	mqtt = new Mqtt(tcp);
-	mqtt->setPrefix("/limero314/ESP_TEST/");
+
+	char deviceName[40];
+	ets_sprintf(deviceName, "/limero314/ESP_%08X/", system_get_chip_id());
+	mqtt->setPrefix(deviceName);
+
+//	led->init();
 
 	system_os_task(MSG_TASK, MSG_TASK_PRIO, MsgQueue, MSG_TASK_QUEUE_SIZE);
 	Post(__FUNCTION__, SIG_INIT);

@@ -50,24 +50,6 @@
 
 extern void MsgInit();
 
-const char* MQTT_ID = "MQTT";
-const char* CLOCK_ID = "CLOCK";
-const char* TCP_ID = "TCP";
-const char* WIFI_ID = "WIFI";
-
-enum Src {
-	MQTT = 'MQTT',
-	SYS = 'SYS',
-	TCP = 'TCP',
-	CLOCK = 'CLOCK',
-	TCP0 = 'TCP0',
-	TCP1 = 'TCP1',
-	TCP2 = 'TCP2',
-	TCP3 = 'TCP3'
-};
-
-enum Src src = TCP;
-
 #include "util.h"
 
 IROM void user_init(void) {
@@ -82,7 +64,6 @@ IROM void user_init(void) {
 
 	INFO("*****************************************");
 	INFO("Starting version : " __DATE__ " " __TIME__);
-	INFO(" Src : %s ", &src);
 
 	system_init_done_cb(MsgInit);
 }

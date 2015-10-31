@@ -256,7 +256,7 @@ Bytes* IROM MqttMsg::message() {
 return &_message;
 }
 
-void IROM MqttMsg::Feed(uint8_t data) {
+bool IROM MqttMsg::feed(uint8_t data) {
 write(data);
 if (_recvState == ST_HEADER) {
 	_header = data;
@@ -267,16 +267,20 @@ if (_recvState == ST_HEADER) {
 	{
 		_recvState = ST_PAYLOAD;
 		_lengthToRead = _remainingLength;
-		if (_remainingLength == 0)
-		_recvState = ST_COMPLETE;
+		if (_remainingLength == 0) {
+			_recvState = ST_COMPLETE;
+		}
 	}
 } else if (_recvState == ST_PAYLOAD) {
 	_lengthToRead--;
 	if (_lengthToRead == 0) {
 		_recvState = ST_COMPLETE;
 	}
-} else if (_recvState == ST_COMPLETE)
-Sys::warn(EINVAL, "");
+} else if (_recvState == ST_COMPLETE) {
+	WARN("");
+}
+INFO(" state/data/remainingLength %d/%X/%d",_recvState,data,_remainingLength);
+return _recvState==ST_COMPLETE;
 }
 
 bool IROM MqttMsg::complete() {
@@ -344,7 +348,7 @@ str.append(" }");
 
 bool IROM MqttMsg::parse() {
 if (length() < 2) {
-	Sys::warn(EINVAL, "MQTT_LEN");
+	WARN("length :%d",length());
 	return false;
 }
 offset(0);
@@ -423,7 +427,7 @@ switch (_header & 0xF0) {
 		break;
 	}
 	default: {
-		Sys::warn(EINVAL, "MQTTIN_TYPE");
+		ERROR(" bad Mqtt msg type 0x%x: erc : %d",_header & 0xF0,EINVAL);
 		break; // ignore bad package
 	}
 }

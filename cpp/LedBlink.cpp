@@ -11,27 +11,29 @@ extern "C" {
 #include "gpio16.h"
 }
 
-IROM LedBlink::LedBlink() :
+IROM LedBlink::LedBlink(void* src) :
 		Handler("LedBlink") {
 	_isOn = false;
 	_msecInterval = 200;
-	_mqtt = (void*) MQTT_ID;
+	_src = src;
 }
 
 IROM void LedBlink::init() {
 	gpio16_output_conf();
-	gpio16_output_set(0); 	// LED is ON
+	gpio16_output_set(0); // LED is ON
 }
 
-IROM  LedBlink::~LedBlink() {
+IROM LedBlink::~LedBlink() {
 }
 
 IROM bool LedBlink::dispatch(Msg& msg) {
 	PT_BEGIN()
+	PT_WAIT_UNTIL(msg.is(0, SIG_INIT));
+	init();
 	while (true) {
 		timeout(_msecInterval);
 		PT_YIELD_UNTIL(
-				msg.is(TCP_ID, SIG_CONNECTED) || msg.is(TCP_ID, SIG_DISCONNECTED)
+				msg.is(_src, SIG_CONNECTED) || msg.is(_src, SIG_DISCONNECTED)
 						|| timeout());
 		switch (msg.signal()) {
 		case SIG_TICK: {

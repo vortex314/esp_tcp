@@ -37,24 +37,26 @@
 class MqttPublisher;
 class MqttSubscriber;
 class MqttSubscription;
-//class MqttPinger;
+class MqttPinger;
 class Mqtt;
+#include "MqttFramer.h"
 
 class Mqtt: public Handler {
 public:
-	Stream* _stream;
 	Str _prefix;
 	MqttSubscriber* _mqttSubscriber;
 	MqttPublisher* _mqttPublisher;
 	MqttSubscription* _mqttSubscription;
+	MqttPinger* _mqttPinger;
 	MqttMsg _mqttOut; //
 	bool _isConnected;
+	MqttFramer* _framer;
 
 private:
 	uint32_t _retries;
 
 public:
-	Mqtt(Stream* stream);
+	Mqtt(MqttFramer* framer);
 	~Mqtt();
 	void sendConnect();
 
@@ -68,6 +70,15 @@ public:
 private:
 	void sendSubscribe(uint8_t flags);
 };
+
+class MqttPinger: public Handler {
+	Mqtt* _mqtt;
+	uint16_t _retries;
+public:
+	MqttPinger(Mqtt* mqtt);
+	bool dispatch(Msg& msg);
+};
+
 
 class MqttSubscriber: public Handler {
 public:

@@ -73,7 +73,9 @@ Tcp* getInstance(void *arg) {
 	struct espconn *pCon = (struct espconn *) arg;
 	return (Tcp*) pCon->reverse;
 }
-
+//	callkback when tcp connection is established
+//_________________________________________________________
+//
 void IROM Tcp::connectCb(void *arg) {
 	Tcp *pTcp = getInstance(arg);
 
@@ -122,8 +124,10 @@ void IROM Tcp::recvCb(void *arg, char *pdata, unsigned short len) {
 	INFO("TCP: Rxd %s:%d length : %d", pTcp->_host, pTcp->_dstPort, len);
 	pTcp->_bytesRxd+=len;
 	int i;
-	for (i = 0; i < len; i++)
+	for (i = 0; i < len; i++) {
+		INFO("0x%X",pdata[i]);
 	pTcp->_rxd.write(pdata[i]);
+	}
 	Msg::publish(pTcp , SIG_RXD);
 }
 

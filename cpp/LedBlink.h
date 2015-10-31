@@ -15,10 +15,10 @@
 class LedBlink: public Handler {
 	bool _isOn;
 	uint32_t _msecInterval;
-	void* _mqtt;
+	void* _src;
 
 public:
-	IROM LedBlink() ;
+	IROM LedBlink(void* src) ;
 	IROM void init() ;
 	IROM virtual ~LedBlink() ;
 	IROM bool dispatch(Msg& msg);
