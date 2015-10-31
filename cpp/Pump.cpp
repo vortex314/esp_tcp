@@ -67,7 +67,7 @@ void IROM MSG_TASK(os_event_t *e) {
 	while (msg->receive()) {
 		if (msg->signal() != SIG_TICK)
 			INFO(">>>> %s , %s ",
-					(const char* )msg->src(), strSignal[msg->signal()]);
+					((Handler* )msg->src())->getName(), strSignal[msg->signal()]);
 		Handler::dispatchToChilds(*msg);
 		msg->free();
 	}
@@ -81,24 +81,26 @@ void IROM tick_cb(void *arg) {
 extern "C" IROM void MsgInit() {
 	INFO(" Start Message Pump ");
 	Msg::init();
-	Msg::publish((void*) __FUNCTION__, SIG_INIT);
 	msg = new Msg(256);
 	led = new LedBlink();
 	wifi = new Wifi();
-	wifi->config(STA_SSID, STA_PASS);
+	wifi->config((const char*) STA_SSID, (const char*) STA_PASS);
 	led->init();
 	CreateMutex(&mutex);
 	flash = new Flash();
 	flash->init();
-	tcp = new Tcp();
-	tcp->config("192.168.0.227", 8008);
-//	tcp->config("iot.eclipse.org",1883);
-	mqttMsg = new MqttMsg(*tcp);
-	mqtt = new Mqtt(*tcp);
+	tcp = new Tcp(wifi);
+//	tcp->config("192.168.0.227", 8008);
+	tcp->config("iot.eclipse.org", 1883);
+//	mqttMsg = new MqttMsg(*tcp);
+	mqtt = new Mqtt(tcp);
+	mqtt->setPrefix("/limero314/ESP_TEST/");
 
+	system_os_task(MSG_TASK, MSG_TASK_PRIO, MsgQueue, MSG_TASK_QUEUE_SIZE);
+	Post(__FUNCTION__, SIG_INIT);
 	os_timer_disarm(&pumpTimer);
 	os_timer_setfn(&pumpTimer, (os_timer_func_t *) tick_cb, (void *) 0);
 	os_timer_arm(&pumpTimer, 20, 1);
-	system_os_task(MSG_TASK, MSG_TASK_PRIO, MsgQueue, MSG_TASK_QUEUE_SIZE);
+
 }
 

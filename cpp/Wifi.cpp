@@ -30,7 +30,7 @@ extern "C" {
 }
 #include "Sys.h"
 
-Wifi::Wifi() {
+Wifi::Wifi() : Handler("Wifi"){
 // TODO Auto-generated constructor stub
 
 }
@@ -52,10 +52,11 @@ bool Wifi::isConnected() const {
 }
 
 bool IROM Wifi::dispatch(Msg& msg) {
-
+//	INFO("line : %d ",_ptLine);
+// INFO("msg : %d:%d",msg.src(),msg.signal());
 PT_BEGIN();
 INIT : {
-	PT_YIELD_UNTIL(msg.is(0,SIG_INIT));
+	PT_WAIT_UNTIL(msg.is(0,SIG_INIT));
 	struct station_config stationConf;
 
 	INFO("WIFI_INIT");
@@ -93,7 +94,7 @@ DISCONNECTED: {
 			v.addr = ipConfig.ip.addr;
 			INFO("  IP Address : %d.%d.%d.%d ",v.ip[0],v.ip[1],v.ip[2],v.ip[3]);
 			INFO(" CONNECTED ");
-			Msg::publish(WIFI_ID,SIG_CONNECTED);
+			Msg::publish(this,SIG_CONNECTED);
 			_connected=true;
 			timeout(2000);
 			goto CONNECTED;
@@ -110,6 +111,7 @@ CONNECTED : {
 		wifi_get_ip_info(STATION_IF, &ipConfig);
 		wifiStatus = wifi_station_get_connect_status();
 		if (wifiStatus != STATION_GOT_IP ) {
+			Msg::publish(this,SIG_DISCONNECTED);
 			timeout(500);
 			_connected=false;
 			goto DISCONNECTED;

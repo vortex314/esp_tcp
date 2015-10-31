@@ -7,12 +7,14 @@
 
 #include "Tcp.h"
 
-const char* TCP_OS = "TCP_OS";
+//const char* TCP_OS = "TCP_OS";
 
 uint8_t StrToIP(const char* str, void *ip);
 
-IROM Tcp::Tcp() :
-		_rxd(256), _txd(256) {
+IROM Tcp::Tcp(Wifi* wifi) :
+		Handler("Tcp"), _rxd(256), _txd(256) {
+	_wifi = wifi;
+	INFO("TCP : ctor");
 	os_strcpy(_host, "www.google.com");
 	_dstPort = 80;
 	_ip.addr = 0;
@@ -76,18 +78,21 @@ void IROM Tcp::connectCb(void *arg) {
 	Tcp *pTcp = getInstance(arg);
 
 	espconn_regist_disconcb(&pTcp->_conn, Tcp::disconnectCb);
-	espconn_regist_recvcb(&pTcp->_conn, Tcp::recvCb); ////////
-	espconn_regist_sentcb(&pTcp->_conn, Tcp::sentCb);///////
+	espconn_regist_recvcb(&pTcp->_conn, Tcp::recvCb);
+	espconn_regist_sentcb(&pTcp->_conn, Tcp::sentCb);
 	INFO("TCP: Connected to %s:%d", pTcp->_host, pTcp->_dstPort);
 
-	Msg::publish(TCP_ID, SIG_CONNECTED);
+	Msg::publish(pTcp, SIG_CONNECTED);
+	pTcp->_connected=true;
 }
 
 void IROM Tcp::disconnectCb(void *arg) {
 	Tcp *pTcp = getInstance(arg);
+
 	INFO("TCP: Disconnected %s:%d ", pTcp->_host, pTcp->_dstPort);
 	pTcp->_ip.addr = 0;
-	Msg::publish(TCP_ID, SIG_DISCONNECTED);
+	Msg::publish(pTcp, SIG_DISCONNECTED);
+	pTcp->_connected=false;
 }
 
 void IROM Tcp::send() { // send buffered data, max 100 bytes
@@ -105,9 +110,10 @@ void IROM Tcp::send() { // send buffered data, max 100 bytes
 
 void IROM Tcp::sentCb(void *arg) {
 	Tcp *pTcp = getInstance(arg);
+
 	INFO("TCP: Txd %s:%d ", pTcp->_host, pTcp->_dstPort);
 	pTcp->send();
-	Msg::publish((void*) TCP_ID, SIG_TXD);
+	Msg::publish(pTcp , SIG_TXD);
 }
 
 void IROM Tcp::recvCb(void *arg, char *pdata, unsigned short len) {
@@ -118,12 +124,14 @@ void IROM Tcp::recvCb(void *arg, char *pdata, unsigned short len) {
 	int i;
 	for (i = 0; i < len; i++)
 	pTcp->_rxd.write(pdata[i]);
+	Msg::publish(pTcp , SIG_RXD);
 }
 
 void IROM Tcp::reconnectCb(void *arg, int8_t err) {
 	Tcp *pTcp = getInstance(arg);
+
 	INFO("TCP: Reconnect %s:%d err : %d", pTcp->_host, pTcp->_dstPort, err);
-	Msg::publish((void*) TCP_ID, SIG_DISCONNECTED);
+	Msg::publish(pTcp, SIG_DISCONNECTED);
 }
 
 void IROM Tcp::dnsFoundCb(const char *name, ip_addr_t *ipaddr, void *arg) {
@@ -140,7 +148,6 @@ void IROM Tcp::dnsFoundCb(const char *name, ip_addr_t *ipaddr, void *arg) {
 	if (pTcp->_ip.addr == 0 && ipaddr->addr != 0) {
 		memcpy(pTcp->_conn.proto.tcp->remote_ip, &ipaddr->addr, 4);
 		espconn_connect(&(pTcp->_conn));
-		pTcp->_connState = TCP_CONNECTING;
 		INFO("TCP: connecting...");
 	}
 }
@@ -172,15 +179,14 @@ IROM void Tcp::connect() {
 		INFO("TCP: Connect to domain %s:%d", _host, _dstPort);
 		espconn_gethostbyname(&_conn, _host, &_ip, Tcp::dnsFoundCb);
 	}
-	_connState = TCP_CONNECTING;
-	INFO(" Heap size : %d",system_get_free_heap_size());
+	INFO(" Heap size : %d", system_get_free_heap_size());
 }
 
-IROM void Tcp::disconnect(){
+IROM void Tcp::disconnect() {
 	espconn_disconnect(&_conn);
 }
 
-IROM bool Tcp::isConnected(){
+IROM bool Tcp::isConnected() {
 	return _connected;
 }
 //____________________________________________________________
@@ -189,13 +195,13 @@ IROM bool Tcp::isConnected(){
 bool IROM Tcp::dispatch(Msg& msg) {
 	PT_BEGIN();
 	INIT: {
-		PT_YIELD_UNTIL(msg.is(0, SIG_INIT));
+		PT_WAIT_UNTIL(msg.is(0, SIG_INIT));
 		INFO(" SIG_INIT");
 		goto WIFI_DISCONNECTED;
 	};
 	WIFI_DISCONNECTED: {
 		while (true) {
-			PT_YIELD_UNTIL(msg.is((void*)WIFI_ID, SIG_CONNECTED));
+			PT_YIELD_UNTIL(msg.is(_wifi, SIG_CONNECTED));
 			goto CONNECTING;
 		}
 	};
@@ -203,9 +209,9 @@ bool IROM Tcp::dispatch(Msg& msg) {
 		while (true) {
 			connect();
 			timeout(3000);
-			PT_YIELD_UNTIL(msg.is(TCP_ID, SIG_DISCONNECTED) || msg.is(TCP_ID, SIG_CONNECTED) || timeout());
-			if ( msg.is(TCP_ID, SIG_CONNECTED) ) goto CONNECTED;
-			if ( msg.is(TCP_ID, SIG_DISCONNECTED) ) {
+			PT_YIELD_UNTIL(msg.is(this, SIG_DISCONNECTED) || msg.is(this, SIG_CONNECTED) || timeout());
+			if ( msg.is(this, SIG_CONNECTED) ) goto CONNECTED;
+			if ( msg.is(this, SIG_DISCONNECTED) ) {
 				timeout(1000);
 				PT_YIELD_UNTIL(timeout());
 				goto CONNECTING;
@@ -215,13 +221,13 @@ bool IROM Tcp::dispatch(Msg& msg) {
 	CONNECTED: {
 		while (true) {
 			timeout(2000);
-			PT_YIELD_UNTIL(msg.is((void*)TCP_ID, SIG_DISCONNECTED) || msg.is((void*)WIFI_ID, SIG_DISCONNECTED));
-			if ( msg.is((void*)TCP_ID, SIG_DISCONNECTED) ) {
+			PT_YIELD_UNTIL(msg.is(this, SIG_DISCONNECTED) || msg.is(_wifi, SIG_DISCONNECTED));
+			if ( msg.is(this, SIG_DISCONNECTED) ) {
 				timeout(1000);
 				PT_YIELD_UNTIL(timeout());
 				goto CONNECTING;
 			}
-			if ( msg.is((void*)WIFI_ID, SIG_DISCONNECTED) ) goto WIFI_DISCONNECTED;
+			if ( msg.is(_wifi, SIG_DISCONNECTED) ) goto WIFI_DISCONNECTED;
 		}
 	};
 	PT_END();

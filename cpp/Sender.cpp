@@ -8,7 +8,7 @@
 #include "Sender.h"
 #include "all.h"
 
-IROM Sender::Sender(Handler* mqtt) {
+IROM Sender::Sender(Handler* mqtt) : Handler("Sender"){
 	_mqtt = mqtt;
 	_myProp = 0;
 }

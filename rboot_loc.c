@@ -4,6 +4,7 @@
  *  Created on: Sep 20, 2015
  *      Author: lieven
  */
+/*
 #include "stdint.h"
 #include "c_types.h"
 #include "rboot.h"
@@ -18,6 +19,6 @@ const rboot_config rom_config ={
 		{0,0},					// padding
 		{0x00002000}
 
-};
+};*/
 
 

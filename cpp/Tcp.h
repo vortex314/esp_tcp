@@ -11,6 +11,7 @@
 #include "Stream.h"
 #include "CircBuf.h"
 #include "Sys.h"
+#include "Wifi.h"
 extern "C" {
 #include "espmissingincludes.h"
 #include "user_interface.h"
@@ -35,8 +36,9 @@ typedef enum {
 
 } ConnState;
 
-class Tcp: public Stream, public Handler {
+class Tcp:  public Handler,public Stream {
 private:
+	Wifi* _wifi;
 	uint16_t _srcPort;
 	uint16_t _dstPort;
 	uint8_t _dstIp[4];
@@ -52,7 +54,7 @@ private:
 	uint32_t _overflowTxd;
 	bool _connected;
 public:
-	Tcp();
+	Tcp(Wifi* wifi);
 	~Tcp();
 	void config(const char* host, uint16_t port);
 	void connect();
