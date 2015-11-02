@@ -19,17 +19,18 @@ uint16_t IROM Mqtt::nextMessageId() {
 IROM Mqtt::Mqtt(MqttFramer* framer) :
 		Handler("Mqtt"), _prefix(SIZE_TOPIC), _mqttOut(SIZE_MQTT), _framer(
 				framer) {
-//    _mqttPublisher = new MqttPublisher(*this);
+    _mqttPublisher = new MqttPublisher(*this);
 //   _mqttSubscriber = new MqttSubscriber(*this);
 //    _mqttSubscription = new MqttSubscription(*this);
 	_mqttPinger = new MqttPinger(this);
 
-//    _mqttPublisher->stop();
+    _mqttPublisher->stop();
 //    _mqttSubscriber->stop();
-//	_mqttPinger->stop();
+	_mqttPinger->stop();
 //    _mqttSubscription->stop();
 
 }
+
 IROM Mqtt::~Mqtt() {
 }
 
@@ -42,11 +43,12 @@ void IROM Mqtt::setPrefix(const char* s) {
 }
 
 void IROM Mqtt::sendConnect() {
-	Str str(8);
-	str << "false";
-	Str online(30);
-	online << _prefix << "system/online";
-	_mqttOut.Connect(MQTT_QOS2_FLAG, _prefix.c_str(), MQTT_CLEAN_SESSION,
+	Str str("false");
+	Str online("system/online");
+	char clientId[20];
+	ets_sprintf(clientId,"ESP%X",system_get_chip_id());
+
+	_mqttOut.Connect(MQTT_QOS2_FLAG, clientId, MQTT_CLEAN_SESSION,
 			online.c_str(), str, "", "", TIME_KEEP_ALIVE / 1000);
 	_framer->send(_mqttOut);
 }
@@ -73,11 +75,12 @@ bool IROM Mqtt::dispatch(Msg& msg) {
 		_mqttOut.prefix(_prefix);
 	}
 	DISCONNECTED: {
+		INFO("DISCONNECTED");
 //		_stream.disconnect();
 		_isConnected = false;
 		Msg::publish(this, SIG_DISCONNECTED);
 		_mqttPinger->stop();
-//		_mqttPublisher->stop(); don't start if nothing to publish !!
+		_mqttPublisher->stop(); // don't start if nothing to publish !!
 //		_mqttSubscriber->stop();
 //		_mqttSubscription->stop();
 		while (true)// DISCONNECTED STATE
@@ -85,19 +88,20 @@ bool IROM Mqtt::dispatch(Msg& msg) {
 //			_stream.connect();
 //			timeout(TIME_CONNECT);
 //			PT_YIELD_UNTIL(_stream.isConnected() || timeout());
-			PT_YIELD_UNTIL(_framer->isConnected() );
+			PT_YIELD_UNTIL(msg.is(_framer, SIG_CONNECTED) );
 			goto STREAM_CONNECTED;
 		}
 	}
 	STREAM_CONNECTED: {
+		INFO("STREAM_CONNECTED");
 		while (true) // LINK_CONNECTED
 		{
 			sendConnect();
-			timeout(TIME_WAIT_CONNECT);
+			timeout(20000);
 			PT_YIELD_UNTIL(
-					msg.is(_framer, SIG_RXD, MQTT_MSG_CONNACK) || !_framer->isConnected() || timeout());
+					msg.is(_framer, SIG_RXD, MQTT_MSG_CONNACK) || msg.is(_framer, SIG_DISCONNECTED) || timeout());
 			// wait reply or timeout on connect send
-			if (!_framer->isConnected() || timeout())
+			if (msg.is(_framer, SIG_DISCONNECTED) || timeout())
 			goto DISCONNECTED;
 			if (msg.is(_framer, SIG_RXD, MQTT_MSG_CONNACK)) {
 				Msg::publish(this, SIG_CONNECTED);
@@ -109,9 +113,11 @@ bool IROM Mqtt::dispatch(Msg& msg) {
 		}
 	}
 	RECEIVING : {
+		INFO("RECEIVING");
 
 	}
 	WAIT_DISCONNECT: {
+		INFO("WAIT_DISCONNECT");
 		PT_YIELD_UNTIL(!_framer->isConnected());
 		goto DISCONNECTED;
 	}
@@ -126,24 +132,46 @@ MqttPinger::MqttPinger(Mqtt* mqtt) :
 		Handler("MqttPinger") {
 	_mqtt = mqtt;
 }
+
+Str str("system/uptime");
+Str str2(20);
 bool IROM MqttPinger::dispatch(Msg& msg) {
 	PT_BEGIN()
-
-	while(true) {
-		_mqtt->_mqttOut.PingReq();
-		_mqtt->_framer->send(_mqtt->_mqttOut);
-		timeout(100);
-		PT_YIELD_UNTIL(msg.is(_mqtt->_framer,SIG_RXD,MQTT_MSG_PINGRESP)||timeout());
-		timeout(100);
-		PT_YIELD_UNTIL(timeout());
-		Str str(20);
-		str << "system/uptime";
-		Str str2(20);
-		str2 << Sys::millis();
-		_mqtt->_mqttOut.Publish(0,str,str2,0);
-		_mqtt->_framer->send(_mqtt->_mqttOut);
+	WAITING : {	// while data arrives, reset timer
+		while(true) {
+			timeout((TIME_KEEP_ALIVE/3));
+			PT_YIELD_UNTIL(msg.is(_mqtt->_framer,SIG_RXD,MQTT_MSG_PINGRESP)||timeout());
+			if ( timeout()) {
+				goto PINGING;
+			}
+		}
 
 	}
+	PINGING : {
+		_retries=1;
+		while(true) {
+			_mqtt->_mqttOut.PingReq();
+			_mqtt->_framer->send(_mqtt->_mqttOut);
+			timeout(TIME_PING);
+
+			PT_YIELD_UNTIL(msg.is(_mqtt->_framer,SIG_RXD,MQTT_MSG_PINGRESP)||timeout());
+
+			if (msg.is(_mqtt->_framer,SIG_RXD,MQTT_MSG_PINGRESP)) {
+				goto WAITING;
+			}
+			_retries++;
+			/*
+			 PT_YIELD_UNTIL(timeout());
+
+			 str2.clear() << Sys::millis();
+			 _mqtt->_mqttOut.Publish(MQTT_QOS1_FLAG,str,str2,Mqtt::nextMessageId());
+			 _mqtt->_framer->send(_mqtt->_mqttOut);
+			 timeout(1000);
+			 PT_YIELD_UNTIL(msg.is(_mqtt->_framer,SIG_RXD,MQTT_MSG_PUBACK)||timeout());
+			 */
+		}
+	}
+
 	PT_END();
 	return true;
 }
@@ -178,10 +206,12 @@ bool IROM MqttSubscription::dispatch(Msg& msg) {
 }
 
 //____________________________________________________________________________
-//       PUBLISHERbe
+//
+//       PUBLISHER
 //____________________________________________________________________________
+
 IROM MqttPublisher::MqttPublisher(Mqtt& mqtt) :
-		Handler("MqttPublisher"), _mqtt(mqtt), _topic(SIZE_TOPIC), _message(
+		Handler("Publisher"), _mqtt(mqtt), _topic(SIZE_TOPIC), _message(
 				SIZE_MESSAGE) {
 	_messageId = 0;
 	_retries = 0;
@@ -245,6 +275,7 @@ bool IROM MqttPublisher::dispatch(Msg& msg) {
 		PT_EXIT();
 	}
 	QOS1_ACK: {
+		INFO("QOS1_ACK");
 		for (_retries = 0; _retries < MAX_RETRIES; _retries++) {
 			sendPublish();
 			timeout(TIME_WAIT_REPLY);
@@ -253,6 +284,7 @@ bool IROM MqttPublisher::dispatch(Msg& msg) {
 			if (msg.is(_mqtt._framer, SIG_RXD, MQTT_MSG_PUBACK)) {
 				int id;
 				msg.get(id);
+				INFO(" messageId compare %d : %d ",id,_messageId);
 				if (id == _messageId) {
 					Msg::publish(this, SIG_ERC);
 					PT_EXIT();
@@ -263,6 +295,7 @@ bool IROM MqttPublisher::dispatch(Msg& msg) {
 		PT_EXIT();
 	}
 	QOS2_REC: {
+		INFO("QOS2_REC");
 		for (_retries = 0; _retries < MAX_RETRIES; _retries++) {
 			sendPublish();
 			timeout(TIME_WAIT_REPLY);
@@ -280,6 +313,7 @@ bool IROM MqttPublisher::dispatch(Msg& msg) {
 		PT_EXIT();
 	}
 	QOS2_COMP: {
+		INFO("QOS2_COMP");
 		for (_retries = 0; _retries < MAX_RETRIES; _retries++) {
 			sendPubRel();
 			timeout(TIME_WAIT_REPLY);
@@ -300,8 +334,10 @@ bool IROM MqttPublisher::dispatch(Msg& msg) {
 }
 
 //____________________________________________________________________________
+//
 //       SUBSCRIBER
 //____________________________________________________________________________
+
 IROM MqttSubscriber::MqttSubscriber(Mqtt &mqtt) :
 		Handler("Subscriber"), _mqtt(mqtt), _topic(SIZE_TOPIC), _message(
 				SIZE_MESSAGE) {
@@ -329,7 +365,7 @@ bool IROM MqttSubscriber::dispatch(Msg& msg) {
 		PT_YIELD_UNTIL(
 				msg.is(_mqtt._framer, SIG_RXD, MQTT_MSG_PUBLISH) || !_mqtt.isConnected() || timeout());
 		if (msg.is(_mqtt._framer, SIG_RXD, MQTT_MSG_PUBLISH)) {
-			int _qos;
+			int _qos=0;
 			msg.scanf("iiSS", _messageId, _qos, &_topic, &_message);
 
 			if (_qos == MQTT_QOS0_FLAG) {

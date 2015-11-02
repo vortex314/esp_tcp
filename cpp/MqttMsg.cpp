@@ -17,8 +17,11 @@ const char* const QosNames[] = { "QOS0", "QOS1", "QOS2" };
 // #define LOG(x) std::cout << Sys::upTime() << " | MQTT OUT " << x << std::endl
 #define LOG(x)
 
+Str logLine(300);
+
 IROM MqttMsg::MqttMsg(uint32_t size) :
-		Bytes(size), _prefix(30) {
+		Bytes(size), _prefix(30), _message(0), _topic(0), _user(0), _password(
+				0), _clientId(0) {
 }
 
 void IROM MqttMsg::prefix(Str& prefix)  {
@@ -78,55 +81,46 @@ void IROM MqttMsg::addBytes(uint8_t* bytes, uint32_t length) {
     for (uint32_t i = 0; i < length; i++)
         write(*bytes++);
 }
+#define MQTT_VERSION 0x04
 
 void IROM MqttMsg::Connect(uint8_t hdr, const char *clientId, uint8_t connectFlag,
         const char *willTopic, Bytes& willMsg, const char *username, const char* password,
         uint16_t keepAlive) {
-            LOG("CONNECT");
-uint8_t connectFlags = connectFlag;
+
+
+	uint8_t connectFlags = connectFlag;
+	uint16_t remainLen=0;
 
     uint16_t clientidlen = strlen(clientId);
     uint16_t usernamelen = strlen(username);
     uint16_t passwordlen = strlen(password);
-    uint16_t payload_len = clientidlen + 2;
     uint16_t willTopicLen = strlen(willTopic) + _prefix.length();
     uint16_t willMsgLen = willMsg.length();
 
+    remainLen = 10 + clientidlen +2; // header MUST length + client id
     // Preparing the connectFlags
     if (usernamelen) {
-        payload_len += usernamelen + 2;
+    	remainLen += usernamelen + 2;
         connectFlags |= MQTT_USERNAME_FLAG;
     }
     if (passwordlen) {
-        payload_len += passwordlen + 2;
+    	remainLen += passwordlen + 2;
         connectFlags |= MQTT_PASSWORD_FLAG;
     }
     if (willTopicLen) {
-        payload_len += willTopicLen + 2;
-        payload_len += willMsgLen + 2;
+    	remainLen += willTopicLen + 2;
+    	remainLen += willMsgLen + 2;
         connectFlags |= MQTT_WILL_FLAG;
     }
 
-    // Variable header
-    uint8_t var_header[] = {0x00, 0x06, 0x4d, 0x51, 0x49, 0x73, 0x64, 0x70, // Protocol name: MQIsdp
-        0x03, // Protocol version
-        connectFlags, // Connect connectFlags
-        (uint8_t) (keepAlive >> 8), (uint8_t) (keepAlive & 0xFF), // Keep alive
-    };
-
-    // Fixed header
-    uint8_t fixedHeaderSize = 2; // Default size = one byte Message Type + one byte Remaining Length
-    uint8_t remainLen = sizeof (var_header) + payload_len;
-    if (remainLen > 127) {
-        fixedHeaderSize++; // add an additional byte for Remaining Length
-    }
-
-    // Message Type
-    addHeader(MQTT_MSG_CONNECT | hdr);
+    addHeader(MQTT_MSG_CONNECT );
     addRemainingLength(remainLen);
-    addBytes(var_header, sizeof (var_header));
-    // Client ID - UTF encoded
+    addString("MQTT");
+    write(MQTT_VERSION);
+    write(connectFlags);
+    addUint16(keepAlive);
     addString(clientId);
+
     if (willTopicLen) {
         Str wt(willTopic);
         addComposedString(_prefix,wt);
@@ -279,7 +273,7 @@ if (_recvState == ST_HEADER) {
 } else if (_recvState == ST_COMPLETE) {
 	WARN("");
 }
-INFO(" state/data/remainingLength %d/%X/%d",_recvState,data,_remainingLength);
+// INFO(" state/data/remainingLength %d/%X/%d",_recvState,data,_remainingLength);
 return _recvState==ST_COMPLETE;
 }
 
@@ -300,7 +294,7 @@ void IROM MqttMsg::readUint16(uint16_t* pi) {
 void IROM MqttMsg::mapUtfStr(Str& str) {
 uint16_t l;
 readUint16(&l);
-_topic.map(data() + offset(), l);
+str.map(data() + offset(), l);
 move(l);
 }
 
@@ -318,15 +312,16 @@ _remainingLength += (data & 0x7F);
 return (data & 0x80);
 }
 
-void IROM MqttMsg::toString(Str& str) {
+const char* IROM MqttMsg::toString(Str& str) {
 parse();
+str.clear();
 str.append(MqttNames[type() >> 4]);
-str.append(":");
+str.append("+");
 str.append(QosNames[(_header & MQTT_QOS_MASK) >> 1]);
 if (_header & 0x1)
-str.append(",RETAIN");
+str.append("+RETAIN");
 if (_header & MQTT_DUP_FLAG)
-str.append(",DUP");
+str.append("+DUP");
 str << ", messageId : ";
 str << _messageId;
 
@@ -339,11 +334,14 @@ if (type() == MQTT_MSG_PUBLISH) {
 	str << ", topic : ";
 	str << _topic;
 } else if (type() == MQTT_MSG_CONNECT) {
+	str << ", clientId : " << _clientId;
 	str << ", willTopic : " << _topic;
-	str << ", willMessage : ";
-	str << (Str&) _message;
+	str << ", willMessage : " << _message;
+	str << ", user : " << _user;
+	str << ", password : " << _password;
 }
 str.append(" }");
+return str.c_str();
 }
 
 bool IROM MqttMsg::parse() {
@@ -359,15 +357,15 @@ while (calcLength(read()))
 ;
 switch (_header & 0xF0) {
 	case MQTT_MSG_CONNECT: {
-		char protocol[8];
-		int i;
-		for(i=0;i<8;i++) protocol[i]=read();
+		Str protocol(0);
+		mapUtfStr(protocol);
 		read(); // version
 		uint8_t connectFlags = read();
+		INFO(" connectFlags :  0x%x",connectFlags);
 		uint16_t keepAliveTimer;
 		readUint16(&keepAliveTimer);
-		Str clientId(23);
-		mapUtfStr(clientId);
+		INFO(" keepALiveTimer :  %d",keepAliveTimer);
+		mapUtfStr(_clientId);
 		if (connectFlags & MQTT_WILL_FLAG) {
 			mapUtfStr(_topic);
 			mapUtfStr(_message);

@@ -52,7 +52,10 @@ extern void MsgInit();
 
 #include "util.h"
 
+
+
 IROM void user_init(void) {
+
 	ThreadLockInit();
 	SysLogInit();
 

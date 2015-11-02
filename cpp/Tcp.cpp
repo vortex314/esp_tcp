@@ -125,7 +125,7 @@ void IROM Tcp::recvCb(void *arg, char *pdata, unsigned short len) {
 	pTcp->_bytesRxd+=len;
 	int i;
 	for (i = 0; i < len; i++) {
-		INFO("0x%X",pdata[i]);
+//		INFO("0x%X",pdata[i]);
 	pTcp->_rxd.write(pdata[i]);
 	}
 	Msg::publish(pTcp , SIG_RXD);
@@ -136,6 +136,7 @@ void IROM Tcp::reconnectCb(void *arg, int8_t err) {
 
 	INFO("TCP: Reconnect %s:%d err : %d", pTcp->_host, pTcp->_dstPort, err);
 	Msg::publish(pTcp, SIG_DISCONNECTED);
+	pTcp->_connected=false;
 }
 
 void IROM Tcp::dnsFoundCb(const char *name, ip_addr_t *ipaddr, void *arg) {

@@ -20,6 +20,7 @@ private:
 	Str _topic;
 	Str _user;
 	Str _password;
+	Str _clientId;
 	uint8_t _header;
 	uint32_t _remainingLength;
 	uint32_t _lengthToRead;
@@ -75,7 +76,7 @@ public:
 	void readBytes(Bytes* b, int length);
 	Str* topic();
 	Bytes* message();
-	void toString(Str& str);
+	const char *  toString(Str& str);
 
 };
 

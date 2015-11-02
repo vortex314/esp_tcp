@@ -14,8 +14,8 @@ void IROM strAlign(char *dst, int dstLength, char* src, int srcLength) {
 	strncat(dst, space, dstLength - copyLength);
 }
 #include <stdarg.h>
-char lastLog[256];
-char buffer[128];
+char lastLog[512];
+char buffer[512];
 uint32_t conflicts = 0;
 
 const char* SysLogLevelStr[] = { "TRACE", "DEBUG", "INFO", "WARN", "ERROR",
@@ -65,7 +65,7 @@ void IROM SysLog(SysLogLevel level, const char* file, const char* function,
 //	if (level > LOG_INFO) { // put log in mqtt buffer
 //		ets_sprintf(lastLog, "%s:%s:%s", SysLogLevelStr[level], dst, buffer);
 //	}
-	ets_snprintf(lastLog, 256, "%10u | %s | %s\n", time, dst, buffer);
+	ets_snprintf(lastLog, sizeof(lastLog), "%10u | %s | %s\n", time, dst, buffer);
 	uart0WriteBytes(lastLog, strlen(lastLog));
 //	os_printf_plus();
 	ReleaseMutex(&logMutex);

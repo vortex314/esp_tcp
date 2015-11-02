@@ -27,6 +27,7 @@ extern "C" {
 #include "Tcp.h"
 #include "MqttMsg.h"
 #include "Mqtt.h"
+#include "Props.h"
 
 // uint32_t __count = 0;
 //Sender sender();
@@ -40,6 +41,7 @@ Tcp* tcp;
 MqttMsg* mqttMsg;
 Mqtt* mqtt;
 MqttFramer* mqttFramer;
+Props* props;
 
 #define MSG_TASK_PRIO        		1
 #define MSG_TASK_QUEUE_SIZE    	100
@@ -56,10 +58,11 @@ extern uint64_t SysWatchDog;
 inline void Post(const char* src, Signal signal) {
 	system_os_post((uint8_t) MSG_TASK_PRIO, (os_signal_t) signal,
 			(os_param_t) src);
+	Msg::publish((const void*) src, (Signal) signal);
 }
 
 void IROM MSG_TASK(os_event_t *e) {
-	Msg::publish((const void*) e->par, (Signal) e->sig);
+//	Msg::publish((const void*) e->par, (Signal) e->sig);
 	while (msg->receive()) {
 		if (msg->signal() != SIG_TICK)
 			INFO(">>>> %s , %s ",
@@ -76,8 +79,18 @@ void IROM tick_cb(void *arg) {
 	Post(CLOCK_ID, SIG_TICK);
 }
 
+extern void (*__init_array_start)(void);
+extern void (*__init_array_end)(void);
+
+static void do_global_ctors(void) {
+    void (**p)(void);
+    for(p = &__init_array_start; p != &__init_array_end; ++p)
+        (*p)();
+}
+
 extern "C" IROM void MsgInit() {
 	INFO(" Start Message Pump ");
+	do_global_ctors();
 	Msg::init();
 	CreateMutex(&mutex);
 	msg = new Msg(256);
@@ -90,9 +103,11 @@ extern "C" IROM void MsgInit() {
 	mqttFramer = new MqttFramer(tcp);
 	mqtt = new Mqtt( mqttFramer);
 	led = new LedBlink(tcp);
+	props = new Props(mqtt);
 
 	wifi->config((const char*) STA_SSID, (const char*) STA_PASS);
 	tcp->config("iot.eclipse.org", 1883);
+//	tcp->config("test.mosquitto.org", 1883);
 
 	char deviceName[40];
 	ets_sprintf(deviceName, "/limero314/ESP_%08X/", system_get_chip_id());
