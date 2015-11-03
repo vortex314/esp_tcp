@@ -19,8 +19,8 @@ MqttFramer::~MqttFramer() {
 }
 extern Str logLine;
 void MqttFramer::send(MqttMsg& msg){
-	INFO(" MQTT send : %s ",msg.toHex(logLine.clear()));
-	INFO(" MQTT send : %s ",((Bytes)msg).toString(logLine.clear()));
+//	INFO(" MQTT send : %s ",msg.toHex(logLine.clear()));
+//	INFO(" MQTT send : %s ",((Bytes)msg).toString(logLine.clear()));
 	INFO(" MQTT send : %s ",msg.toString(logLine.clear()));
 	if ( _stream->hasSpace())
 		_stream->write(msg);

@@ -58,15 +58,15 @@ extern uint64_t SysWatchDog;
 inline void Post(const char* src, Signal signal) {
 	system_os_post((uint8_t) MSG_TASK_PRIO, (os_signal_t) signal,
 			(os_param_t) src);
-	Msg::publish((const void*) src, (Signal) signal);
+//	Msg::publish((const void*) src, (Signal) signal);
 }
 
 void IROM MSG_TASK(os_event_t *e) {
 //	Msg::publish((const void*) e->par, (Signal) e->sig);
 	while (msg->receive()) {
-		if (msg->signal() != SIG_TICK)
-			INFO(">>>> %s , %s ",
-					((Handler* )msg->src())->getName(), strSignal[msg->signal()]);
+//		if (msg->signal() != SIG_TICK)
+//			INFO(">>>> %s , %s ",
+//					((Handler* )msg->src())->getName(), strSignal[msg->signal()]);
 		Handler::dispatchToChilds(*msg);
 		msg->free();
 	}
@@ -76,7 +76,7 @@ void IROM MSG_TASK(os_event_t *e) {
 const char* CLOCK_ID = "CLOCK";
 
 void IROM tick_cb(void *arg) {
-	Post(CLOCK_ID, SIG_TICK);
+	Msg::publish(CLOCK_ID, SIG_TICK);
 }
 
 extern void (*__init_array_start)(void);
@@ -107,6 +107,7 @@ extern "C" IROM void MsgInit() {
 
 	wifi->config((const char*) STA_SSID, (const char*) STA_PASS);
 	tcp->config("iot.eclipse.org", 1883);
+//	tcp->config("192.168.0.227", 1883);
 //	tcp->config("test.mosquitto.org", 1883);
 
 	char deviceName[40];
@@ -116,10 +117,10 @@ extern "C" IROM void MsgInit() {
 //	led->init();
 
 	system_os_task(MSG_TASK, MSG_TASK_PRIO, MsgQueue, MSG_TASK_QUEUE_SIZE);
-	Post(__FUNCTION__, SIG_INIT);
+	Msg::publish(__FUNCTION__, SIG_INIT);
 	os_timer_disarm(&pumpTimer);
 	os_timer_setfn(&pumpTimer, (os_timer_func_t *) tick_cb, (void *) 0);
-	os_timer_arm(&pumpTimer, 20, 1);
+	os_timer_arm(&pumpTimer, 10, 1);
 
 }
 

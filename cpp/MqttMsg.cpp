@@ -15,7 +15,7 @@ const char* const MqttNames[] = { "UNKNOWN", "CONNECT", "CONNACK", "PUBLISH",
 const char* const QosNames[] = { "QOS0", "QOS1", "QOS2" };
 
 // #define LOG(x) std::cout << Sys::upTime() << " | MQTT OUT " << x << std::endl
-#define LOG(x)
+#define LOG(x) INFO(x)
 
 Str logLine(300);
 
@@ -314,25 +314,18 @@ return (data & 0x80);
 
 const char* IROM MqttMsg::toString(Str& str) {
 parse();
-str.clear();
-str.append(MqttNames[type() >> 4]);
-str.append("+");
-str.append(QosNames[(_header & MQTT_QOS_MASK) >> 1]);
+str.clear() << '{' << MqttNames[type() >> 4] << "+" << QosNames[(_header & MQTT_QOS_MASK) >> 1];
 if (_header & 0x1)
 str.append("+RETAIN");
 if (_header & MQTT_DUP_FLAG)
 str.append("+DUP");
-str << ", messageId : ";
-str << _messageId;
+str << ", messageId : " << _messageId;
 
 if (type() == MQTT_MSG_PUBLISH) {
-	str << (const char*) ", topic : ";
-	str << _topic;
-	str << ", message : ";
-	str << (Str&) _message;
+	str << (const char*) ", topic : " << _topic;
+	str << ", message : " << (Str&) _message;
 } else if (type() == MQTT_MSG_SUBSCRIBE) {
-	str << ", topic : ";
-	str << _topic;
+	str << ", topic : " << _topic;
 } else if (type() == MQTT_MSG_CONNECT) {
 	str << ", clientId : " << _clientId;
 	str << ", willTopic : " << _topic;

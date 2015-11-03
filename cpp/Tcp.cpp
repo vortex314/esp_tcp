@@ -82,6 +82,9 @@ void IROM Tcp::connectCb(void *arg) {
 	espconn_regist_disconcb(&pTcp->_conn, Tcp::disconnectCb);
 	espconn_regist_recvcb(&pTcp->_conn, Tcp::recvCb);
 	espconn_regist_sentcb(&pTcp->_conn, Tcp::sentCb);
+	espconn_set_opt(&pTcp->_conn,ESPCONN_NODELAY);
+	espconn_set_opt(&pTcp->_conn,ESPCONN_COPY);
+	espconn_regist_write_finish(&pTcp->_conn, Tcp::sentCb);
 	INFO("TCP: Connected to %s:%d", pTcp->_host, pTcp->_dstPort);
 
 	Msg::publish(pTcp, SIG_CONNECTED);
@@ -105,7 +108,7 @@ void IROM Tcp::send() { // send buffered data, max 100 bytes
 	}
 	if (length) {
 		_bytesTxd += length;
-		INFO(" TCP:send %d bytes", length);
+//		INFO(" TCP:send %d bytes", length);
 		espconn_sent(&_conn, buffer, length);
 	}
 }
@@ -113,7 +116,7 @@ void IROM Tcp::send() { // send buffered data, max 100 bytes
 void IROM Tcp::sentCb(void *arg) {
 	Tcp *pTcp = getInstance(arg);
 
-	INFO("TCP: Txd %s:%d ", pTcp->_host, pTcp->_dstPort);
+//	INFO("TCP: Txd %s:%d ", pTcp->_host, pTcp->_dstPort);
 	pTcp->send();
 	Msg::publish(pTcp , SIG_TXD);
 }
@@ -121,12 +124,12 @@ void IROM Tcp::sentCb(void *arg) {
 void IROM Tcp::recvCb(void *arg, char *pdata, unsigned short len) {
 	Tcp *pTcp = getInstance(arg);
 
-	INFO("TCP: Rxd %s:%d length : %d", pTcp->_host, pTcp->_dstPort, len);
+//	INFO("TCP: Rxd %s:%d length : %d", pTcp->_host, pTcp->_dstPort, len);
 	pTcp->_bytesRxd+=len;
 	int i;
 	for (i = 0; i < len; i++) {
 //		INFO("0x%X",pdata[i]);
-	pTcp->_rxd.write(pdata[i]);
+		pTcp->_rxd.write(pdata[i]);
 	}
 	Msg::publish(pTcp , SIG_RXD);
 }

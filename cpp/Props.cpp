@@ -15,8 +15,8 @@ Props::Props(Mqtt* mqtt) : Handler("Props") {
 Props::~Props() {
 	// TODO Auto-generated destructor stub
 }
-Str topic("topic1");
-Str value("value");
+Str topic("system/uptime");
+Str value(20);
 Handler *src;
 IROM bool Props::dispatch(Msg& msg) {
 	PT_BEGIN()
@@ -27,10 +27,11 @@ IROM bool Props::dispatch(Msg& msg) {
 	}
 	CONNECTED: {
 		while (_mqtt->isConnected()) {
-			timeout(100);
+			timeout(1000);
 			PT_YIELD_UNTIL(timeout());
+			value.clear() << Sys::millis();
 			src = _mqtt->publish(topic, value,
-					(Flags) {T_INT32,M_READ,T_100SEC,QOS_1,NO_RETAIN,true});
+					(Flags) {T_INT32,M_READ,T_100SEC,QOS_2,NO_RETAIN,true});
 			PT_YIELD_UNTIL(!src->isRunning());
 		}
 		goto WAIT_CONNECT;

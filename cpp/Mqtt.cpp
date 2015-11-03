@@ -284,7 +284,7 @@ bool IROM MqttPublisher::dispatch(Msg& msg) {
 			if (msg.is(_mqtt._framer, SIG_RXD, MQTT_MSG_PUBACK)) {
 				int id;
 				msg.get(id);
-				INFO(" messageId compare %d : %d ",id,_messageId);
+//				INFO(" messageId compare %d : %d ",id,_messageId);
 				if (id == _messageId) {
 					Msg::publish(this, SIG_ERC);
 					PT_EXIT();
@@ -304,6 +304,7 @@ bool IROM MqttPublisher::dispatch(Msg& msg) {
 			if (msg.is(_mqtt._framer, SIG_RXD, MQTT_MSG_PUBREC)) {
 				int id;
 				msg.get(id);
+//				INFO(" messageId compare %d : %d ",id,_messageId);
 				if (id == _messageId) {
 					goto QOS2_COMP;
 				}
