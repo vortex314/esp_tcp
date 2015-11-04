@@ -19,15 +19,15 @@ uint16_t IROM Mqtt::nextMessageId() {
 IROM Mqtt::Mqtt(MqttFramer* framer) :
 		Handler("Mqtt"), _prefix(SIZE_TOPIC), _mqttOut(SIZE_MQTT), _framer(
 				framer) {
-    _mqttPublisher = new MqttPublisher(*this);
-//   _mqttSubscriber = new MqttSubscriber(*this);
-//    _mqttSubscription = new MqttSubscription(*this);
+	_mqttPublisher = new MqttPublisher(*this);
+	_mqttSubscriber = new MqttSubscriber(*this);
+	_mqttSubscription = new MqttSubscription(*this);
 	_mqttPinger = new MqttPinger(this);
 
-    _mqttPublisher->stop();
-//    _mqttSubscriber->stop();
+	_mqttPublisher->stop();
+	_mqttSubscriber->stop();
 	_mqttPinger->stop();
-//    _mqttSubscription->stop();
+	_mqttSubscription->stop();
 
 }
 
@@ -40,6 +40,10 @@ bool IROM Mqtt::isConnected() {
 
 void IROM Mqtt::setPrefix(const char* s) {
 	_prefix.clear() << s;
+}
+
+void IROM Mqtt::getPrefix(Str& s) {
+	s << _prefix;
 }
 
 void IROM Mqtt::sendConnect() {
@@ -80,7 +84,7 @@ bool IROM Mqtt::dispatch(Msg& msg) {
 		_isConnected = false;
 		Msg::publish(this, SIG_DISCONNECTED);
 		_mqttPinger->stop();
-		_mqttPublisher->stop(); // don't start if nothing to publish !!
+		_mqttPublisher->stop();// don't start if nothing to publish !!
 //		_mqttSubscriber->stop();
 //		_mqttSubscription->stop();
 		while (true)// DISCONNECTED STATE
@@ -125,7 +129,7 @@ bool IROM Mqtt::dispatch(Msg& msg) {
 }
 //________________________________________________________________________________________________
 //
-//
+//			MQTT PINGER
 //________________________________________________________________________________________________
 
 MqttPinger::MqttPinger(Mqtt* mqtt) :
@@ -137,7 +141,7 @@ Str str("system/uptime");
 Str str2(20);
 bool IROM MqttPinger::dispatch(Msg& msg) {
 	PT_BEGIN()
-	WAITING : {	// while data arrives, reset timer
+	WAITING : { // while data arrives, reset timer
 		while(true) {
 			timeout((TIME_KEEP_ALIVE/3));
 			PT_YIELD_UNTIL(msg.is(_mqtt->_framer,SIG_RXD,MQTT_MSG_PINGRESP)||timeout());
@@ -178,7 +182,7 @@ bool IROM MqttPinger::dispatch(Msg& msg) {
 
 //________________________________________________________________________________________________
 //
-//
+//		MQTT SUBSCRIPTION : initiate a subscribe, handle retries
 //________________________________________________________________________________________________
 
 bool IROM MqttSubscription::dispatch(Msg& msg) {
@@ -192,7 +196,7 @@ bool IROM MqttSubscription::dispatch(Msg& msg) {
 		if (msg.is(_mqtt._framer, SIG_RXD, MQTT_MSG_SUBACK)) {
 			int id;
 			if (msg.get(id) && id == _messageId) {
-				Msg::publish(this, SIG_ERC);
+				Msg::publish(this, SIG_ERC,0);
 				PT_EXIT();
 			}
 		} else if (msg.is(_mqtt._framer, SIG_DISCONNECTED)) {
@@ -207,7 +211,7 @@ bool IROM MqttSubscription::dispatch(Msg& msg) {
 
 //____________________________________________________________________________
 //
-//       PUBLISHER
+//       MQTT PUBLISHER : Publish at different QOS levels, do retries
 //____________________________________________________________________________
 
 IROM MqttPublisher::MqttPublisher(Mqtt& mqtt) :
@@ -266,7 +270,8 @@ bool IROM MqttPublisher::dispatch(Msg& msg) {
 		_state = ST_BUSY;
 		if (_flags.qos == QOS_0) {
 			sendPublish();
-			Msg::publish(this, SIG_ERC);
+			PT_YIELD_UNTIL(msg.is(_mqtt._framer,SIG_TXD));
+			Msg::publish(this, SIG_ERC,0);
 			PT_EXIT();
 		} else if (_flags.qos == QOS_1)
 		goto QOS1_ACK;
@@ -286,7 +291,7 @@ bool IROM MqttPublisher::dispatch(Msg& msg) {
 				msg.get(id);
 //				INFO(" messageId compare %d : %d ",id,_messageId);
 				if (id == _messageId) {
-					Msg::publish(this, SIG_ERC);
+					Msg::publish(this, SIG_ERC,0);
 					PT_EXIT();
 				}
 			}
@@ -323,7 +328,7 @@ bool IROM MqttPublisher::dispatch(Msg& msg) {
 			if (msg.is(_mqtt._framer, SIG_RXD, MQTT_MSG_PUBCOMP)) {
 				int id;
 				if (msg.get(id) && id == _messageId) {
-					Msg::publish(this, SIG_ERC);
+					Msg::publish(this, SIG_ERC,0);
 					PT_EXIT();
 				}
 			}
@@ -336,7 +341,7 @@ bool IROM MqttPublisher::dispatch(Msg& msg) {
 
 //____________________________________________________________________________
 //
-//       SUBSCRIBER
+//       MQTT SUBSCRIBER : receive subscriptions, ack,rec
 //____________________________________________________________________________
 
 IROM MqttSubscriber::MqttSubscriber(Mqtt &mqtt) :
@@ -353,7 +358,8 @@ void IROM MqttSubscriber::sendPubRec() {
 }
 
 void IROM MqttSubscriber::callBack() {
-//TODO propMgr.onPublish(_topic, _message);
+	Msg pub(256);
+	pub.create(this,SIG_RXD).addf("SS",&_topic,&_message);
 }
 
 // #define PT_WAIT_FOR( ___pt, ___signals, ___timeout ) listen(___signals,___timeout);PT_YIELD(___pt);
@@ -429,4 +435,3 @@ void IROM MqttSubscription::sendSubscribe() {
 	_mqtt._framer->send(_mqtt._mqttOut);
 	_retries++;
 }
-
