@@ -27,7 +27,7 @@ extern "C" {
 #include "Tcp.h"
 #include "MqttMsg.h"
 #include "Mqtt.h"
-#include "Props.h"
+#include "Prop.h"
 
 // uint32_t __count = 0;
 //Sender sender();
@@ -41,7 +41,7 @@ Tcp* tcp;
 MqttMsg* mqttMsg;
 Mqtt* mqtt;
 MqttFramer* mqttFramer;
-Props* props;
+PropMgr* propMgr;
 
 #define MSG_TASK_PRIO        		1
 #define MSG_TASK_QUEUE_SIZE    	100
@@ -78,20 +78,32 @@ const char* CLOCK_ID = "CLOCK";
 void IROM tick_cb(void *arg) {
 	Msg::publish(CLOCK_ID, SIG_TICK);
 }
-
+//-----------------------------------------------------------------------
 extern void (*__init_array_start)(void);
 extern void (*__init_array_end)(void);
 
 static void do_global_ctors(void) {
-    void (**p)(void);
-    for(p = &__init_array_start; p != &__init_array_end; ++p)
-        (*p)();
+	void (**p)(void);
+	for (p = &__init_array_start; p != &__init_array_end; ++p)
+		(*p)();
 }
+//----------------------------------------------------------------------
+#include "MqttTree.h"
+MqttTree* device;
+char deviceName[40];
 
 extern "C" IROM void MsgInit() {
 	INFO(" Start Message Pump ");
 	do_global_ctors();
 	Msg::init();
+
+	ets_sprintf(deviceName, "ESP_%08X", system_get_chip_id());
+	INFO(" init device tree ");
+
+//	device = &MqttTree::root().add("limero314").add(deviceName);
+//	device->add("system").add("online", "true");
+	INFO(" init device tree done");
+
 	CreateMutex(&mutex);
 	msg = new Msg(256);
 
@@ -101,18 +113,17 @@ extern "C" IROM void MsgInit() {
 	wifi = new Wifi();
 	tcp = new Tcp(wifi);
 	mqttFramer = new MqttFramer(tcp);
-	mqtt = new Mqtt( mqttFramer);
+	mqtt = new Mqtt(mqttFramer);
 	led = new LedBlink(tcp);
-	props = new Props(mqtt);
+//	propMgr = new PropMgr(mqtt);
 
 	wifi->config((const char*) STA_SSID, (const char*) STA_PASS);
 	tcp->config("iot.eclipse.org", 1883);
 //	tcp->config("192.168.0.227", 1883);
 //	tcp->config("test.mosquitto.org", 1883);
 
-	char deviceName[40];
-	ets_sprintf(deviceName, "/limero314/ESP_%08X/", system_get_chip_id());
 	mqtt->setPrefix(deviceName);
+	propMgr->setPrefix(deviceName);
 
 //	led->init();
 

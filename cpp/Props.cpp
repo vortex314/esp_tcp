@@ -36,8 +36,7 @@ IROM bool Props::dispatch(Msg& msg) {
 		update << "#";
 		src = _mqtt->subscribe(update);
 		PT_YIELD_UNTIL(!src->isRunning());
-		src =	_mqtt->publish(online, trueValue,
-									(Flags) {T_INT32,M_READ,T_100SEC,QOS_1,NO_RETAIN,true});
+		src =	_mqtt->publish(online, trueValue, MQTT_QOS1_FLAG);
 
 
 		timeout(1000);
@@ -46,8 +45,7 @@ IROM bool Props::dispatch(Msg& msg) {
 			update.clear() << "/update";
 			value.clear() << Sys::millis();
 			src =
-					_mqtt->publish(topic, value,
-							(Flags) {T_INT32,M_READ,T_100SEC,QOS_1,NO_RETAIN,true});
+					_mqtt->publish(topic, value,MQTT_QOS1_FLAG);
 			PT_YIELD_UNTIL(!src->isRunning());
 		}
 		goto WAIT_CONNECT;

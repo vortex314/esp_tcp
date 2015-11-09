@@ -18,7 +18,7 @@
 #include "MqttMsg.h"
 
 #include "Handler.h"
-#include "Flags.h"
+
 //#include "Event.h"
 #include "Msg.h"
 
@@ -66,7 +66,7 @@ public:
 	void setPrefix(const char * prefix);
 	bool isConnected();
 	Handler* subscribe(Str& topic);
-	Handler* publish(Str& topic,Bytes& message,Flags flags);
+	Handler* publish(Str& topic,Bytes& message,uint32_t flags);
 private:
 	void sendSubscribe(uint8_t flags);
 };
@@ -91,7 +91,7 @@ private:
 	Mqtt& _mqtt;
 	Str _topic;
 	Bytes _message;
-	Flags _flags;
+	uint32_t _flags;
 	uint16_t _messageId;
 	uint16_t _retries;
 };
@@ -100,7 +100,7 @@ class MqttPublish {
 public:
 	Str topic;
 	Bytes message;
-	Flags flags;
+	uint32_t flags;
 	MqttPublish(int topicSize, int messageSize) :
 			topic(topicSize), message(messageSize) {
 	}
@@ -110,7 +110,7 @@ class MqttPublisher: public Handler  {
 public:
 	MqttPublisher(Mqtt& mqtt);
 	bool dispatch(Msg& msg);
-	Handler* publish(Str& topic, Bytes& msg, Flags flags);
+	Handler* publish(Str& topic, Bytes& msg, uint32_t flags);
 	// will send PUB_OK,PUB_FAIL
 private:
 	void sendPublish();
@@ -122,7 +122,7 @@ private:
 	Str _topic;
 	Bytes _message;
 	uint16_t _messageId;
-	Flags _flags;
+	uint32_t _flags;
 	uint16_t _retries;
 };
 

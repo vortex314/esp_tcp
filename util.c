@@ -65,7 +65,8 @@ void IROM SysLog(SysLogLevel level, const char* file, const char* function,
 //	if (level > LOG_INFO) { // put log in mqtt buffer
 //		ets_sprintf(lastLog, "%s:%s:%s", SysLogLevelStr[level], dst, buffer);
 //	}
-	ets_snprintf(lastLog, sizeof(lastLog), "%10u | %s | %s\n", time, dst, buffer);
+	ets_snprintf(lastLog, sizeof(lastLog), "%10u | %s | %s\n", time, dst,
+			buffer);
 	uart0WriteBytes(lastLog, strlen(lastLog));
 //	os_printf_plus();
 	ReleaseMutex(&logMutex);
