@@ -61,6 +61,11 @@ IROM Erc Topic::getInteger(void *instance, Cbor& cbor) {
 	return E_OK;
 }
 
+IROM Erc Topic::getUI32(void *instance, Cbor& cbor) {
+	cbor.add(*(uint32_t*) instance);
+	return E_OK;
+}
+
 IROM Erc Topic::getString(void *instance, Cbor& cbor) {
 	cbor.add(*(Str*) instance);
 	return E_OK;
@@ -126,7 +131,7 @@ _mqttErrorString.clear() << "publisher started ";
 
 }
 
-TopicPublisher::~TopicPublisher() {
+IROM TopicPublisher::~TopicPublisher() {
 
 }
 

@@ -59,15 +59,10 @@ extern uint64_t SysWatchDog;
 inline void Post(const char* src, Signal signal) {
 	system_os_post((uint8_t) MSG_TASK_PRIO, (os_signal_t) signal,
 			(os_param_t) src);
-//	Msg::publish((const void*) src, (Signal) signal);
 }
 
 void IROM MSG_TASK(os_event_t *e) {
-//	Msg::publish((const void*) e->par, (Signal) e->sig);
 	while (msg->receive()) {
-//		if (msg->signal() != SIG_TICK)
-//			INFO(">>>> %s , %s ",
-//					((Handler* )msg->src())->getName(), strSignal[msg->signal()]);
 		Handler::dispatchToChilds(*msg);
 		msg->free();
 	}
@@ -91,22 +86,8 @@ static void do_global_ctors(void) {
 //----------------------------------------------------------------------
 
 char deviceName[40];
-bool alive = true;
-Erc getBoolean(void* pv, Cbor& cbor) {
-	cbor.add((bool*) pv);
-	return E_OK;
-}
-Erc getSystemUptime(void* pv, Cbor& cbor) {
-	cbor.add(Sys::millis());
-	return E_OK;
-}
-#include "UartEsp8266.h"
 
-
-Erc getUartOverflows(void* pv,Cbor& cbor){
-	cbor.add(((UartEsp8266*)pv)->overflowTxd());
-	return E_OK;
-}
+extern void TopicsCreator();
 
 extern "C" IROM void MsgInit() {
 	INFO(" Start Message Pump ");
@@ -128,21 +109,12 @@ extern "C" IROM void MsgInit() {
 	led = new LedBlink(tcp);
 //	topicMgr = new TopicMgr(mqtt);
 	topicPublisher = new TopicPublisher(mqtt);
-	new Topic("system/online", (void*)true, 0, Topic::getConstantBoolean,Topic::F_QOS1+Topic::F_RETAIN);
-	new Topic("system/uptime", 0, 0, getSystemUptime,Topic::F_QOS2);
-	new Topic("uart0/overflows",UartEsp8266::getUart0(),0,getUartOverflows,0);
-	new Topic("mqtt/topicSize",(void*)MQTT_SIZE_TOPIC,0,Topic::getConstantInt,0);
-	new Topic("mqtt/valueSize",(void*)MQTT_SIZE_VALUE,0,Topic::getConstantInt,0);
-	new Topic("mqtt/messageSize",(void*)MQTT_SIZE_MESSAGE,0,Topic::getConstantInt,0);
+
+	TopicsCreator();
 
 	wifi->config((const char*) STA_SSID, (const char*) STA_PASS);
 	tcp->config("iot.eclipse.org", 1883);
-//	tcp->config("192.168.0.227", 1883);
-//	tcp->config("test.mosquitto.org", 1883);
-
 	mqtt->setPrefix(deviceName);
-
-//	led->init();
 
 	system_os_task(MSG_TASK, MSG_TASK_PRIO, MsgQueue, MSG_TASK_QUEUE_SIZE);
 	Msg::publish(__FUNCTION__, SIG_INIT);

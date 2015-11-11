@@ -52,6 +52,7 @@ public:
 	}
 	void changed();
 	static Erc getInteger(void *instance, Cbor& bytes);
+	static Erc getUI32(void *instance, Cbor& bytes);
 	static Erc getString(void *instance, Cbor& bytes);
 	static Erc getConstantInt(void *instance, Cbor& bytes);
 	static Erc getConstantBoolean(void *instance, Cbor& bytes);

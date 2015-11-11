@@ -53,14 +53,41 @@ LOCAL void uart0_rx_intr_handler(void *para);
  *                UART1 just used for debug output
  * Parameters   : uart_no, use UART0 or UART1 defined ahead
  * Returns      : NONE
- *******************************************************************************/LOCAL void ICACHE_FLASH_ATTR
-uart0_config() {
-	uint8 uart_no = UART0;
+ *******************************************************************************/
+void IROM
+uart_config(uint32_t uart_no, uint32_t baudrate, char* mode) {
+
+	UartDev.baut_rate = baudrate;
+
 	/* rcv_buff size if 0x100 */
 	ETS_UART_INTR_ATTACH(uart0_rx_intr_handler, &(UartDev.rcv_buff));
 	PIN_PULLUP_DIS(PERIPHS_IO_MUX_U0TXD_U);
 	PIN_FUNC_SELECT(PERIPHS_IO_MUX_U0TXD_U, FUNC_U0TXD);
-	uart_div_modify(uart_no, UART_CLK_FREQ / (UartDev.baut_rate)); //SET BAUDRATE
+	uart_div_modify(uart_no, UART_CLK_FREQ / baudrate); //SET BAUDRATE
+
+	uint32_t flags;
+
+	if (mode[0] == '8') {
+		UartDev.data_bits = EIGHT_BITS;
+	} else if (mode[0] == '7') {
+		UartDev.data_bits = SEVEN_BITS;
+	};
+
+	if (mode[1] == 'N') {
+		UartDev.parity = NONE_BITS;
+	} else if (mode[1] == 'E') {
+		UartDev.data_bits = EVEN_BITS;
+	} else if (mode[1] == 'O') {
+		UartDev.data_bits = ODD_BITS;
+	};
+
+	if (mode[2] == '1') {
+		UartDev.stop_bits = ONE_STOP_BIT;
+	} else if (mode[2] == '2') {
+		UartDev.stop_bits = TWO_STOP_BIT;
+	} else if (mode[2] == '-') {
+		UartDev.stop_bits = ONE_HALF_STOP_BIT;
+	};
 
 	WRITE_PERI_REG(UART_CONF0(uart_no),
 			((UartDev.exist_parity & UART_PARITY_EN_M) << UART_PARITY_EN_S) //SET BIT AND PARITY MODE
@@ -83,13 +110,13 @@ uart0_config() {
 	//enable rx_interrupt
 //	SET_PERI_REG_MASK(UART_INT_ENA(uart_no),
 //			UART_RXFIFO_FULL_INT_ENA|UART_RXFIFO_OVF_INT_ENA|UART_RXFIFO_TOUT_INT_ENA|UART_TXFIFO_EMPTY_INT_ENA);
-	SET_PERI_REG_MASK(UART_CONF1(UART0),
+	SET_PERI_REG_MASK(UART_CONF1(uart_no),
 			(UART_TX_EMPTY_THRESH_VAL & UART_TXFIFO_EMPTY_THRHD)<<UART_TXFIFO_EMPTY_THRHD_S);
 //	SET_PERI_REG_MASK(UART_INT_ENA(UART0), UART_TXFIFO_EMPTY_INT_ENA);
 	SET_PERI_REG_MASK(UART_INT_ENA(uart_no),
 			UART_RXFIFO_FULL_INT_ENA|UART_RXFIFO_OVF_INT_ENA|UART_RXFIFO_TOUT_INT_ENA);
 //	uart_tx_intr_enable(1);
-	uart_rx_intr_enable(UART0);
+	uart_rx_intr_enable(uart_no);
 }
 
 LOCAL void ICACHE_FLASH_ATTR
@@ -128,11 +155,11 @@ static unsigned int uart_tx_fifo_length(void) {
 			& UART_TXFIFO_CNT);
 }
 
-void uart0_tx_intr_enable() {
-	SET_PERI_REG_MASK(UART_INT_ENA(UART0), UART_TXFIFO_EMPTY_INT_ENA);
+void uart_tx_intr_enable(uint32_t uartno) {
+	SET_PERI_REG_MASK(UART_INT_ENA(uartno), UART_TXFIFO_EMPTY_INT_ENA);
 }
-void uart0_tx_intr_disable() {
-	CLEAR_PERI_REG_MASK(UART_INT_ENA(UART0), UART_TXFIFO_EMPTY_INT_ENA);
+void uart_tx_intr_disable(uint32_t uartno) {
+	CLEAR_PERI_REG_MASK(UART_INT_ENA(uartno), UART_TXFIFO_EMPTY_INT_ENA);
 }
 
 void uart_rx_intr_disable(uint8 uart_no) {
@@ -202,13 +229,13 @@ LOCAL void uart0_rx_intr_handler(void *para) {
 		int b;
 		while ((uart_tx_fifo_length() < 126) && ((b = uart0SendByte()) >= 0)) {
 			uartTxdCount++;
-			WRITE_PERI_REG(UART_FIFO(UART0), (uint8_t) b);
+			WRITE_PERI_REG(UART_FIFO(UART0), (uint8_t ) b);
 			loop++;
 			if (loop > 100)
 				break;
 		}
 		if (b < 0) { // no more chars to send
-			uart0_tx_intr_disable();
+			uart_tx_intr_disable(0);
 		}
 		WRITE_PERI_REG(UART_INT_CLR(UART0), UART_TXFIFO_EMPTY_INT_CLR);
 
@@ -230,9 +257,10 @@ void ICACHE_FLASH_ATTR
 uart_init(UartBautRate uart0_br, UartBautRate uart1_br) {
 
 	UartDev.baut_rate = uart0_br;
-	uart0_config();
+	uart_config(0,uart0_br,"8N1");
 	UartDev.baut_rate = uart1_br;
 	uart1_config();
+//	uart_config(1,uart1_br,"8N1");
 	ETS_UART_INTR_ENABLE();
 
 	os_install_putc1((void *) uart0Write);

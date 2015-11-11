@@ -13,20 +13,25 @@
  */
 
 #include "UartEsp8266.h"
+extern "C" {
+#include "uart.h"
+}
+#include "Str.h"
 
 
-IROM UartEsp8266::UartEsp8266() :
+IROM UartEsp8266::UartEsp8266(uint32_t uartNo) :
 		_rxd(256), _txd(3000) {
+	_uartNo = uartNo;
 	_bytesRxd = 0;
 	_bytesTxd = 0;
 	_overflowTxd = 0;
+	_baudrate=115200;
+	strcpy(_mode,"8N1");
 }
 
 IROM UartEsp8266::~UartEsp8266() {
 	ERROR(" dtor called ");
 }
-
-extern "C" void uart0_tx_intr_enable();
 //__________________________________________________________________
 //
 IROM Erc UartEsp8266::write(Bytes& bytes) {
@@ -38,7 +43,7 @@ IROM Erc UartEsp8266::write(Bytes& bytes) {
 		_overflowTxd++;
 	}
 	if (_txd.hasData()) {
-		uart0_tx_intr_enable();
+		uart_tx_intr_enable(_uartNo);
 	}
 	return E_OK;
 }
@@ -52,7 +57,7 @@ IROM Erc UartEsp8266::write(uint8_t* pb, uint32_t length) {
 		_overflowTxd++;
 	}
 	if (_txd.hasData()) {
-		uart0_tx_intr_enable();
+		uart_tx_intr_enable(_uartNo);
 	}
 	return E_OK;
 }
@@ -64,7 +69,7 @@ IROM Erc UartEsp8266::write(uint8_t data) {
 		_overflowTxd++;
 	}
 	if (_txd.hasData()) {
-		uart0_tx_intr_enable();
+		uart_tx_intr_enable(_uartNo);
 	}
 	return E_OK;
 }
@@ -97,7 +102,7 @@ UartEsp8266* UartEsp8266::_uart1 = 0;
 
 UartEsp8266* UartEsp8266::getUart0() {
 	if (UartEsp8266::_uart0 == 0) {
-		UartEsp8266::_uart0 = new UartEsp8266();
+		UartEsp8266::_uart0 = new UartEsp8266(0);
 	}
 	return UartEsp8266::_uart0;
 }
@@ -105,6 +110,7 @@ UartEsp8266* UartEsp8266::getUart0() {
 /**********************************************************
  * USART1 interrupt request handler:
  *********************************************************/
+#include "uart.h"
 // incoming char enqueue it
 extern "C" void uart0RecvByte(uint8_t b) {
 	UartEsp8266* uart0 =  UartEsp8266::getUart0();
@@ -141,13 +147,33 @@ extern "C" void uart0WriteBytes(uint8_t *pb, uint32_t size) {
 		uart0Write('#');
 	}
 }
-void UartEsp8266::connect() {
+IROM void UartEsp8266::connect() {
 
 }
-void UartEsp8266::disconnect() {
+IROM void UartEsp8266::disconnect() {
 
 }
 bool UartEsp8266::isConnected() {
 	return true;
+}
+
+IROM uint32_t UartEsp8266::getBaudrate() {
+	return _baudrate;
+}
+
+IROM Erc UartEsp8266::setBaudrate(uint32_t baudrate) {
+	_baudrate = baudrate;
+	uart_config(_uartNo,_baudrate,_mode);
+	return E_OK;
+}
+
+IROM void UartEsp8266::getMode(Str& str) {
+	str=_mode;
+}
+
+IROM Erc UartEsp8266::setMode(Str& str) {
+	//TODO check legal values
+	strncpy(_mode,str.c_str(),3);
+	return E_OK;
 }
 
