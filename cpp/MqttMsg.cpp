@@ -154,7 +154,7 @@ addHeader(MQTT_MSG_PUBLISH + hdr);
 }
 
 void IROM MqttMsg::ConnAck(uint8_t erc) {
-    LOG("CONNACK");
+//   LOG("CONNACK");
 addHeader(MQTT_MSG_CONNACK);
     addRemainingLength(2);
     write((uint8_t)0);
@@ -162,34 +162,34 @@ addHeader(MQTT_MSG_CONNACK);
 }
 
 void IROM MqttMsg::Disconnect() {
-    LOG("DISCONNECT");
+//    LOG("DISCONNECT");
 addHeader(MQTT_MSG_DISCONNECT);
     addRemainingLength(0);
 }
 
 void IROM MqttMsg::PubRel(uint16_t messageId) {
-    LOG("PUBREL");
+//    LOG("PUBREL");
 addHeader(MQTT_MSG_PUBREL | MQTT_QOS1_FLAG);
     addRemainingLength(2);
     addUint16(messageId);
 }
 
 void IROM MqttMsg::PubAck(uint16_t messageId) {
-    LOG("PUBACK");
+//    LOG("PUBACK");
 addHeader(MQTT_MSG_PUBACK | MQTT_QOS1_FLAG);
     addRemainingLength(2);
     addUint16(messageId);
 }
 
 void IROM MqttMsg::PubRec(uint16_t messageId) {
-    LOG("PUBREC");
+//    LOG("PUBREC");
 addHeader(MQTT_MSG_PUBREC | MQTT_QOS1_FLAG);
     addRemainingLength(2);
     addUint16(messageId);
 }
 
 void IROM MqttMsg::PubComp(uint16_t messageId) {
-    LOG("PUBCOMP");
+//    LOG("PUBCOMP");
 addHeader(MQTT_MSG_PUBCOMP | MQTT_QOS1_FLAG);
     addRemainingLength(2);
     addUint16(messageId);
@@ -197,7 +197,7 @@ addHeader(MQTT_MSG_PUBCOMP | MQTT_QOS1_FLAG);
 
 void IROM MqttMsg::Subscribe(uint8_t hdr, Str& topic, uint16_t messageId,
         uint8_t requestedQos) {
-            LOG("SUBSCRIBE");
+//           LOG("SUBSCRIBE");
 addHeader(hdr | MQTT_MSG_SUBSCRIBE);
     addRemainingLength(topic.length()  + 2 + 2 + 1);
     addUint16(messageId);
@@ -206,13 +206,13 @@ addHeader(hdr | MQTT_MSG_SUBSCRIBE);
 }
 
 void IROM MqttMsg::PingReq() {
-    LOG("PINGREQ");
+//    LOG("PINGREQ");
 addHeader(MQTT_MSG_PINGREQ); // Message Type, DUP flag, QoS level, Retain
 addRemainingLength(0);// Remaining length
 }
 
 void IROM MqttMsg::PingResp() {
-LOG("PINGRESP");
+// LOG("PINGRESP");
 addHeader(MQTT_MSG_PINGRESP); // Message Type, DUP flag, QoS level, Retain
 addRemainingLength(0);// Remaining length
 }
@@ -323,7 +323,8 @@ str << ", messageId : " << _messageId;
 
 if (type() == MQTT_MSG_PUBLISH) {
 	str << (const char*) ", topic : " << _topic;
-	str << ", message : " << (Str&) _message;
+	str << ", message : ";
+	_message.toHex(str);
 } else if (type() == MQTT_MSG_SUBSCRIBE) {
 	str << ", topic : " << _topic;
 } else if (type() == MQTT_MSG_CONNECT) {

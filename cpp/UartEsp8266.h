@@ -13,9 +13,6 @@
 
 // EXPOSED C routines for C interrupt handlers
 
-
-
-
 class UartEsp8266: public Uart {
 public:
 	CircBuf _rxd;
@@ -26,24 +23,26 @@ public:
 	uint32_t _overflowTxd;
 	static UartEsp8266* _uart0;
 	static UartEsp8266* _uart1;
+	static UartEsp8266* getUart0();
 public:
 
 	UartEsp8266();
-	 ~UartEsp8266();
+	~UartEsp8266();
 	void receive(uint8_t b);
 	void init(uint32_t baud);
-	 Erc write(Bytes& data);
-	 Erc write(uint8_t b);
-	 Erc write(uint8_t* pb,uint32_t length);
-	 bool hasData();
-	 bool hasSpace();
-	 uint8_t read();
-	 void connect();
-	 void disconnect();
-	 bool isConnected();
+	Erc write(Bytes& data);
+	Erc write(uint8_t b);
+	Erc write(uint8_t* pb, uint32_t length);
+	bool hasData();
+	bool hasSpace();
+	uint8_t read();
+	void connect();
+	void disconnect();
+	bool isConnected();
+	uint32_t overflowTxd() {
+		return _overflowTxd;
+	}
 
 };
-
-
 
 #endif /* UARTESP8266_H_ */

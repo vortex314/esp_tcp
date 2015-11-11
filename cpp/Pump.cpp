@@ -27,7 +27,7 @@ extern "C" {
 #include "Tcp.h"
 #include "MqttMsg.h"
 #include "Mqtt.h"
-#include "Prop.h"
+#include "Topic.h"
 
 // uint32_t __count = 0;
 //Sender sender();
@@ -41,7 +41,8 @@ Tcp* tcp;
 MqttMsg* mqttMsg;
 Mqtt* mqtt;
 MqttFramer* mqttFramer;
-PropMgr* propMgr;
+TopicSubscriber* topicSubscriber;
+TopicPublisher* topicPublisher;
 
 #define MSG_TASK_PRIO        		1
 #define MSG_TASK_QUEUE_SIZE    	100
@@ -88,21 +89,31 @@ static void do_global_ctors(void) {
 		(*p)();
 }
 //----------------------------------------------------------------------
-#include "MqttTree.h"
-MqttTree* device;
+
 char deviceName[40];
+bool alive = true;
+Erc getBoolean(void* pv, Cbor& cbor) {
+	cbor.add((bool*) pv);
+	return E_OK;
+}
+Erc getSystemUptime(void* pv, Cbor& cbor) {
+	cbor.add(Sys::millis());
+	return E_OK;
+}
+#include "UartEsp8266.h"
+
+
+Erc getUartOverflows(void* pv,Cbor& cbor){
+	cbor.add(((UartEsp8266*)pv)->overflowTxd());
+	return E_OK;
+}
 
 extern "C" IROM void MsgInit() {
 	INFO(" Start Message Pump ");
 	do_global_ctors();
 	Msg::init();
 
-	ets_sprintf(deviceName, "ESP_%08X", system_get_chip_id());
-	INFO(" init device tree ");
-
-//	device = &MqttTree::root().add("limero314").add(deviceName);
-//	device->add("system").add("online", "true");
-	INFO(" init device tree done");
+	ets_sprintf(deviceName, "limero314/ESP_%08X/", system_get_chip_id());
 
 	CreateMutex(&mutex);
 	msg = new Msg(256);
@@ -115,7 +126,14 @@ extern "C" IROM void MsgInit() {
 	mqttFramer = new MqttFramer(tcp);
 	mqtt = new Mqtt(mqttFramer);
 	led = new LedBlink(tcp);
-//	propMgr = new PropMgr(mqtt);
+//	topicMgr = new TopicMgr(mqtt);
+	topicPublisher = new TopicPublisher(mqtt);
+	new Topic("system/online", (void*)true, 0, Topic::getConstantBoolean,Topic::F_QOS1+Topic::F_RETAIN);
+	new Topic("system/uptime", 0, 0, getSystemUptime,Topic::F_QOS2);
+	new Topic("uart0/overflows",UartEsp8266::getUart0(),0,getUartOverflows,0);
+	new Topic("mqtt/topicSize",(void*)MQTT_SIZE_TOPIC,0,Topic::getConstantInt,0);
+	new Topic("mqtt/valueSize",(void*)MQTT_SIZE_VALUE,0,Topic::getConstantInt,0);
+	new Topic("mqtt/messageSize",(void*)MQTT_SIZE_MESSAGE,0,Topic::getConstantInt,0);
 
 	wifi->config((const char*) STA_SSID, (const char*) STA_PASS);
 	tcp->config("iot.eclipse.org", 1883);
@@ -123,7 +141,6 @@ extern "C" IROM void MsgInit() {
 //	tcp->config("test.mosquitto.org", 1883);
 
 	mqtt->setPrefix(deviceName);
-	propMgr->setPrefix(deviceName);
 
 //	led->init();
 

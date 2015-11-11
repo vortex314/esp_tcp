@@ -17,7 +17,7 @@ uint16_t IROM Mqtt::nextMessageId() {
 //____________________________________________________________________________
 
 IROM Mqtt::Mqtt(MqttFramer* framer) :
-		Handler("Mqtt"), _prefix(SIZE_TOPIC), _mqttOut(SIZE_MQTT), _framer(
+		Handler("Mqtt"), _prefix(MQTT_SIZE_TOPIC), _mqttOut(MQTT_SIZE_VALUE), _framer(
 				framer) {
 	_mqttPublisher = new MqttPublisher(*this);
 	_mqttSubscriber = new MqttSubscriber(*this);
@@ -56,8 +56,11 @@ void IROM Mqtt::sendConnect() {
 			online.c_str(), str, "", "", TIME_KEEP_ALIVE / 1000);
 	_framer->send(_mqttOut);
 }
-
+Str loggerLine(100);
 Handler* IROM Mqtt::publish(Str& topic, Bytes& message, uint32_t flags) {
+	loggerLine.clear() << topic << " : ";
+	((Cbor&)message).toString(loggerLine);
+	INFO(" publish : %s ",loggerLine.c_str());
 	return _mqttPublisher->publish(topic, message, flags);
 }
 
@@ -72,14 +75,13 @@ Handler* IROM Mqtt::subscribe(Str& topic) {
 
 bool IROM Mqtt::dispatch(Msg& msg) {
 	PT_BEGIN()
-	INIT: {
-		PT_WAIT_UNTIL(msg.is(0, SIG_INIT));
-		_retries = 0;
-		_isConnected = false;
-		_mqttOut.prefix(_prefix);
-	}
+	PT_WAIT_UNTIL(msg.is(0, SIG_INIT));
+	_retries = 0;
+	_isConnected = false;
+	_mqttOut.prefix(_prefix);
+
 	DISCONNECTED: {
-		INFO("DISCONNECTED");
+//		INFO("DISCONNECTED");
 //		_stream.disconnect();
 		_isConnected = false;
 		Msg::publish(this, SIG_DISCONNECTED);
@@ -97,7 +99,7 @@ bool IROM Mqtt::dispatch(Msg& msg) {
 		}
 	}
 	STREAM_CONNECTED: {
-		INFO("STREAM_CONNECTED");
+//		INFO("STREAM_CONNECTED");
 		while (true) // LINK_CONNECTED
 		{
 			sendConnect();
@@ -117,11 +119,11 @@ bool IROM Mqtt::dispatch(Msg& msg) {
 		}
 	}
 	RECEIVING: {
-		INFO("RECEIVING");
+//		INFO("RECEIVING");
 
 	}
 	WAIT_DISCONNECT: {
-		INFO("WAIT_DISCONNECT");
+//		INFO("WAIT_DISCONNECT");
 		PT_YIELD_UNTIL(!_framer->isConnected());
 		goto DISCONNECTED;
 	}
@@ -144,8 +146,7 @@ PT_BEGIN()
 WAITING: { // while data arrives, reset timer
 	while (true) {
 		timeout((TIME_KEEP_ALIVE / 3));
-		PT_YIELD_UNTIL(
-				msg.is(_mqtt->_framer,SIG_RXD,MQTT_MSG_PINGRESP)||timeout());
+		PT_YIELD_UNTIL(msg.is(_mqtt->_framer, SIG_RXD) || timeout());
 		if (timeout()) {
 			goto PINGING;
 		}
@@ -166,15 +167,6 @@ PINGING: {
 			goto WAITING;
 		}
 		_retries++;
-		/*
-		 PT_YIELD_UNTIL(timeout());
-
-		 str2.clear() << Sys::millis();
-		 _mqtt->_mqttOut.Publish(MQTT_QOS1_FLAG,str,str2,Mqtt::nextMessageId());
-		 _mqtt->_framer->send(_mqtt->_mqttOut);
-		 timeout(1000);
-		 PT_YIELD_UNTIL(msg.is(_mqtt->_framer,SIG_RXD,MQTT_MSG_PUBACK)||timeout());
-		 */
 	}
 }
 
@@ -222,8 +214,8 @@ PT_END()
 //____________________________________________________________________________
 
 IROM MqttPublisher::MqttPublisher(Mqtt& mqtt) :
-Handler("Publisher"), _mqtt(mqtt), _topic(SIZE_TOPIC), _message(
-SIZE_MESSAGE) {
+Handler("Publisher"), _mqtt(mqtt), _topic(MQTT_SIZE_TOPIC), _message(
+MQTT_SIZE_VALUE) {
 _messageId = 0;
 _retries = 0;
 _state = ST_READY;
@@ -250,7 +242,7 @@ _state = ST_READY;
 } else if ((_flags & MQTT_QOS_MASK) == MQTT_QOS1_FLAG) {
 header += MQTT_QOS1_FLAG;
 timeout(TIME_WAIT_REPLY);
-} else if ((_flags & MQTT_QOS_MASK )== MQTT_QOS1_FLAG) {
+} else if ((_flags & MQTT_QOS_MASK) == MQTT_QOS2_FLAG) {
 header += MQTT_QOS2_FLAG;
 timeout(TIME_WAIT_REPLY);
 }
@@ -289,7 +281,7 @@ PT_EXIT()
 ;
 }
 QOS1_ACK: {
-INFO("QOS1_ACK");
+// INFO("QOS1_ACK");
 for (_retries = 0; _retries < MAX_RETRIES; _retries++) {
 sendPublish();
 timeout(TIME_WAIT_REPLY);
@@ -310,7 +302,7 @@ PT_EXIT()
 ;
 }
 QOS2_REC: {
-INFO("QOS2_REC");
+// INFO("QOS2_REC");
 for (_retries = 0; _retries < MAX_RETRIES; _retries++) {
 sendPublish();
 timeout(TIME_WAIT_REPLY);
@@ -329,7 +321,7 @@ PT_EXIT()
 ;
 }
 QOS2_COMP: {
-INFO("QOS2_COMP");
+// INFO("QOS2_COMP");
 for (_retries = 0; _retries < MAX_RETRIES; _retries++) {
 sendPubRel();
 timeout(TIME_WAIT_REPLY);
@@ -338,9 +330,9 @@ if (msg.is(_mqtt._framer, SIG_RXD, MQTT_MSG_PUBCOMP)) {
 	int id;
 	if (msg.get(id) && id == _messageId) {
 		Msg::publish(this, SIG_ERC, 0);
-		PT_EXIT()
-		;
-	}
+	PT_EXIT()
+	;
+}
 }
 }
 Msg::publish(this, SIG_ERC, ETIMEDOUT);
@@ -356,8 +348,8 @@ PT_END()
 //____________________________________________________________________________
 
 IROM MqttSubscriber::MqttSubscriber(Mqtt &mqtt) :
-Handler("Subscriber"), _mqtt(mqtt), _topic(SIZE_TOPIC), _message(
-SIZE_MESSAGE) {
+Handler("Subscriber"), _mqtt(mqtt), _topic(MQTT_SIZE_TOPIC), _message(
+MQTT_SIZE_VALUE) {
 _messageId = 0;
 _retries = 0;
 }
@@ -371,6 +363,7 @@ timeout(TIME_WAIT_REPLY);
 void IROM MqttSubscriber::callBack() {
 Msg pub(256);
 pub.create(this, SIG_RXD).addf("SS", &_topic, &_message);
+pub.send();
 }
 
 // #define PT_WAIT_FOR( ___pt, ___signals, ___timeout ) listen(___signals,___timeout);PT_YIELD(___pt);
@@ -410,7 +403,7 @@ for (_retries = 0; _retries < MAX_RETRIES; _retries++) {
 sendPubRec();
 timeout(TIME_WAIT_REPLY);
 PT_YIELD_UNTIL(
-	!_mqtt.isConnected() || msg.is(_mqtt._framer,SIG_RXD,MQTT_MSG_PUBREL) || timeout());
+!_mqtt.isConnected() || msg.is(_mqtt._framer,SIG_RXD,MQTT_MSG_PUBREL) || timeout());
 if (msg.is(_mqtt._framer, SIG_RXD, MQTT_MSG_PUBREL)) {
 callBack();
 msg.scanf("i", _messageId);
@@ -428,7 +421,7 @@ PT_END()
 //       SUBSCRIPTION
 //____________________________________________________________________________
 IROM MqttSubscription::MqttSubscription(Mqtt & mqtt) :
-Handler("Subscription"), _mqtt(mqtt), _topic(SIZE_TOPIC) {
+Handler("Subscription"), _mqtt(mqtt), _topic(MQTT_SIZE_TOPIC) {
 _retries = 0;
 _messageId = 0;
 // listen(&_mqtt);
@@ -443,7 +436,7 @@ return this;
 }
 
 void IROM MqttSubscription::sendSubscribe() {
-_mqtt._mqttOut.Subscribe(MQTT_QOS1_FLAG, _topic, _messageId,MQTT_QOS2_FLAG);
+_mqtt._mqttOut.Subscribe(MQTT_QOS1_FLAG, _topic, _messageId, MQTT_QOS2_FLAG);
 _mqtt._framer->send(_mqtt._mqttOut);
 _retries++;
 }

@@ -29,9 +29,9 @@
 #define TIME_WAIT_CONNECT 5000
 #define	TIME_PING ( TIME_KEEP_ALIVE /3 )
 #define TIME_FOREVER UINT32_MAX
-#define SIZE_TOPIC	40
-#define SIZE_MESSAGE	256
-#define SIZE_MQTT	300
+#define MQTT_SIZE_TOPIC	40
+#define MQTT_SIZE_VALUE	256
+#define MQTT_SIZE_MESSAGE 	300
 #define MAX_RETRIES	4
 
 class MqttPublisher;
@@ -66,7 +66,7 @@ public:
 	void setPrefix(const char * prefix);
 	bool isConnected();
 	Handler* subscribe(Str& topic);
-	Handler* publish(Str& topic,Bytes& message,uint32_t flags);
+	Handler* publish(Str& topic, Bytes& message, uint32_t flags);
 private:
 	void sendSubscribe(uint8_t flags);
 };
@@ -78,7 +78,6 @@ public:
 	MqttPinger(Mqtt* mqtt);
 	bool dispatch(Msg& msg);
 };
-
 
 class MqttSubscriber: public Handler {
 public:
@@ -106,7 +105,7 @@ public:
 	}
 };
 
-class MqttPublisher: public Handler  {
+class MqttPublisher: public Handler {
 public:
 	MqttPublisher(Mqtt& mqtt);
 	bool dispatch(Msg& msg);
@@ -138,6 +137,5 @@ private:
 	Str _topic;
 	void sendSubscribe();
 };
-
 
 #endif /* MQTT_H_ */
