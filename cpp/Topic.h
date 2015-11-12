@@ -26,6 +26,7 @@ class Topic {
 	void* _instance;
 	int _flags;
 
+
 public:
 
 	enum Flags {
@@ -81,6 +82,7 @@ private:
 	Mqtt* _mqtt;
 	Str _topic;
 	Cbor _value;
+	Handler* _src;
 
 	Str _mqttErrorString;
 public:

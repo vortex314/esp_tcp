@@ -105,18 +105,29 @@ TopicSubscriber::~TopicSubscriber() {
 	_mqttErrorString.clear() << "subscriber started ";
 }
 
+Str _tempStr(100);
+
 IROM bool TopicSubscriber::dispatch(Msg& msg) {
 	Erc erc;
 	Topic* pt;
 	PT_BEGIN()
+//-------------------------------------------------- subscribe to PUT/.../#
+	_tempStr.clear() << "PUT/";
+	_mqtt->getPrefix(_tempStr);
+	_tempStr << "#";
+	_src = _mqtt->subscribe(_tempStr);
+	PT_YIELD_UNTIL(_src->isReady());
+//-------------------------------------------------- wait PUT cmd
 	while (true) {
 		PT_YIELD_UNTIL(msg.is(_mqtt, SIG_RXD, MQTT_MSG_PUBLISH));
 		msg.scanf("SB", &_topic, &_value);
 		if ((pt = Topic::find(_topic))) {
 			erc = pt->putter(_value);
-			if (erc)
+			if (erc) {
 				_mqttErrorString.clear() << "PUT failed on " << _topic << ":"
 						<< (int) erc;
+				Msg::publish(_mqttError, SIG_CHANGE);
+			}
 		}
 	}
 PT_END()
@@ -156,6 +167,7 @@ DISCONNECTED: {
 	goto CONNECTED;
 }
 CONNECTED: {
+
 	while (_mqtt->isConnected()) {
 		timeout(100);
 		PT_YIELD_UNTIL(msg.is(0, SIG_CHANGE) || timeout());

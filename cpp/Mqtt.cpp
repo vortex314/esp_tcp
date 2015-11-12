@@ -87,8 +87,8 @@ bool IROM Mqtt::dispatch(Msg& msg) {
 		Msg::publish(this, SIG_DISCONNECTED);
 		_mqttPinger->stop();
 		_mqttPublisher->stop(); // don't start if nothing to publish !!
-//		_mqttSubscriber->stop();
-//		_mqttSubscription->stop();
+		_mqttSubscriber->stop();
+		_mqttSubscription->stop();
 		while (true) // DISCONNECTED STATE
 		{
 //			_stream.connect();
@@ -175,38 +175,6 @@ PT_END()
 return true;
 }
 
-//________________________________________________________________________________________________
-//
-//		MQTT SUBSCRIPTION : initiate a subscribe, handle retries
-//________________________________________________________________________________________________
-
-bool IROM MqttSubscription::dispatch(Msg& msg) {
-PT_BEGIN()
-_messageId = Mqtt::nextMessageId();
-for (_retries = 0; _retries < MAX_RETRIES; _retries++) {
-sendSubscribe();
-timeout(TIME_WAIT_REPLY);
-PT_YIELD_UNTIL(
-		msg.is(_mqtt._framer, SIG_RXD, MQTT_MSG_SUBACK) || msg.is(_mqtt._framer, SIG_DISCONNECTED ) || timeout());
-if (msg.is(_mqtt._framer, SIG_RXD, MQTT_MSG_SUBACK)) {
-	int id;
-	if (msg.get(id) && id == _messageId) {
-		Msg::publish(this, SIG_ERC, 0);
-		PT_EXIT()
-		;
-	}
-} else if (msg.is(_mqtt._framer, SIG_DISCONNECTED)) {
-	Msg::publish(this, SIG_ERC, ECONNABORTED);
-	PT_EXIT()
-	;
-}
-}
-Msg::publish(this, SIG_ERC, EAGAIN);
-PT_EXIT()
-;
-PT_END()
-;
-}
 
 //____________________________________________________________________________
 //
@@ -420,16 +388,54 @@ PT_END()
 //____________________________________________________________________________
 //       SUBSCRIPTION
 //____________________________________________________________________________
+
+//________________________________________________________________________________________________
+//
+//		MQTT SUBSCRIPTION : initiate a subscribe, handle retries
+//________________________________________________________________________________________________
+
+bool IROM MqttSubscription::dispatch(Msg& msg) {
+PT_BEGIN()
+		INFO("BEGIN");
+_messageId = Mqtt::nextMessageId();
+for (_retries = 0; _retries < MAX_RETRIES; _retries++) {
+sendSubscribe();
+timeout(TIME_WAIT_REPLY);
+PT_YIELD_UNTIL(
+		msg.is(_mqtt._framer, SIG_RXD, MQTT_MSG_SUBACK) || msg.is(_mqtt._framer, SIG_DISCONNECTED ) || timeout());
+
+
+if (msg.is(_mqtt._framer, SIG_RXD, MQTT_MSG_SUBACK)) {
+
+	INFO("SIG_RXD");
+	int id;
+	if (msg.get(id) && id == _messageId) {
+		Msg::publish(this, SIG_ERC, 0);
+		PT_EXIT();
+	}
+} else if (msg.is(_mqtt._framer, SIG_DISCONNECTED)) {
+	INFO("DISC");
+	Msg::publish(this, SIG_ERC, ECONNABORTED);
+	PT_EXIT();
+}
+}
+Msg::publish(this, SIG_ERC, EAGAIN);
+PT_EXIT();
+PT_END();
+}
+
 IROM MqttSubscription::MqttSubscription(Mqtt & mqtt) :
 Handler("Subscription"), _mqtt(mqtt), _topic(MQTT_SIZE_TOPIC) {
 _retries = 0;
 _messageId = 0;
-// listen(&_mqtt);
 }
 
 Handler* IROM MqttSubscription::subscribe(Str& topic) {
-if (isRunning() || !_mqtt.isConnected())
+	INFO("subscribe %s",topic.c_str());
+if ( !_mqtt.isConnected())
 return 0;
+if ( isRunning()) return 0;
+INFO("subscribe %s accepted ",topic.c_str());
 _topic = topic;
 restart();
 return this;

@@ -109,6 +109,7 @@ extern "C" IROM void MsgInit() {
 	led = new LedBlink(tcp);
 //	topicMgr = new TopicMgr(mqtt);
 	topicPublisher = new TopicPublisher(mqtt);
+	topicSubscriber = new TopicSubscriber(mqtt);
 
 	TopicsCreator();
 
