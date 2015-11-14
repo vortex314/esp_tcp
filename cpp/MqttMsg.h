@@ -55,8 +55,7 @@ public:
 	void PubAck(uint16_t messageId);
 	void PubRec(uint16_t messageId);
 	void PubComp(uint16_t messageId);
-	void Subscribe(uint8_t hdr, Str& topic, uint16_t messageId,
-			uint8_t requestedQos);
+	void Subscribe(Str& topic, uint16_t messageId, uint8_t requestedQos);
 	void prefix(Str& pr);
 public:
 
@@ -76,7 +75,7 @@ public:
 	void readBytes(Bytes* b, int length);
 	Str* topic();
 	Bytes* message();
-	const char *  toString(Str& str);
+	const char * toString(Str& str);
 
 };
 

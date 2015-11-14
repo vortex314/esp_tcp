@@ -83,6 +83,7 @@ IROM Erc Topic::getConstantBoolean(void *instance, Cbor& cbor) {
 
 IROM Topic* Topic::find(Str& str) {
 	Topic *pt;
+	INFO(" find ");
 	for (pt = first(); pt != 0; pt = pt->next()) {
 		if (strncmp(pt->_name, str.c_str(), str.length()) == 0)
 			break;
@@ -110,17 +111,25 @@ Str _tempStr(100);
 IROM bool TopicSubscriber::dispatch(Msg& msg) {
 	Erc erc;
 	Topic* pt;
+	if (msg.is(_mqtt, SIG_DISCONNECTED)) {
+		restart();
+		return true;
+	}
 	PT_BEGIN()
+	PT_WAIT_UNTIL(_mqtt->isConnected());
 //-------------------------------------------------- subscribe to PUT/.../#
+	INFO("subscribe");
 	_tempStr.clear() << "PUT/";
 	_mqtt->getPrefix(_tempStr);
 	_tempStr << "#";
-	_src = _mqtt->subscribe(_tempStr);
+	_src = _mqtt->subscribe(_tempStr);	// TODO could be zero
+	INFO("subscribing : %X", _src);
 	PT_YIELD_UNTIL(_src->isReady());
 //-------------------------------------------------- wait PUT cmd
 	while (true) {
-		PT_YIELD_UNTIL(msg.is(_mqtt, SIG_RXD, MQTT_MSG_PUBLISH));
+		PT_YIELD_UNTIL(msg.is(_mqtt, SIG_RXD));
 		msg.scanf("SB", &_topic, &_value);
+		INFO(" PUBLISH received %s  ",_topic.c_str());
 		if ((pt = Topic::find(_topic))) {
 			erc = pt->putter(_value);
 			if (erc) {

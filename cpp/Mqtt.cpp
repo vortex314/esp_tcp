@@ -330,7 +330,7 @@ timeout(TIME_WAIT_REPLY);
 
 void IROM MqttSubscriber::callBack() {
 Msg pub(256);
-pub.create(this, SIG_RXD).addf("SS", &_topic, &_message);
+pub.create(this, SIG_RXD).addf("SB", &_topic, &_message);
 pub.send();
 }
 
@@ -396,7 +396,7 @@ PT_END()
 
 bool IROM MqttSubscription::dispatch(Msg& msg) {
 PT_BEGIN()
-		INFO("BEGIN");
+//		INFO("BEGIN");
 _messageId = Mqtt::nextMessageId();
 for (_retries = 0; _retries < MAX_RETRIES; _retries++) {
 sendSubscribe();
@@ -407,7 +407,7 @@ PT_YIELD_UNTIL(
 
 if (msg.is(_mqtt._framer, SIG_RXD, MQTT_MSG_SUBACK)) {
 
-	INFO("SIG_RXD");
+//	INFO("SIG_RXD");
 	int id;
 	if (msg.get(id) && id == _messageId) {
 		Msg::publish(this, SIG_ERC, 0);
@@ -435,14 +435,15 @@ Handler* IROM MqttSubscription::subscribe(Str& topic) {
 if ( !_mqtt.isConnected())
 return 0;
 if ( isRunning()) return 0;
-INFO("subscribe %s accepted ",topic.c_str());
+// INFO("subscribe %s accepted ",topic.c_str());
+_messageId=Mqtt::nextMessageId();
 _topic = topic;
 restart();
 return this;
 }
 
 void IROM MqttSubscription::sendSubscribe() {
-_mqtt._mqttOut.Subscribe(MQTT_QOS1_FLAG, _topic, _messageId, MQTT_QOS2_FLAG);
+_mqtt._mqttOut.Subscribe(_topic, _messageId, 2);
 _mqtt._framer->send(_mqtt._mqttOut);
 _retries++;
 }

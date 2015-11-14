@@ -136,7 +136,7 @@ void IROM MqttMsg::Connect(uint8_t hdr, const char *clientId,
 
 void IROM MqttMsg::Publish(uint8_t hdr, Str& topic, Bytes& msg,
 		uint16_t messageId) {
-	LOG("PUBLISH");
+//	LOG("PUBLISH");
 	addHeader(MQTT_MSG_PUBLISH + hdr);
 	bool addMessageId = (hdr & MQTT_QOS_MASK) ? true : false;
 	int remLen = topic.length() + _prefix.length() + 2 + msg.length();
@@ -194,10 +194,10 @@ void IROM MqttMsg::PubComp(uint16_t messageId) {
 	addUint16(messageId);
 }
 
-void IROM MqttMsg::Subscribe(uint8_t hdr, Str& topic, uint16_t messageId,
+void IROM MqttMsg::Subscribe(Str& topic, uint16_t messageId,
 		uint8_t requestedQos) {
-	LOG("SUBSCRIBE");
-	addHeader(hdr | MQTT_MSG_SUBSCRIBE);
+//	LOG("SUBSCRIBE");
+	addHeader(MQTT_QOS1_FLAG | MQTT_MSG_SUBSCRIBE);
 	addRemainingLength(topic.length() + 2 + 2 + 1);
 	addUint16(messageId);
 	addStr(topic);
