@@ -103,6 +103,10 @@ UartEsp8266* UartEsp8266::_uart1 = 0;
 UartEsp8266* UartEsp8266::getUart0() {
 	if (UartEsp8266::_uart0 == 0) {
 		UartEsp8266::_uart0 = new UartEsp8266(0);
+		UartEsp8266::_uart0->setBaudrate(115200);
+		Str mode(4);
+		mode="8N1";
+		UartEsp8266::_uart0->setMode(mode);
 	}
 	return UartEsp8266::_uart0;
 }
@@ -174,6 +178,8 @@ IROM void UartEsp8266::getMode(Str& str) {
 IROM Erc UartEsp8266::setMode(Str& str) {
 	//TODO check legal values
 	strncpy(_mode,str.c_str(),3);
+	INFO("uart settings %d %d %s",_uartNo,_baudrate,_mode);
+ 	uart_config(_uartNo,_baudrate,_mode);
 	return E_OK;
 }
 

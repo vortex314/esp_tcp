@@ -46,10 +46,10 @@ bool MqttFramer::dispatch(Msg& msg) {
 					INFO("MQTT IN : %s", _msg->toString(logLine.clear()));
 					Msg msg2(200);
 					msg2.create(this, SIG_RXD).add(_msg->type()).add(
-							_msg->messageId());
+							_msg->messageId()); // <type><msgId>
 					if (_msg->type() == MQTT_MSG_PUBLISH) {
 						msg2.addf("iSS", _msg->qos(), _msg->topic(),
-								_msg->message());
+								_msg->message()); // <type><msgId><qos><topic><value>
 					}
 					msg2.send();
 //					Msg::publish(this, SIG_RXD, _msg->type());

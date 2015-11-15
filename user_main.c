@@ -60,7 +60,7 @@ IROM void user_init(void) {
 	SysLogInit();
 
 	uart_init(BIT_RATE_115200, BIT_RATE_115200);
-	uart_config(0,115200,"8N1");
+	uart_config(0,115200,"8E1");
 
 	gpio_init();
 	clockInit();

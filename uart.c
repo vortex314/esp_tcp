@@ -56,7 +56,7 @@ LOCAL void uart0_rx_intr_handler(void *para);
  *******************************************************************************/
 void IROM
 uart_config(uint32_t uart_no, uint32_t baudrate, char* mode) {
-
+	UartDev.buff_uart_no = uart_no;
 	UartDev.baut_rate = baudrate;
 
 	/* rcv_buff size if 0x100 */
@@ -67,12 +67,14 @@ uart_config(uint32_t uart_no, uint32_t baudrate, char* mode) {
 
 	uint32_t flags;
 
+	UartDev.data_bits = EIGHT_BITS;
 	if (mode[0] == '8') {
 		UartDev.data_bits = EIGHT_BITS;
 	} else if (mode[0] == '7') {
 		UartDev.data_bits = SEVEN_BITS;
 	};
 
+	UartDev.parity = NONE_BITS;
 	if (mode[1] == 'N') {
 		UartDev.parity = NONE_BITS;
 	} else if (mode[1] == 'E') {
@@ -81,6 +83,7 @@ uart_config(uint32_t uart_no, uint32_t baudrate, char* mode) {
 		UartDev.data_bits = ODD_BITS;
 	};
 
+	UartDev.stop_bits = ONE_STOP_BIT;
 	if (mode[2] == '1') {
 		UartDev.stop_bits = ONE_STOP_BIT;
 	} else if (mode[2] == '2') {

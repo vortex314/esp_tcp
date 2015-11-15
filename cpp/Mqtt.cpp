@@ -28,6 +28,8 @@ IROM Mqtt::Mqtt(MqttFramer* framer) :
 	_mqttSubscriber->stop();
 	_mqttPinger->stop();
 	_mqttSubscription->stop();
+	_isConnected = false;
+	_retries = 0;
 
 }
 
@@ -59,8 +61,8 @@ void IROM Mqtt::sendConnect() {
 Str loggerLine(100);
 Handler* IROM Mqtt::publish(Str& topic, Bytes& message, uint32_t flags) {
 	loggerLine.clear() << topic << " : ";
-	((Cbor&)message).toString(loggerLine);
-	INFO(" publish : %s ",loggerLine.c_str());
+	((Cbor&) message).toString(loggerLine);
+	INFO(" publish : %s ", loggerLine.c_str());
 	return _mqttPublisher->publish(topic, message, flags);
 }
 
@@ -112,7 +114,7 @@ bool IROM Mqtt::dispatch(Msg& msg) {
 			if (msg.is(_framer, SIG_RXD, MQTT_MSG_CONNACK)) {
 				Msg::publish(this, SIG_CONNECTED);
 				_isConnected = true;
-//				_mqttSubscriber->restart();
+				_mqttSubscriber->restart();
 				_mqttPinger->restart();
 				goto RECEIVING;
 			}
@@ -137,6 +139,7 @@ PT_END()
 MqttPinger::MqttPinger(Mqtt* mqtt) :
 	Handler("MqttPinger") {
 _mqtt = mqtt;
+_retries = 0;
 }
 
 Str str("system/uptime");
@@ -175,7 +178,6 @@ PT_END()
 return true;
 }
 
-
 //____________________________________________________________________________
 //
 //       MQTT PUBLISHER : Publish at different QOS levels, do retries
@@ -184,6 +186,7 @@ return true;
 IROM MqttPublisher::MqttPublisher(Mqtt& mqtt) :
 Handler("Publisher"), _mqtt(mqtt), _topic(MQTT_SIZE_TOPIC), _message(
 MQTT_SIZE_VALUE) {
+_flags = 0;
 _messageId = 0;
 _retries = 0;
 _state = ST_READY;
@@ -236,34 +239,35 @@ _state = ST_READY;
 PT_YIELD_UNTIL(msg.is(0, SIG_TICK));
 _state = ST_BUSY;
 if ((_flags & MQTT_QOS_MASK) == MQTT_QOS0_FLAG) {
-sendPublish();
-PT_YIELD_UNTIL(msg.is(_mqtt._framer, SIG_TXD));
-Msg::publish(this, SIG_ERC, 0);
-PT_EXIT()
-;
+	sendPublish();
+	PT_YIELD_UNTIL(msg.is(_mqtt._framer, SIG_TXD));
+	Msg::publish(this, SIG_ERC, 0);
+	PT_EXIT()
+	;
 } else if ((_flags & MQTT_QOS_MASK) == MQTT_QOS1_FLAG)
-goto QOS1_ACK;
+	goto QOS1_ACK;
 else if ((_flags & MQTT_QOS_MASK) == MQTT_QOS2_FLAG)
-goto QOS2_REC;
+	goto QOS2_REC;
 PT_EXIT()
 ;
 }
 QOS1_ACK: {
 // INFO("QOS1_ACK");
 for (_retries = 0; _retries < MAX_RETRIES; _retries++) {
-sendPublish();
-timeout(TIME_WAIT_REPLY);
-PT_YIELD_UNTIL(msg.is(_mqtt._framer,SIG_RXD,MQTT_MSG_PUBACK) || timeout());
-if (msg.is(_mqtt._framer, SIG_RXD, MQTT_MSG_PUBACK)) {
-	int id;
-	msg.get(id);
+	sendPublish();
+	timeout(TIME_WAIT_REPLY);
+	PT_YIELD_UNTIL(msg.is(_mqtt._framer,SIG_RXD,MQTT_MSG_PUBACK) || timeout());
+	if (msg.is(_mqtt._framer, SIG_RXD, MQTT_MSG_PUBACK)) {
+		int id;
+		msg.get(id); 	// skip type in  <src><signal><type><msgId><qos><topic><value>
+		msg.get(id);
 //				INFO(" messageId compare %d : %d ",id,_messageId);
-	if (id == _messageId) {
-		Msg::publish(this, SIG_ERC, 0);
-		PT_EXIT()
-		;
+		if (id == _messageId) {
+			Msg::publish(this, SIG_ERC, 0);
+			PT_EXIT()
+			;
+		}
 	}
-}
 }
 Msg::publish(this, SIG_ERC, ETIMEDOUT);
 PT_EXIT()
@@ -272,17 +276,17 @@ PT_EXIT()
 QOS2_REC: {
 // INFO("QOS2_REC");
 for (_retries = 0; _retries < MAX_RETRIES; _retries++) {
-sendPublish();
-timeout(TIME_WAIT_REPLY);
-PT_YIELD_UNTIL(msg.is(_mqtt._framer,SIG_RXD,MQTT_MSG_PUBREC) || timeout());
-if (msg.is(_mqtt._framer, SIG_RXD, MQTT_MSG_PUBREC)) {
-	int id;
-	msg.get(id);
+	sendPublish();
+	timeout(TIME_WAIT_REPLY);
+	PT_YIELD_UNTIL(msg.is(_mqtt._framer,SIG_RXD,MQTT_MSG_PUBREC) || timeout());
+	if (msg.is(_mqtt._framer, SIG_RXD, MQTT_MSG_PUBREC)) {
+		int id;
+		msg.get(id);
 //				INFO(" messageId compare %d : %d ",id,_messageId);
-	if (id == _messageId) {
-		goto QOS2_COMP;
+		if (id == _messageId) {
+			goto QOS2_COMP;
+		}
 	}
-}
 }
 Msg::publish(this, SIG_ERC, ETIMEDOUT);
 PT_EXIT()
@@ -291,17 +295,17 @@ PT_EXIT()
 QOS2_COMP: {
 // INFO("QOS2_COMP");
 for (_retries = 0; _retries < MAX_RETRIES; _retries++) {
-sendPubRel();
-timeout(TIME_WAIT_REPLY);
-PT_YIELD_UNTIL(msg.is(_mqtt._framer,SIG_RXD,MQTT_MSG_PUBCOMP) || timeout());
-if (msg.is(_mqtt._framer, SIG_RXD, MQTT_MSG_PUBCOMP)) {
-	int id;
-	if (msg.get(id) && id == _messageId) {
-		Msg::publish(this, SIG_ERC, 0);
-	PT_EXIT()
-	;
-}
-}
+	sendPubRel();
+	timeout(TIME_WAIT_REPLY);
+	PT_YIELD_UNTIL(msg.is(_mqtt._framer,SIG_RXD,MQTT_MSG_PUBCOMP) || timeout());
+	if (msg.is(_mqtt._framer, SIG_RXD, MQTT_MSG_PUBCOMP)) {
+		int id;
+		if (msg.get(id) && id == _messageId) {
+			Msg::publish(this, SIG_ERC, 0);
+			PT_EXIT()
+			;
+		}
+	}
 }
 Msg::publish(this, SIG_ERC, ETIMEDOUT);
 PT_EXIT()
@@ -318,6 +322,7 @@ PT_END()
 IROM MqttSubscriber::MqttSubscriber(Mqtt &mqtt) :
 Handler("Subscriber"), _mqtt(mqtt), _topic(MQTT_SIZE_TOPIC), _message(
 MQTT_SIZE_VALUE) {
+_flags = 0;
 _messageId = 0;
 _retries = 0;
 }
@@ -329,8 +334,13 @@ timeout(TIME_WAIT_REPLY);
 }
 
 void IROM MqttSubscriber::callBack() {
+loggerLine.clear() << _topic << " : ";
+((Cbor&) _message).toString(loggerLine);
+INFO(" PUBLISH received : %s ", loggerLine.c_str());
 Msg pub(256);
-pub.create(this, SIG_RXD).addf("SB", &_topic, &_message);
+Str _shortTopic(40);
+_shortTopic.clear().substr(_topic, 4 + _mqtt._prefix.length()); // skip "/PUT" +<prefix.length>
+pub.create(this, SIG_RXD).addf("SB", &_shortTopic, &_message);
 pub.send();
 }
 
@@ -342,22 +352,27 @@ PT_BEGIN()
 READY: {
 timeout(100000000);
 PT_YIELD_UNTIL(
-msg.is(_mqtt._framer, SIG_RXD, MQTT_MSG_PUBLISH) || !_mqtt.isConnected() || timeout());
-if (msg.is(_mqtt._framer, SIG_RXD, MQTT_MSG_PUBLISH)) {
+	msg.is(_mqtt._framer, SIG_RXD, MQTT_MSG_PUBLISH) || !_mqtt.isConnected() || timeout());
+if (msg.is(_mqtt._framer, SIG_RXD, MQTT_MSG_PUBLISH)) { // <type><msgId><qos><topic><value>
 int _qos = 0;
-msg.scanf("iiSS", _messageId, _qos, &_topic, &_message);
+int _type = 0;
+
+_topic.clear();
+_message.clear();
+
+msg.scanf("iiiSS", &_type, &_messageId, &_qos, &_topic, &_message);
 
 if (_qos == MQTT_QOS0_FLAG) {
 
-callBack();
+	callBack();
 } else if (_qos == MQTT_QOS1_FLAG) {
 
-callBack();
-_mqtt._mqttOut.PubAck(_messageId);
-_mqtt._framer->send(_mqtt._mqttOut);
+	callBack();
+	_mqtt._mqttOut.PubAck(_messageId);
+	_mqtt._framer->send(_mqtt._mqttOut);
 
 } else if (_qos == MQTT_QOS2_FLAG) {
-goto QOS2_WAIT_REL;
+	goto QOS2_WAIT_REL;
 
 }
 } else if (!_mqtt.isConnected()) {
@@ -371,13 +386,13 @@ for (_retries = 0; _retries < MAX_RETRIES; _retries++) {
 sendPubRec();
 timeout(TIME_WAIT_REPLY);
 PT_YIELD_UNTIL(
-!_mqtt.isConnected() || msg.is(_mqtt._framer,SIG_RXD,MQTT_MSG_PUBREL) || timeout());
+		!_mqtt.isConnected() || msg.is(_mqtt._framer,SIG_RXD,MQTT_MSG_PUBREL) || timeout());
 if (msg.is(_mqtt._framer, SIG_RXD, MQTT_MSG_PUBREL)) {
-callBack();
-msg.scanf("i", _messageId);
-_mqtt._mqttOut.PubComp(_messageId);
-_mqtt._framer->send(_mqtt._mqttOut);
-goto READY;
+	callBack();
+	msg.scanf("i", &_messageId);
+	_mqtt._mqttOut.PubComp(_messageId);
+	_mqtt._framer->send(_mqtt._mqttOut);
+	goto READY;
 }
 }
 goto READY;
@@ -402,26 +417,29 @@ for (_retries = 0; _retries < MAX_RETRIES; _retries++) {
 sendSubscribe();
 timeout(TIME_WAIT_REPLY);
 PT_YIELD_UNTIL(
-		msg.is(_mqtt._framer, SIG_RXD, MQTT_MSG_SUBACK) || msg.is(_mqtt._framer, SIG_DISCONNECTED ) || timeout());
-
+msg.is(_mqtt._framer, SIG_RXD, MQTT_MSG_SUBACK) || msg.is(_mqtt._framer, SIG_DISCONNECTED ) || timeout());
 
 if (msg.is(_mqtt._framer, SIG_RXD, MQTT_MSG_SUBACK)) {
 
 //	INFO("SIG_RXD");
-	int id;
-	if (msg.get(id) && id == _messageId) {
-		Msg::publish(this, SIG_ERC, 0);
-		PT_EXIT();
-	}
+int id;
+if (msg.get(id) && id == _messageId) {
+Msg::publish(this, SIG_ERC, 0);
+PT_EXIT()
+;
+}
 } else if (msg.is(_mqtt._framer, SIG_DISCONNECTED)) {
-	INFO("DISC");
-	Msg::publish(this, SIG_ERC, ECONNABORTED);
-	PT_EXIT();
+INFO("DISC");
+Msg::publish(this, SIG_ERC, ECONNABORTED);
+PT_EXIT()
+;
 }
 }
 Msg::publish(this, SIG_ERC, EAGAIN);
-PT_EXIT();
-PT_END();
+PT_EXIT()
+;
+PT_END()
+;
 }
 
 IROM MqttSubscription::MqttSubscription(Mqtt & mqtt) :
@@ -431,12 +449,13 @@ _messageId = 0;
 }
 
 Handler* IROM MqttSubscription::subscribe(Str& topic) {
-	INFO("subscribe %s",topic.c_str());
-if ( !_mqtt.isConnected())
+INFO("subscribe %s", topic.c_str());
+if (!_mqtt.isConnected())
 return 0;
-if ( isRunning()) return 0;
+if (isRunning())
+return 0;
 // INFO("subscribe %s accepted ",topic.c_str());
-_messageId=Mqtt::nextMessageId();
+_messageId = Mqtt::nextMessageId();
 _topic = topic;
 restart();
 return this;

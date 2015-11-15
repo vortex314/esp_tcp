@@ -34,6 +34,7 @@ public:
 		F_QOS1 = MQTT_QOS1_FLAG,
 		F_QOS2 = MQTT_QOS2_FLAG,
 		F_RETAIN = MQTT_RETAIN_FLAG,
+		F_POLL
 	};
 	Topic(const char* name, void* instance, Xdr putter, Xdr getter, int flags);
 	virtual ~Topic();
@@ -55,6 +56,7 @@ public:
 	static Erc getInteger(void *instance, Cbor& bytes);
 	static Erc getUI32(void *instance, Cbor& bytes);
 	static Erc getString(void *instance, Cbor& bytes);
+	static Erc getConstantChar(void *instance, Cbor& bytes);
 	static Erc getConstantInt(void *instance, Cbor& bytes);
 	static Erc getConstantBoolean(void *instance, Cbor& bytes);
 	static Topic* find(Str& str);
