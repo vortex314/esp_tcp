@@ -32,6 +32,8 @@ IROM Topic::Topic(const char* name, void* instance, Xdr putter, Xdr getter,
 	}
 }
 
+
+
 IROM Topic::~Topic() {
 
 }

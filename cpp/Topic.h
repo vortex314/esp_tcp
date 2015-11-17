@@ -26,7 +26,6 @@ class Topic {
 	void* _instance;
 	int _flags;
 
-
 public:
 
 	enum Flags {

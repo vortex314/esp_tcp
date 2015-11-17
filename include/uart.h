@@ -51,14 +51,14 @@ typedef enum {
 } UartStopBitsNum;
 
 typedef enum {
-    NONE_BITS = 0x2,
-    ODD_BITS   = 1,
+    NONE_BITS = 0x1,
+    ODD_BITS   = 0x1,
     EVEN_BITS = 0
 } UartParityMode;
 
 typedef enum {
     STICK_PARITY_DIS   = 0,
-    STICK_PARITY_EN    = 1
+    STICK_PARITY_EN    = 2
 } UartExistParity;
 
 typedef enum {
@@ -150,7 +150,7 @@ void uart0_sendStr(const char *str);
 
 ///////////////////////////////////////
 #define UART_FIFO_LEN  128  //define the tx fifo length
-#define UART_TX_EMPTY_THRESH_VAL 0x20
+#define UART_TX_EMPTY_THRESH_VAL 0x10
 
 
  struct UartBuffer{
@@ -196,10 +196,7 @@ void  Uart_rx_buff_enq();
 #endif
 void  uart_rx_intr_enable(uint8 uart_no);
 void  uart_rx_intr_disable(uint8 uart_no);
-void  uart_tx_intr_enable(uint32_t uart_no);
-void  uart_tx_intr_disable(uint32_t uart_no);
 void uart0_tx_buffer(uint8 *buf, uint16 len);
-void uart_config(uint32_t uartno,uint32_t baudrate,char* mode);
 
 //==============================================
 #define FUNC_UART0_CTS 4

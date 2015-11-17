@@ -15,9 +15,15 @@
 #include "UartEsp8266.h"
 extern "C" {
 #include "uart.h"
+void uart_tx_intr_enable(uint32_t uartno);
+void uart_tx_intr_disable(uint32_t uartno);
+void uart_rx_intr_disable(uint8 uart_no);
+void uart_rx_intr_enable(uint8 uart_no);
+void uart_config(uint32_t uart_no, uint32_t baudrate, char* mode);
 }
 #include "Str.h"
 
+#define UART_DEFAULT_MODE "8E1"
 
 IROM UartEsp8266::UartEsp8266(uint32_t uartNo) :
 		_rxd(256), _txd(3000) {
@@ -25,8 +31,8 @@ IROM UartEsp8266::UartEsp8266(uint32_t uartNo) :
 	_bytesRxd = 0;
 	_bytesTxd = 0;
 	_overflowTxd = 0;
-	_baudrate=115200;
-	strcpy(_mode,"8N1");
+	_baudrate = 115200;
+	strcpy(_mode, UART_DEFAULT_MODE);
 }
 
 IROM UartEsp8266::~UartEsp8266() {
@@ -105,7 +111,7 @@ UartEsp8266* UartEsp8266::getUart0() {
 		UartEsp8266::_uart0 = new UartEsp8266(0);
 		UartEsp8266::_uart0->setBaudrate(115200);
 		Str mode(4);
-		mode="8N1";
+		mode = UART_DEFAULT_MODE;
 		UartEsp8266::_uart0->setMode(mode);
 	}
 	return UartEsp8266::_uart0;
@@ -117,12 +123,12 @@ UartEsp8266* UartEsp8266::getUart0() {
 #include "uart.h"
 // incoming char enqueue it
 extern "C" void uart0RecvByte(uint8_t b) {
-	UartEsp8266* uart0 =  UartEsp8266::getUart0();
+	UartEsp8266* uart0 = UartEsp8266::getUart0();
 	uart0->receive(b);
 }
 // get next byte to transmit or return -1 if not available/empty circbuf
 extern "C" int uart0SendByte() {
-	UartEsp8266* uart0 =  UartEsp8266::getUart0();
+	UartEsp8266* uart0 = UartEsp8266::getUart0();
 	if (uart0->_txd.hasData()) {
 		uart0->_bytesTxd++;
 		return uart0->_txd.readFromIsr();
@@ -131,7 +137,7 @@ extern "C" int uart0SendByte() {
 }
 // enqueue char to send in TXD
 extern "C" void uart0Write(uint8_t b) {
-	UartEsp8266* uart0 =  UartEsp8266::getUart0();
+	UartEsp8266* uart0 = UartEsp8266::getUart0();
 	if (b == '\n') {
 		uart0->write('\r');
 		uart0->write(b);
@@ -143,7 +149,7 @@ extern "C" void uart0Write(uint8_t b) {
 }
 
 extern "C" void uart0WriteBytes(uint8_t *pb, uint32_t size) {
-	UartEsp8266* uart0 =  UartEsp8266::getUart0();
+	UartEsp8266* uart0 = UartEsp8266::getUart0();
 	if (uart0->_txd.hasSpace(size))
 		for (uint32_t i = 0; i < size; i++)
 			uart0Write(*(pb + i));
@@ -167,19 +173,19 @@ IROM uint32_t UartEsp8266::getBaudrate() {
 
 IROM Erc UartEsp8266::setBaudrate(uint32_t baudrate) {
 	_baudrate = baudrate;
-	uart_config(_uartNo,_baudrate,_mode);
+	uart_config(_uartNo, _baudrate, _mode);
 	return E_OK;
 }
 
 IROM void UartEsp8266::getMode(Str& str) {
-	str=_mode;
+	str = _mode;
 }
 
 IROM Erc UartEsp8266::setMode(Str& str) {
 	//TODO check legal values
-	strncpy(_mode,str.c_str(),3);
-	INFO("uart settings %d %d %s",_uartNo,_baudrate,_mode);
- 	uart_config(_uartNo,_baudrate,_mode);
+	strncpy(_mode, str.c_str(), 3);
+	INFO("uart settings %d %d %s", _uartNo, _baudrate, _mode);
+	uart_config(_uartNo, _baudrate, _mode);
 	return E_OK;
 }
 

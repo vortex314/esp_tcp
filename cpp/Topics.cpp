@@ -70,7 +70,7 @@ public:
 		Str mode(4);
 		UartEsp8266* uart = (UartEsp8266*) pv;
 		if (cbor.get(mode)) {
-			INFO( " set Mode : %s ",mode.c_str());
+			INFO(" set Mode : %s ", mode.c_str());
 			return uart->setMode(mode);
 			return E_OK;
 		}
@@ -84,6 +84,46 @@ public:
 		return E_OK;
 	}
 };
+
+#include "Gpio.h"
+class GpioTopic {
+public:
+	IROM static char* newString(const char* first, const char* second) {
+		char* ptr = (char*)malloc(strlen(first) + strlen(second) + 2);
+		strcpy(ptr, first);
+		strcat(ptr, "/");
+		strcat(ptr, second);
+		return ptr;
+	}
+	;
+
+	IROM static void create(const char* pin, Gpio* gpio) {
+
+		new Topic(newString(pin, "mode"), gpio, setMode, getMode,
+				Topic::F_POLL);
+		new Topic(newString(pin, "data"), gpio, 0, 0, Topic::F_POLL);
+
+	}
+
+	IROM static Erc setMode(void* pv, Cbor& cbor) {
+		Str mode(4);
+		Gpio* gpio = (Gpio*) pv;
+		if (cbor.get(mode)) {
+			INFO(" set Mode : %s ", mode.c_str());
+			return gpio->setMode((char*) mode.c_str());
+		}
+		return EINVAL;
+	}
+	IROM static Erc getMode(void* pv, Cbor& cbor) {
+		char mode[4];
+		Gpio* gpio = (Gpio*) pv;
+		gpio->getMode(mode);
+		cbor.add(mode);
+		return E_OK;
+	}
+};
+
+Gpio gpio0(0);
 
 class MqttTopic {
 public:
@@ -106,5 +146,6 @@ void TopicsCreator() {
 //	new Topic("system/uptime", 0, 0, getSystemUptime, Topic::F_QOS2);
 	UartTopic::create(UartEsp8266::_uart0);
 	MqttTopic::create();
+	GpioTopic::create("gpio0", &gpio0);
 
 }

@@ -56,18 +56,16 @@ LOCAL void uart0_rx_intr_handler(void *para);
  *******************************************************************************/
 void IROM
 uart_config(uint32_t uart_no, uint32_t baudrate, char* mode) {
+	INFO("uart_no %d baudrate %d mode %s", uart_no, baudrate, mode);
+//	uart_rx_intr_disable(uart_no);
+//	ETS_UART_INTR_DISABLE();
 	UartDev.buff_uart_no = uart_no;
 	UartDev.baut_rate = baudrate;
-
-	/* rcv_buff size if 0x100 */
-	ETS_UART_INTR_ATTACH(uart0_rx_intr_handler, &(UartDev.rcv_buff));
-	PIN_PULLUP_DIS(PERIPHS_IO_MUX_U0TXD_U);
-	PIN_FUNC_SELECT(PERIPHS_IO_MUX_U0TXD_U, FUNC_U0TXD);
-	uart_div_modify(uart_no, UART_CLK_FREQ / baudrate); //SET BAUDRATE
 
 	uint32_t flags;
 
 	UartDev.data_bits = EIGHT_BITS;
+
 	if (mode[0] == '8') {
 		UartDev.data_bits = EIGHT_BITS;
 	} else if (mode[0] == '7') {
@@ -75,15 +73,21 @@ uart_config(uint32_t uart_no, uint32_t baudrate, char* mode) {
 	};
 
 	UartDev.parity = NONE_BITS;
+	UartDev.exist_parity = STICK_PARITY_DIS;
+
 	if (mode[1] == 'N') {
+		UartDev.exist_parity = STICK_PARITY_DIS;
 		UartDev.parity = NONE_BITS;
 	} else if (mode[1] == 'E') {
-		UartDev.data_bits = EVEN_BITS;
+		UartDev.exist_parity = STICK_PARITY_EN;
+		UartDev.parity = EVEN_BITS;
 	} else if (mode[1] == 'O') {
-		UartDev.data_bits = ODD_BITS;
+		UartDev.exist_parity = STICK_PARITY_EN;
+		UartDev.parity = ODD_BITS;
 	};
 
 	UartDev.stop_bits = ONE_STOP_BIT;
+
 	if (mode[2] == '1') {
 		UartDev.stop_bits = ONE_STOP_BIT;
 	} else if (mode[2] == '2') {
@@ -92,18 +96,28 @@ uart_config(uint32_t uart_no, uint32_t baudrate, char* mode) {
 		UartDev.stop_bits = ONE_HALF_STOP_BIT;
 	};
 
-	WRITE_PERI_REG(UART_CONF0(uart_no),
-			((UartDev.exist_parity & UART_PARITY_EN_M) << UART_PARITY_EN_S) //SET BIT AND PARITY MODE
-			| ((UartDev.parity & UART_PARITY_M) <<UART_PARITY_S ) | ((UartDev.stop_bits & UART_STOP_BIT_NUM) << UART_STOP_BIT_NUM_S) | ((UartDev.data_bits & UART_BIT_NUM) << UART_BIT_NUM_S));
+	/* rcv_buff size if 0x100 */
+	ETS_UART_INTR_ATTACH(uart0_rx_intr_handler, &(UartDev.rcv_buff));
+	PIN_PULLUP_DIS(PERIPHS_IO_MUX_U0TXD_U);
+	PIN_FUNC_SELECT(PERIPHS_IO_MUX_U0TXD_U, FUNC_U0TXD);
+	uart_div_modify(uart_no, UART_CLK_FREQ / baudrate); //SET BAUDRATE
+
+	WRITE_PERI_REG(UART_CONF0(uart_no),  //
+			UartDev.exist_parity //SET BIT AND PARITY MODE
+			| UartDev.parity// parity
+			| ((UartDev.stop_bits & UART_STOP_BIT_NUM) << UART_STOP_BIT_NUM_S)// stopbits
+			| ((UartDev.data_bits & UART_BIT_NUM) << UART_BIT_NUM_S));// databits
 
 	SET_PERI_REG_MASK(UART_CONF0(uart_no), UART_RXFIFO_RST | UART_TXFIFO_RST);
 	//clear rx and tx fifo,not ready
 	CLEAR_PERI_REG_MASK(UART_CONF0(uart_no), UART_RXFIFO_RST | UART_TXFIFO_RST);
 	//RESET FIFO
 
-	WRITE_PERI_REG(
-			UART_CONF1(uart_no), //set rx fifo trigger
-			((100 & UART_RXFIFO_FULL_THRHD) << UART_RXFIFO_FULL_THRHD_S) | (0x02 & UART_RX_TOUT_THRHD) << UART_RX_TOUT_THRHD_S | UART_RX_TOUT_EN| ((0x10 & UART_TXFIFO_EMPTY_THRHD)<<UART_TXFIFO_EMPTY_THRHD_S));
+	WRITE_PERI_REG(UART_CONF1(uart_no),//set rx fifo trigger
+			((100 & UART_RXFIFO_FULL_THRHD) << UART_RXFIFO_FULL_THRHD_S)//
+			| ((0x02 & UART_RX_TOUT_THRHD) << UART_RX_TOUT_THRHD_S)//
+			| UART_RX_TOUT_EN//
+			| ((0x10 & UART_TXFIFO_EMPTY_THRHD)<<UART_TXFIFO_EMPTY_THRHD_S));//
 
 	SET_PERI_REG_MASK(UART_INT_ENA(uart_no),
 			UART_RXFIFO_TOUT_INT_ENA |UART_FRM_ERR_INT_ENA);
@@ -116,10 +130,12 @@ uart_config(uint32_t uart_no, uint32_t baudrate, char* mode) {
 	SET_PERI_REG_MASK(UART_CONF1(uart_no),
 			(UART_TX_EMPTY_THRESH_VAL & UART_TXFIFO_EMPTY_THRHD)<<UART_TXFIFO_EMPTY_THRHD_S);
 //	SET_PERI_REG_MASK(UART_INT_ENA(UART0), UART_TXFIFO_EMPTY_INT_ENA);
-	SET_PERI_REG_MASK(UART_INT_ENA(uart_no),
-			UART_RXFIFO_FULL_INT_ENA|UART_RXFIFO_OVF_INT_ENA|UART_RXFIFO_TOUT_INT_ENA);
+	SET_PERI_REG_MASK(UART_INT_ENA(uart_no), UART_RXFIFO_FULL_INT_ENA//
+			|UART_RXFIFO_OVF_INT_ENA//
+			|UART_RXFIFO_TOUT_INT_ENA);//
 //	uart_tx_intr_enable(1);
 	uart_rx_intr_enable(uart_no);
+//	ETS_UART_INTR_ENABLE();
 }
 
 LOCAL void ICACHE_FLASH_ATTR
@@ -260,7 +276,7 @@ void ICACHE_FLASH_ATTR
 uart_init(UartBautRate uart0_br, UartBautRate uart1_br) {
 
 	UartDev.baut_rate = uart0_br;
-	uart_config(0,uart0_br,"8N1");
+	uart_config(0, uart0_br, "8N1");
 	UartDev.baut_rate = uart1_br;
 	uart1_config();
 //	uart_config(1,uart1_br,"8N1");
