@@ -38,7 +38,7 @@
 #ifndef __GPIO16_H__
 #define __GPIO16_H__
 
-#include "gpio.h"
+#include <gpio.h>
 
 #define GPIO_PIN_NUM 13
 #define GPIO_INTERRUPT_ENABLE 1

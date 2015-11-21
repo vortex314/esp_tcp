@@ -36,7 +36,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_cbor/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_cbor/cpp}&quot;"/>
 								</option>
-								<option id="gnu.c.compiler.option.misc.other.886301534" name="Other flags" superClass="gnu.c.compiler.option.misc.other" useByScannerDiscovery="false" value="-c -fmessage-length=0 -Os -Wpointer-arith -Wundef -Werror -Wl,-EL -fno-inline-functions -nostdlib -mlongcalls -mtext-section-literals -fno-jump-tables -D__ets__ -DICACHE_FLASH" valueType="string"/>
+								<option id="gnu.c.compiler.option.misc.other.886301534" name="Other flags" superClass="gnu.c.compiler.option.misc.other" useByScannerDiscovery="false" value="-c -fmessage-length=0 -Os -Wpointer-arith -Wundef -Werror -Wl,-EL -fno-inline-functions -nostdlib -mlongcalls -mtext-section-literals -fno-jump-tables -D__ets__ -DICACHE_FLASH -ffunction-sections -fdata-sections" valueType="string"/>
 								<option id="gnu.c.compiler.option.warnings.nowarn.1650923941" name="Inhibit all warnings (-w)" superClass="gnu.c.compiler.option.warnings.nowarn" useByScannerDiscovery="false" value="true" valueType="boolean"/>
 								<option id="gnu.c.compiler.option.preprocessor.def.symbols.2009187411" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="ICACHE_FLASH"/>
@@ -66,7 +66,7 @@
 									<listOptionValue builtIn="false" value="STA_PASS='&quot;LievenMarletteEwoutRonald&quot;'"/>
 									<listOptionValue builtIn="false" value="ESP_COREDUMP"/>
 								</option>
-								<option id="gnu.cpp.compiler.option.other.other.2047560662" name="Other flags" superClass="gnu.cpp.compiler.option.other.other" useByScannerDiscovery="false" value="-c -fmessage-length=0 -ffunction-sections -fno-rtti -fno-exceptions -mlongcalls -mtext-section-literals -fno-jump-tables" valueType="string"/>
+								<option id="gnu.cpp.compiler.option.other.other.2047560662" name="Other flags" superClass="gnu.cpp.compiler.option.other.other" useByScannerDiscovery="false" value="-c -fmessage-length=0 -ffunction-sections -fdata-sections -fno-rtti -fno-exceptions -mlongcalls -mtext-section-literals -fno-jump-tables" valueType="string"/>
 								<option id="gnu.cpp.compiler.option.optimization.flags.1021007226" name="Other optimization flags" superClass="gnu.cpp.compiler.option.optimization.flags" useByScannerDiscovery="false" value="-Og" valueType="string"/>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1703538761" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>

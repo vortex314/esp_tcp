@@ -16,12 +16,12 @@
 	 bool _connected;
 	static void callback();
 public:
-	Wifi();
-	virtual ~Wifi();
-	 void config(const char* ssid,const char* pswd);
-	 bool dispatch(Msg& msg);
-	 void init();
-	 bool isConnected() const;
+	IROM Wifi();
+	IROM virtual ~Wifi();
+	IROM void config(const char* ssid,const char* pswd);
+	IROM bool dispatch(Msg& msg);
+	IROM void init();
+	IROM bool isConnected() const;
 }
 ;
 

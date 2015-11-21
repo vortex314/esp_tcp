@@ -136,7 +136,7 @@ PT_END()
 //			MQTT PINGER
 //________________________________________________________________________________________________
 
-MqttPinger::MqttPinger(Mqtt* mqtt) :
+IROM MqttPinger::MqttPinger(Mqtt* mqtt) :
 	Handler("MqttPinger") {
 _mqtt = mqtt;
 _retries = 0;

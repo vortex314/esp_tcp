@@ -35,35 +35,35 @@ public:
         ST_HEADER, ST_LENGTH, ST_PAYLOAD, ST_COMPLETE
     } _recvState;
 public:
-    MqttIn();
-    MqttIn(Bytes* bytes);
-    MqttIn(int size);
-    void remap(Bytes* bytes);
+    IROM MqttIn();
+    IROM MqttIn(Bytes* bytes);
+    IROM MqttIn(int size);
+    IROM void remap(Bytes* bytes);
 //   MqttIn(MqttIn& src);
-    virtual ~MqttIn();
-    void clone(MqttIn& m)
+    IROM virtual ~MqttIn();
+    IROM void clone(MqttIn& m)
     {
 //        Bytes::clone(m);
         parse();
     }
-    void Feed(uint8_t b);
+    IROM void Feed(uint8_t b);
 
-    uint16_t messageId(); // if < 0 then not found
-    uint8_t type();
-    uint8_t qos();
-    bool complete();
-    void complete(bool st);
-    void reset();
-    void add(uint8_t data);
-    bool addRemainingLength(uint8_t data);
-    bool parse();
-    void readUint16(uint16_t * pi);
-    void readUtf(Str* str);
-    void readBytes(Bytes* b, int length);
-    Str* topic();
-    Bytes* message();
-    void toString(Str& str);
-    Bytes* getBytes()
+    IROM uint16_t messageId(); // if < 0 then not found
+    IROM uint8_t type();
+    IROM uint8_t qos();
+    IROM bool complete();
+    IROM void complete(bool st);
+    IROM void reset();
+    IROM void add(uint8_t data);
+    IROM bool addRemainingLength(uint8_t data);
+    IROM bool parse();
+    IROM void readUint16(uint16_t * pi);
+    IROM void readUtf(Str* str);
+    IROM void readBytes(Bytes* b, int length);
+    IROM Str* topic();
+    IROM Bytes* message();
+    IROM void toString(Str& str);
+    IROM Bytes* getBytes()
     {
         return _bytes;
     }

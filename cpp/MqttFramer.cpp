@@ -7,18 +7,18 @@
 
 #include "MqttFramer.h"
 
-MqttFramer::MqttFramer(Tcp* stream) :
+IROM MqttFramer::MqttFramer(Tcp* stream) :
 		Handler("MqttFrame") {
 	_msg = new MqttMsg(256);
 	_msg->reset();
 	_stream = stream;
 }
 
-MqttFramer::~MqttFramer() {
+IROM MqttFramer::~MqttFramer() {
 
 }
 extern Str logLine;
-void MqttFramer::send(MqttMsg& msg) {
+IROM void MqttFramer::send(MqttMsg& msg) {
 //	INFO(" MQTT send : %s ",msg.toHex(logLine.clear()));
 //	INFO(" MQTT send : %s ",((Bytes)msg).toString(logLine.clear()));
 	INFO(" MQTT send : %s ", msg.toString(logLine.clear()));
@@ -26,11 +26,11 @@ void MqttFramer::send(MqttMsg& msg) {
 		_stream->write(msg);
 }
 
-bool MqttFramer::isConnected() {
+IROM bool MqttFramer::isConnected() {
 	return _stream->isConnected();
 }
 
-bool MqttFramer::dispatch(Msg& msg) {
+IROM bool MqttFramer::dispatch(Msg& msg) {
 	PT_BEGIN()
 	while (true) {
 		PT_YIELD_UNTIL(msg.is(_stream, SIG_ALL));

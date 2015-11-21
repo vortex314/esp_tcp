@@ -29,23 +29,23 @@ public:
 	static UartEsp8266* getUart0();
 public:
 
-	UartEsp8266(uint32_t uartNo);
-	~UartEsp8266();
-	void receive(uint8_t b);
-	void init(uint32_t baud);
-	Erc write(Bytes& data);
-	Erc write(uint8_t b);
-	Erc write(uint8_t* pb, uint32_t length);
-	bool hasData();
-	bool hasSpace();
-	uint8_t read();
-	void connect();
-	void disconnect();
-	bool isConnected();
-	virtual Erc setBaudrate(uint32_t baudrate);
-	virtual uint32_t getBaudrate();
-	virtual Erc setMode(Str& str);
-	virtual void getMode(Str& str);
+	IROM UartEsp8266(uint32_t uartNo);
+	IROM ~UartEsp8266();
+	IROM void receive(uint8_t b);
+	IROM void init(uint32_t baud);
+	IROM Erc write(Bytes& data);
+	IROM Erc write(uint8_t b);
+	IROM Erc write(uint8_t* pb, uint32_t length);
+	IROM bool hasData();
+	IROM bool hasSpace();
+	IROM uint8_t read();
+	IROM void connect();
+	IROM void disconnect();
+	IROM bool isConnected();
+	IROM virtual Erc setBaudrate(uint32_t baudrate);
+	IROM virtual uint32_t getBaudrate();
+	IROM virtual Erc setMode(Str& str);
+	IROM virtual void getMode(Str& str);
 
 };
 

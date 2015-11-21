@@ -18,13 +18,13 @@ private :
 	Tcp* _stream;
 	MqttMsg* _msg;
 public:
-	MqttFramer(Tcp* stream);
-	virtual ~MqttFramer();
-	bool isConnected();
-	void connect();
-	void disconnect();
-	void send(MqttMsg& msg);
-	bool dispatch(Msg& msg);
+	IROM MqttFramer(Tcp* stream);
+	IROM virtual ~MqttFramer();
+	IROM bool isConnected();
+	IROM void connect();
+	IROM void disconnect();
+	IROM void send(MqttMsg& msg);
+	IROM bool dispatch(Msg& msg);
 };
 
 #endif /* MQTTFRAMER_H_ */

@@ -12,10 +12,10 @@
 class Config {
 public:
 	virtual ~Config(){};
-	virtual bool set(const char* key, const char*s)=0;
-	virtual bool set(const char* key, int value)=0;
-	virtual void get(int& value, const char* key, int dflt)=0;
-	virtual void get(char* value, int length, const char* key,
+	IROM virtual bool set(const char* key, const char*s)=0;
+	IROM virtual bool set(const char* key, int value)=0;
+	IROM virtual void get(int& value, const char* key, int dflt)=0;
+	IROM virtual void get(char* value, int length, const char* key,
 			const char* dflt)=0;
 };
 

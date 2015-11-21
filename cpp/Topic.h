@@ -35,30 +35,30 @@ public:
 		F_RETAIN = MQTT_RETAIN_FLAG,
 		F_POLL
 	};
-	Topic(const char* name, void* instance, Xdr putter, Xdr getter, int flags);
-	virtual ~Topic();
-	static Topic* first();
-	Topic* next();
-	const char* getName() {
+	IROM Topic(const char* name, void* instance, Xdr putter, Xdr getter, int flags);
+	IROM virtual ~Topic();
+	IROM static Topic* first();
+	IROM Topic* next();
+	IROM const char* getName() {
 		return _name;
 	}
-	bool match(Str& name);
-	Erc putter(Cbor& cbor);
-	Erc getter(Cbor& cbor);
-	bool hasGetter() {
+	IROM bool match(Str& name);
+	IROM Erc putter(Cbor& cbor);
+	IROM Erc getter(Cbor& cbor);
+	IROM bool hasGetter() {
 		return _getter != 0;
 	}
-	int flags() {
+	IROM int flags() {
 		return _flags;
 	}
-	void changed();
-	static Erc getInteger(void *instance, Cbor& bytes);
-	static Erc getUI32(void *instance, Cbor& bytes);
-	static Erc getString(void *instance, Cbor& bytes);
-	static Erc getConstantChar(void *instance, Cbor& bytes);
-	static Erc getConstantInt(void *instance, Cbor& bytes);
-	static Erc getConstantBoolean(void *instance, Cbor& bytes);
-	static Topic* find(Str& str);
+	IROM void changed();
+	IROM static Erc getInteger(void *instance, Cbor& bytes);
+	IROM static Erc getUI32(void *instance, Cbor& bytes);
+	IROM static Erc getString(void *instance, Cbor& bytes);
+	IROM static Erc getConstantChar(void *instance, Cbor& bytes);
+	IROM static Erc getConstantInt(void *instance, Cbor& bytes);
+	IROM static Erc getConstantBoolean(void *instance, Cbor& bytes);
+	IROM static Topic* find(Str& str);
 
 };
 
@@ -73,9 +73,9 @@ private:
 	Str _mqttErrorString;
 	void nextTopic();
 public:
-	TopicPublisher(Mqtt* mqtt);
-	virtual ~TopicPublisher();
-	bool dispatch(Msg& msg);
+	IROM TopicPublisher(Mqtt* mqtt);
+	IROM virtual ~TopicPublisher();
+	IROM bool dispatch(Msg& msg);
 };
 
 class TopicSubscriber: public Handler {
@@ -87,9 +87,9 @@ private:
 
 	Str _mqttErrorString;
 public:
-	TopicSubscriber(Mqtt* mqtt);
-	virtual ~TopicSubscriber();
-	bool dispatch(Msg& msg);
+	IROM TopicSubscriber(Mqtt* mqtt);
+	IROM virtual ~TopicSubscriber();
+	IROM bool dispatch(Msg& msg);
 };
 
 #endif /* TOPIC_H_ */

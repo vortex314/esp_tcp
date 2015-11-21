@@ -56,35 +56,35 @@ private:
 	uint32_t _retries;
 
 public:
-	Mqtt(MqttFramer* framer);
-	~Mqtt();
-	void sendConnect();
+	IROM Mqtt(MqttFramer* framer);
+	IROM ~Mqtt();
+	IROM void sendConnect();
 
-	bool dispatch(Msg& msg);
-	static uint16_t nextMessageId();
-	void getPrefix(Str& prefix);
-	void setPrefix(const char * prefix);
-	bool isConnected();
-	Handler* subscribe(Str& topic);
-	Handler* publish(Str& topic, Bytes& message, uint32_t flags);
+	IROM bool dispatch(Msg& msg);
+	IROM static uint16_t nextMessageId();
+	IROM void getPrefix(Str& prefix);
+	IROM void setPrefix(const char * prefix);
+	IROM bool isConnected();
+	IROM Handler* subscribe(Str& topic);
+	IROM Handler* publish(Str& topic, Bytes& message, uint32_t flags);
 private:
-	void sendSubscribe(uint8_t flags);
+	IROM void sendSubscribe(uint8_t flags);
 };
 
 class MqttPinger: public Handler {
 	Mqtt* _mqtt;
 	uint16_t _retries;
 public:
-	MqttPinger(Mqtt* mqtt);
-	bool dispatch(Msg& msg);
+	IROM MqttPinger(Mqtt* mqtt);
+	IROM bool dispatch(Msg& msg);
 };
 
 class MqttSubscriber: public Handler {
 public:
-	MqttSubscriber(Mqtt& mqtt);
-	bool dispatch(Msg& msg);
-	void sendPubRec();
-	void callBack();
+	IROM MqttSubscriber(Mqtt& mqtt);
+	IROM bool dispatch(Msg& msg);
+	IROM void sendPubRec();
+	IROM void callBack();
 	// will invoke
 private:
 	Mqtt& _mqtt;
@@ -100,20 +100,20 @@ public:
 	Str topic;
 	Bytes message;
 	uint32_t flags;
-	MqttPublish(int topicSize, int messageSize) :
+	IROM MqttPublish(int topicSize, int messageSize) :
 			topic(topicSize), message(messageSize) {
 	}
 };
 
 class MqttPublisher: public Handler {
 public:
-	MqttPublisher(Mqtt& mqtt);
-	bool dispatch(Msg& msg);
-	Handler* publish(Str& topic, Bytes& msg, uint32_t flags);
+	IROM MqttPublisher(Mqtt& mqtt);
+	IROM bool dispatch(Msg& msg);
+	IROM Handler* publish(Str& topic, Bytes& msg, uint32_t flags);
 	// will send PUB_OK,PUB_FAIL
 private:
-	void sendPublish();
-	void sendPubRel();
+	IROM void sendPublish();
+	IROM void sendPubRel();
 	Mqtt& _mqtt;
 	enum State {
 		ST_READY, ST_BUSY,
@@ -127,15 +127,15 @@ private:
 
 class MqttSubscription: public Handler {
 public:
-	MqttSubscription(Mqtt& mqtt);
-	bool dispatch(Msg& msg);
-	Handler* subscribe(Str& topic);
+	IROM MqttSubscription(Mqtt& mqtt);
+	IROM bool dispatch(Msg& msg);
+	IROM Handler* subscribe(Str& topic);
 private:
 	Mqtt& _mqtt;
 	uint16_t _retries;
 	uint16_t _messageId;
 	Str _topic;
-	void sendSubscribe();
+	IROM void sendSubscribe();
 };
 
 #endif /* MQTT_H_ */

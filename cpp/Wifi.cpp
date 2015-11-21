@@ -31,15 +31,15 @@ extern "C" {
 #include "Sys.h"
 
 Wifi::Wifi() : Handler("Wifi"){
-// TODO Auto-generated constructor stub
-
+_connections=0;
+_connected=false;
 }
 
 Wifi::~Wifi() {
 // TODO Auto-generated destructor stub
 }
 
-void IROM Wifi::config(const char* ssid,const char* pswd) {
+void  Wifi::config(const char* ssid,const char* pswd) {
 ets_strncpy(_ssid,ssid,sizeof(_ssid));
 ets_strncpy(_pswd,pswd,sizeof(_pswd));
 _connected=false;
@@ -47,11 +47,11 @@ _connected=false;
 
 static uint8_t wifiStatus = STATION_IDLE;
 
-bool Wifi::isConnected() const {
+ bool Wifi::isConnected() const {
 	return _connected;
 }
 
-bool IROM Wifi::dispatch(Msg& msg) {
+bool  Wifi::dispatch(Msg& msg) {
 //	INFO("line : %d ",_ptLine);
 // INFO("msg : %d:%d",msg.src(),msg.signal());
 PT_BEGIN();

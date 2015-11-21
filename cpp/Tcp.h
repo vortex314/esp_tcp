@@ -45,7 +45,7 @@ private:
 	struct espconn _conn;
 	char _host[64];
 	ip_addr_t _ip;
-	ConnState _connState;
+//	ConnState _connState;
 	CircBuf _rxd;
 	CircBuf _txd;
 	uint32_t _connections;
@@ -54,26 +54,26 @@ private:
 	uint32_t _overflowTxd;
 	bool _connected;
 public:
-	Tcp(Wifi* wifi);
-	~Tcp();
-	void config(const char* host, uint16_t port);
-	void connect();
-	static void connectCb(void *arg);
-	static void reconnectCb(void *arg, int8 err); // mqtt_tcpclient_recon_cb(void *arg, sint8 errType)
-	static void dnsFoundCb(const char *name, ip_addr_t *ipaddr, void *arg);
-	static void disconnectCb(void *arg);
-	static void recvCb(void *arg, char *pdata, unsigned short len);
-	static void sentCb(void *arg);
-	void send();
-	Erc write(Bytes& bytes);
-	Erc write(uint8_t b);
-	Erc write(uint8_t* pb, uint32_t length);
-	bool hasData();
-	bool hasSpace();
-	uint8_t read();
-	bool dispatch(Msg& msg);
-	bool isConnected();
-	void disconnect();
+	IROM Tcp(Wifi* wifi);
+	IROM ~Tcp();
+	void IROM config(const char* host, uint16_t port);
+	void IROM connect();
+	static void IROM connectCb(void *arg);
+	IROM static void reconnectCb(void *arg, int8 err); // mqtt_tcpclient_recon_cb(void *arg, sint8 errType)
+	IROM static void dnsFoundCb(const char *name, ip_addr_t *ipaddr, void *arg);
+	IROM static void disconnectCb(void *arg);
+	IROM static void recvCb(void *arg, char *pdata, unsigned short len);
+	IROM static void sentCb(void *arg);
+	IROM void send();
+	IROM Erc write(Bytes& bytes);
+	IROM Erc write(uint8_t b);
+	IROM Erc write(uint8_t* pb, uint32_t length);
+	IROM bool hasData();
+	IROM bool hasSpace();
+	IROM uint8_t read();
+	IROM bool dispatch(Msg& msg);
+	IROM bool isConnected();
+	IROM void disconnect();
 };
 
 #endif /* TCP_H_ */

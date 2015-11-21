@@ -110,7 +110,7 @@ IROM TopicSubscriber::TopicSubscriber(Mqtt* mqtt) :
 
 }
 
-TopicSubscriber::~TopicSubscriber() {
+IROM TopicSubscriber::~TopicSubscriber() {
 	_mqttErrorString.clear() << "subscriber started ";
 }
 

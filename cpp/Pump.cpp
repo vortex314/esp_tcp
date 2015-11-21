@@ -29,10 +29,8 @@ extern "C" {
 #include "Mqtt.h"
 #include "Topic.h"
 
-// uint32_t __count = 0;
-//Sender sender();
 mutex_t mutex;
-//extern "C" uint32_t conflicts;
+
 Flash* flash;
 LedBlink *led;
 Msg* msg;
@@ -87,7 +85,7 @@ static void do_global_ctors(void) {
 
 char deviceName[40];
 
-extern void TopicsCreator();
+extern IROM void TopicsCreator();
 
 extern "C" IROM void MsgInit() {
 	INFO(" Start Message Pump ");

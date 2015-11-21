@@ -138,7 +138,7 @@ uart_config(uint32_t uart_no, uint32_t baudrate, char* mode) {
 //	ETS_UART_INTR_ENABLE();
 }
 
-LOCAL void ICACHE_FLASH_ATTR
+void IROM
 uart1_config() {
 	uint8 uart_no = UART1;
 	PIN_FUNC_SELECT(PERIPHS_IO_MUX_GPIO2_U, FUNC_U1TXD_BK);
@@ -272,7 +272,7 @@ LOCAL void uart0_rx_intr_handler(void *para) {
 
 }
 
-void ICACHE_FLASH_ATTR
+void IROM
 uart_init(UartBautRate uart0_br, UartBautRate uart1_br) {
 
 	UartDev.baut_rate = uart0_br;

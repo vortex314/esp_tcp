@@ -39,6 +39,7 @@
 #include "osapi.h"
 #include "gpio16.h"
 #include "eagle_soc.h"
+#include "Sys.h"
 
 uint8_t pin_num[GPIO_PIN_NUM];
 uint8_t pin_func[GPIO_PIN_NUM];
@@ -63,7 +64,7 @@ GPIO_INT_TYPE pin_int_type[GPIO_PIN_NUM] = {
 								GPIO_PIN_INTR_DISABLE};
 #endif
 
-void ICACHE_FLASH_ATTR gpio16_output_conf(void)
+void IROM gpio16_output_conf(void)
 {
 	WRITE_PERI_REG(PAD_XPD_DCDC_CONF,
                    (READ_PERI_REG(PAD_XPD_DCDC_CONF) & 0xffffffbc) | (uint32)0x1); 	// mux configuration for XPD_DCDC to output rtc_gpio0
@@ -75,13 +76,13 @@ void ICACHE_FLASH_ATTR gpio16_output_conf(void)
                    (READ_PERI_REG(RTC_GPIO_ENABLE) & (uint32)0xfffffffe) | (uint32)0x1);	//out enable
 }
 
-void ICACHE_FLASH_ATTR gpio16_output_set(uint8 value)
+void IROM gpio16_output_set(uint8 value)
 {
 	WRITE_PERI_REG(RTC_GPIO_OUT,
                    (READ_PERI_REG(RTC_GPIO_OUT) & (uint32)0xfffffffe) | (uint32)(value & 1));
 }
 
-void ICACHE_FLASH_ATTR gpio16_input_conf(void)
+void IROM gpio16_input_conf(void)
 {
 	WRITE_PERI_REG(PAD_XPD_DCDC_CONF,
                    (READ_PERI_REG(PAD_XPD_DCDC_CONF) & 0xffffffbc) | (uint32)0x1); 	// mux configuration for XPD_DCDC and rtc_gpio0 connection
@@ -93,12 +94,12 @@ void ICACHE_FLASH_ATTR gpio16_input_conf(void)
                    READ_PERI_REG(RTC_GPIO_ENABLE) & (uint32)0xfffffffe);	//out disable
 }
 
-uint8 ICACHE_FLASH_ATTR gpio16_input_get(void)
+uint8 IROM gpio16_input_get(void)
 {
 	return (uint8)(READ_PERI_REG(RTC_GPIO_IN_DATA) & 1);
 }
 
-int ICACHE_FLASH_ATTR set_gpio_mode(unsigned pin, unsigned mode, unsigned pull)
+int IROM set_gpio_mode(unsigned pin, unsigned mode, unsigned pull)
 {
 	if (pin >= GPIO_PIN_NUM)
 		return -1;
@@ -163,7 +164,7 @@ int ICACHE_FLASH_ATTR set_gpio_mode(unsigned pin, unsigned mode, unsigned pull)
 	return 1;
 }
 
-int ICACHE_FLASH_ATTR gpio_write(unsigned pin, unsigned level)
+int IROM gpio_write(unsigned pin, unsigned level)
 {
 	if (pin >= GPIO_PIN_NUM)
 		return -1;
@@ -175,7 +176,7 @@ int ICACHE_FLASH_ATTR gpio_write(unsigned pin, unsigned level)
 	GPIO_OUTPUT_SET(GPIO_ID_PIN(pin_num[pin]), level);
 }
 
-int ICACHE_FLASH_ATTR gpio_read(unsigned pin)
+int IROM gpio_read(unsigned pin)
 {
 	if (pin >= GPIO_PIN_NUM)
 		return -1;
@@ -212,12 +213,12 @@ void ICACHE_FLASH_ATTR gpio_intr_dispatcher(gpio_intr_handler cb)
 	}
 }
 
-void ICACHE_FLASH_ATTR gpio_intr_attach(gpio_intr_handler cb)
+void IROM gpio_intr_attach(gpio_intr_handler cb)
 {
 	ETS_GPIO_INTR_ATTACH(gpio_intr_dispatcher, cb);
 }
 
-int ICACHE_FLASH_ATTR gpio_intr_deattach(unsigned pin)
+int IROM gpio_intr_deattach(unsigned pin)
 {
 	if (pin >= GPIO_PIN_NUM)
 		return -1;
@@ -233,7 +234,7 @@ int ICACHE_FLASH_ATTR gpio_intr_deattach(unsigned pin)
 	return 1;
 }
 
-int ICACHE_FLASH_ATTR gpio_intr_init(unsigned pin, GPIO_INT_TYPE type)
+int IROM gpio_intr_init(unsigned pin, GPIO_INT_TYPE type)
 {
 	if (pin >= GPIO_PIN_NUM)
 		return -1;

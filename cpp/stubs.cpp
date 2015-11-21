@@ -31,26 +31,26 @@ extern "C" {
 #include "Erc.h"
 #endif
 
-void _exit(int code) {
+IROM void _exit(int code) {
 	ASSERT(false);
 }
 
-void __aeabi_atexit() {
+IROM void __aeabi_atexit() {
 	return;
 }
 
-void __exidx_end() {
+IROM void __exidx_end() {
 	ASSERT(false);
 }
 
-void __exidx_start() {
+IROM void __exidx_start() {
 	ASSERT(false);
 }
 /*
  kill
  Send a signal. Minimal implementation:
  */
-int _kill(int pid, int sig) {
+IROM int _kill(int pid, int sig) {
 	ASSERT(false);
 	errno = EINVAL;
 	return (-1);
@@ -68,11 +68,11 @@ int _kill(int pid, int sig) {
  Process-ID; this is sometimes used to generate strings unlikely to conflict with other processes. Minimal implementation, for a system without processes:
  */
 
-int _getpid() {
+IROM int _getpid() {
 	return 1;
 }
 
-int _ctype(char c) {
+IROM int _ctype(char c) {
 	return 0;
 }
 #define STDIN_FILENO 0
@@ -94,7 +94,7 @@ int _ctype(char c) {
  isatty
  Query whether output stream is a terminal. For consistency with the other minimal implementations,
  */
-int _isatty(int file) {
+IROM int _isatty(int file) {
 	DEBUG("SHouldn't arrive here !");
 	switch (file) {
 		case STDOUT_FILENO:
@@ -112,7 +112,7 @@ int _isatty(int file) {
  Write a character to a file. `libc' subroutines will use this system routine for output to all files, including stdout
  Returns -1 on error or number of bytes sent
  */
-int _write(int file, char *ptr, int len) {
+IROM int _write(int file, char *ptr, int len) {
 	ASSERT(false);
 	return 0;
 }
@@ -122,7 +122,7 @@ int _write(int file, char *ptr, int len) {
  Returns -1 on error or blocks until the number of characters have been read.
  */
 
-int _read(int file, void *ptr, size_t len) {
+IROM int _read(int file, void *ptr, size_t len) {
 	ASSERT(false);
 
 	return 0;
@@ -137,11 +137,11 @@ int _read(int file, void *ptr, size_t len) {
  lseek
  Set position in a file. Minimal implementation:
  */
-off_t lseek(int file, off_t ptr, int dir) {
+IROM off_t lseek(int file, off_t ptr, int dir) {
 	return 0;
 }
 
-int _close(int file) {
+IROM int _close(int file) {
 	return -1;
 }
 /*
@@ -151,7 +151,7 @@ int _close(int file) {
  The `sys/stat.h' header file required is distributed in the `include' subdirectory for this C library.
  */
 
-int _fstat(int file, struct stat *st) {
+IROM int _fstat(int file, struct stat *st) {
 	st->st_mode = S_IFCHR;
 	return 0;
 }
@@ -161,7 +161,7 @@ int _fstat(int file, struct stat *st) {
  Establish a new name for an existing file. Minimal implementation:
  */
 
-int _link(char *old, char *nw) {
+IROM int _link(char *old, char *nw) {
 	errno = EMLINK;
 	return -1;
 }
@@ -170,31 +170,31 @@ int _link(char *old, char *nw) {
  lseek
  Set position in a file. Minimal implementation:
  */
-int _lseek(int file, int ptr, int dir) {
+IROM int _lseek(int file, int ptr, int dir) {
 	return 0;
 }
 
 __extension__ typedef int __guard __attribute__((mode (__DI__)));
 
 
-int __cxa_guard_acquire(__guard *g) {
+IROM int __cxa_guard_acquire(__guard *g) {
 	return !*(char *) (g);
 }
 
-void __cxa_guard_release(__guard *g) {
+IROM void __cxa_guard_release(__guard *g) {
 	*(char *) g = 1;
 }
 
-void __cxa_guard_abort(__guard *) {
+IROM void __cxa_guard_abort(__guard *) {
 }
 
-void __cxa_pure_virtual(void) {
+IROM void __cxa_pure_virtual(void) {
 }
 
-int _getpid_r(){
+IROM int _getpid_r(){
 	return 1;
 };
-void _kill_r(int id){
+IROM void _kill_r(int id){
 
 }
 
@@ -202,7 +202,7 @@ void _kill_r(int id){
 #include "osapi.h"
 #include "util.h"
 caddr_t
-_sbrk_rr (int incr)
+IROM _sbrk_rr (int incr)
 {
 	ASSERT(false);
 	return 0;

@@ -33,30 +33,30 @@ private:
 	uint32_t _freePos;
 	uint16_t _keyMax;
 
-	void findOrCreateActivePage();
-	bool initializePage(uint32_t pageIdx, uint32_t sequence);
-	bool scanPage(uint32_t pageIdx);
-	static uint32_t pageAddress(uint32_t pageIdx);
-	bool isValidPage(uint32_t pageIdx, uint32_t& sequence);
-	uint32_t nextPage(uint32_t pageIdx);
-	bool loadItem(uint16_t& offset,uint16_t& index,uint16_t& length );
-	uint16_t findItem(uint16_t index );
-	bool writeItem( uint16_t sequence, uint8_t* start,uint32_t length) ;
-	uint16_t findFreeBegin();
-	int flashReadByte(uint32_t location) ;
-	int findKey(const char*s);
-	int findOrCreateKey(const char*s);
-	uint32_t flashReadQuad(uint32_t location);
-	bool loadItem(uint16_t offset,uint8_t* start,uint16_t& length );
+	IROM void findOrCreateActivePage();
+	IROM bool initializePage(uint32_t pageIdx, uint32_t sequence);
+	IROM bool scanPage(uint32_t pageIdx);
+	IROM static uint32_t pageAddress(uint32_t pageIdx);
+	IROM bool isValidPage(uint32_t pageIdx, uint32_t& sequence);
+	IROM uint32_t nextPage(uint32_t pageIdx);
+	IROM bool loadItem(uint16_t& offset,uint16_t& index,uint16_t& length );
+	IROM uint16_t findItem(uint16_t index );
+	IROM bool writeItem( uint16_t sequence, uint8_t* start,uint32_t length) ;
+	IROM uint16_t findFreeBegin();
+	IROM int flashReadByte(uint32_t location) ;
+	IROM int findKey(const char*s);
+	IROM int findOrCreateKey(const char*s);
+	IROM uint32_t flashReadQuad(uint32_t location);
+	IROM bool loadItem(uint16_t offset,uint8_t* start,uint16_t& length );
 
 public:
-	Flash();
-	~Flash();
-	void init();
-	bool set(const char* key, const char*s);
-	bool set(const char* key, int value);
-	void get(int& value, const char* key, int dflt);
-	void get(char* value, int length, const char* key, const char* dflt);
+	IROM Flash();
+	IROM ~Flash();
+	IROM void init();
+	IROM bool set(const char* key, const char*s);
+	IROM bool set(const char* key, int value);
+	IROM void get(int& value, const char* key, int dflt);
+	IROM void get(char* value, int length, const char* key, const char* dflt);
 };
 
 #endif /* FLASH_H_ */
