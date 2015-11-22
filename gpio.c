@@ -27,11 +27,12 @@
 #include "ets_sys.h"
 #include "esp8266_peri.h"
 #include "Sys.h"
+#include "gpio_c.h"
 
 uint8_t esp8266_gpioToFn[16] = { 0x34, 0x18, 0x38, 0x14, 0x3C, 0x40, 0x1C, 0x20,
 		0x24, 0x28, 0x2C, 0x30, 0x04, 0x08, 0x0C, 0x10 };
 
-IROM void pinMode(uint8_t pin, uint8_t mode) {
+IROM void __pinMode(uint8_t pin, uint8_t mode) {
 	if (pin < 16) {
 		if (mode == SPECIAL) {
 			GPC(pin) = (GPC(pin) & (0xF << GPCI)); //SOURCE(GPIO) | DRIVER(NORMAL) | INT_TYPE(UNCHANGED) | WAKEUP_ENABLE(DISABLED)
@@ -83,7 +84,7 @@ IROM void pinMode(uint8_t pin, uint8_t mode) {
 	}
 }
 
-IROM void digitalWrite(uint8_t pin, uint8_t val) {
+IROM void __digitalWrite(uint8_t pin, uint8_t val) {
 	if (pin < 16) {
 		if (val)
 			GPOS = (1 << pin);
@@ -97,7 +98,7 @@ IROM void digitalWrite(uint8_t pin, uint8_t val) {
 	}
 }
 
-IROM  int digitalRead(uint8_t pin) {
+IROM  int __digitalRead(uint8_t pin) {
 	if (pin < 16) {
 		return GPIP(pin);
 	} else if (pin == 16) {
@@ -146,7 +147,7 @@ void interrupt_handler(void *arg) {
 	ETS_GPIO_INTR_ENABLE();
 }
 
-IROM void attachInterrupt(uint8_t pin, voidFuncPtr userFunc, int mode) {
+IROM void __attachInterrupt(uint8_t pin, voidFuncPtr userFunc, int mode) {
 	if (pin < 16) {
 		interrupt_handler_t *handler = &interrupt_handlers[pin];
 		handler->mode = mode;
@@ -158,7 +159,7 @@ IROM void attachInterrupt(uint8_t pin, voidFuncPtr userFunc, int mode) {
 	}
 }
 
-IROM void detachInterrupt(uint8_t pin) {
+IROM void __detachInterrupt(uint8_t pin) {
 	if (pin < 16) {
 		GPC(pin) &= ~(0xF << GPCI); //INT mode disabled
 		GPIEC = (1 << pin); //Clear Interrupt for this pin
@@ -171,9 +172,9 @@ IROM void detachInterrupt(uint8_t pin) {
 
 IROM void initPins() {
 	//Disable UART interrupts
-	system_set_os_print(0);
+/*	system_set_os_print(0);
 	U0IE = 0;
-	U1IE = 0;
+	U1IE = 0;*/
 	int i;
 	for (i = 0; i <= 5; ++i) {
 		pinMode(i, INPUT);
@@ -186,10 +187,10 @@ IROM void initPins() {
 	ETS_GPIO_INTR_ATTACH(interrupt_handler, &interrupt_reg);
 	ETS_GPIO_INTR_ENABLE();
 }
-/*
+
 extern void pinMode(uint8_t pin, uint8_t mode) __attribute__ ((weak, alias("__pinMode")));
 extern void digitalWrite(uint8_t pin, uint8_t val) __attribute__ ((weak, alias("__digitalWrite")));
 extern int digitalRead(uint8_t pin) __attribute__ ((weak, alias("__digitalRead")));
 extern void attachInterrupt(uint8_t pin, voidFuncPtr handler, int mode) __attribute__ ((weak, alias("__attachInterrupt")));
 extern void detachInterrupt(uint8_t pin) __attribute__ ((weak, alias("__detachInterrupt")));
-*/
+

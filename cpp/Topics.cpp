@@ -11,8 +11,6 @@
 #include "UartEsp8266.h"
 #include "Gpio.h"
 
-
-
 class UartTopic {
 public:
 	IROM static Erc sendData(void* pv, Cbor& cbor) {
@@ -44,7 +42,7 @@ public:
 		}
 		return EINVAL;
 	}
-	IROM static Erc getBaudrate(void* pv, Cbor& cbor)  {
+	IROM static Erc getBaudrate(void* pv, Cbor& cbor) {
 		UartEsp8266* uart = (UartEsp8266*) pv;
 		cbor.add(uart->getBaudrate());
 		return E_OK;
@@ -59,7 +57,7 @@ public:
 		}
 		return EINVAL;
 	}
-	IROM static Erc getMode(void* pv, Cbor& cbor)  {
+	IROM static Erc getMode(void* pv, Cbor& cbor) {
 		Str mode(4);
 		UartEsp8266* uart = (UartEsp8266*) pv;
 		uart->getMode(mode);
@@ -68,21 +66,19 @@ public:
 	}
 	IROM static void create(UartEsp8266* uart) {
 		new Topic("uart0/overflows", &UartEsp8266::_uart0->_overflowTxd, 0,
-				Topic::getInteger, Topic::F_POLL);
+				Topic::getInteger, 0);
 		new Topic("uart0/bytesRxd", &UartEsp8266::_uart0->_bytesRxd, 0,
-				Topic::getUI32, Topic::F_POLL);
+				Topic::getUI32, 0);
 		new Topic("uart0/bytesTxd", &UartEsp8266::_uart0->_bytesTxd, 0,
-				Topic::getUI32, Topic::F_POLL);
+				Topic::getUI32, 0);
 		new Topic("uart0/data", UartEsp8266::_uart0, UartTopic::sendData,
 				UartTopic::recvData, 2);
 		new Topic("uart0/baudrate", UartEsp8266::_uart0, UartTopic::setBaudrate,
-				UartTopic::getBaudrate, Topic::F_POLL);
+				UartTopic::getBaudrate, 0);
 		new Topic("uart0/mode", UartEsp8266::_uart0, UartTopic::setMode,
-				UartTopic::getMode, Topic::F_POLL);
+				UartTopic::getMode, 0);
 	}
 };
-
-
 
 class GpioTopic {
 public:
@@ -94,7 +90,7 @@ public:
 		return ptr;
 	}
 	IROM static Erc setMode(void* pv, Cbor& cbor) {
-		Str mode(4);
+		Str mode(5);
 		Gpio* gpio = (Gpio*) pv;
 		if (cbor.get(mode)) {
 			INFO(" set Mode : %s ", mode.c_str());
@@ -103,32 +99,50 @@ public:
 		return EINVAL;
 	}
 	IROM static Erc getMode(void* pv, Cbor& cbor) {
-		char mode[4];
+		char mode[5];
 		Gpio* gpio = (Gpio*) pv;
 		gpio->getMode(mode);
 		cbor.add(mode);
 		return E_OK;
 	}
+
+	IROM static Erc getDigital(void* pv, Cbor& cbor) {
+		uint8_t v;
+		Gpio* gpio = (Gpio*) pv;
+		gpio->digitalRead(&v);
+		cbor.add(v);
+		return E_OK;
+	}
+
+	IROM static Erc setDigital(void* pv, Cbor& cbor) {
+		uint32_t v;
+		Gpio* gpio = (Gpio*) pv;
+		if (cbor.get(v)) {
+			return gpio->digitalWrite(v);
+		}
+		return EINVAL;
+	}
+
 	IROM static void create(const char* pin, Gpio* gpio) {
 
-		new Topic(newString(pin, "mode"), gpio, setMode, getMode,
-				Topic::F_POLL);
-		new Topic(newString(pin, "data"), gpio, 0, 0, Topic::F_POLL);
+		new Topic(newString(pin, "mode"), gpio, setMode, getMode, 0);
+		new Topic(newString(pin, "data"), gpio, setDigital, getDigital, 0);
 
 	}
 };
 
 Gpio gpio0(0);
+Gpio gpio2(2);
 
 class MqttTopic {
 public:
 	IROM static void create() {
 		new Topic("mqtt/topicSize", (void*) MQTT_SIZE_TOPIC, 0,
-				Topic::getConstantInt, Topic::F_POLL);
+				Topic::getConstantInt, 0);
 		new Topic("mqtt/valueSize", (void*) MQTT_SIZE_VALUE, 0,
-				Topic::getConstantInt, Topic::F_POLL);
+				Topic::getConstantInt, 0);
 		new Topic("mqtt/messageSize", (void*) MQTT_SIZE_MESSAGE, 0,
-				Topic::getConstantInt, Topic::F_POLL);
+				Topic::getConstantInt, 0);
 	}
 };
 
@@ -137,17 +151,14 @@ Erc getSystemUptime(void* pv, Cbor& cbor) {
 	return E_OK;
 }
 
-
-  void TopicsCreator(void) {
-
-	new Topic("system/online", (void*) true, 0, Topic::getConstantBoolean,
-			Topic::F_QOS1 + Topic::F_POLL);
+void TopicsCreator(void) {
 	new Topic("system/version", (void*) __FILE__ " " __DATE__ " " __TIME__, 0,
-			Topic::getConstantChar, Topic::F_QOS1 + Topic::F_POLL);
+			Topic::getConstantChar, Topic::F_QOS1);
 	new Topic("system/uptime", 0, 0, getSystemUptime, Topic::F_QOS2);
 
 	UartTopic::create(UartEsp8266::_uart0);
 	MqttTopic::create();
 	GpioTopic::create("gpio0", &gpio0);
+	GpioTopic::create("gpio2", &gpio2);
 
 }

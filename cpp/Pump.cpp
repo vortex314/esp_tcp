@@ -16,6 +16,7 @@ extern "C" {
 #include "ets_sys.h"
 #include "user_interface.h"
 #include "espmissingincludes.h"
+#include "gpio_c.h"
 }
 
 #include "UartEsp8266.h"
@@ -91,6 +92,7 @@ extern "C" IROM void MsgInit() {
 	INFO(" Start Message Pump ");
 	do_global_ctors();
 	Msg::init();
+//	initPins();
 
 	ets_sprintf(deviceName, "limero314/ESP_%08X/", system_get_chip_id());
 
@@ -106,6 +108,9 @@ extern "C" IROM void MsgInit() {
 	mqtt = new Mqtt(mqttFramer);
 	led = new LedBlink(tcp);
 //	topicMgr = new TopicMgr(mqtt);
+
+	new Topic("system/online", (void*) true, 0, Topic::getConstantBoolean,
+			Topic::F_QOS1); // ---------------- at least one topic
 	topicPublisher = new TopicPublisher(mqtt);
 	topicSubscriber = new TopicSubscriber(mqtt);
 

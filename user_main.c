@@ -47,10 +47,9 @@
 #include "mem.h"
 #include "gpio16.h"
 #include "Sys.h"
+#include "util.h"
 
 extern void MsgInit();
-
-#include "util.h"
 
 
 
@@ -68,6 +67,7 @@ IROM void user_init(void) {
 
 	INFO("*****************************************");
 	INFO("Starting version : " __DATE__ " " __TIME__);
+	INFO("*****************************************");
 
 	system_init_done_cb(MsgInit);
 }

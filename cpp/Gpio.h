@@ -12,6 +12,9 @@
 class Gpio {
 private:
 	uint8_t _pin;
+	bool _digitalValue;
+	bool _input;
+	// I/O : D/P
 	typedef enum {
 		MODE_DISABLED = 0,
 		MODE_OUTPUT_OPEN_DRAIN,
@@ -23,14 +26,14 @@ private:
 	Mode _mode;
 	static const char* _sMode[];
 public:
-	IROM Gpio(uint8_t pin);
-	IROM virtual ~Gpio();
-	IROM Erc setMode(char* str);
-	IROM Erc getMode(char* str);
-	IROM Erc digitalWrite(uint8_t i);
-	IROM Erc digitalRead(uint8_t* i);
-	IROM Erc analogRead(int v);
-	IROM Erc analogWrite(int* v);
+	Gpio(uint8_t pin) IROM;
+	virtual ~Gpio() IROM;
+	Erc setMode(const char* str) IROM;
+	Erc getMode(char* str) IROM;
+	Erc digitalWrite(uint8_t i) IROM;
+	Erc digitalRead(uint8_t* i) IROM;
+	Erc analogRead(int v) IROM;
+	Erc analogWrite(int* v) IROM;
 };
 
 #endif /* GPIO_H_ */

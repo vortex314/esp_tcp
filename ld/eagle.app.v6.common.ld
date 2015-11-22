@@ -152,6 +152,7 @@ SECTIONS
     _irom0_text_start = ABSOLUTE(.);
     *.c.o(.literal*, .text*)
     *.cpp.o(.literal*, .text*)
+/*    *libCommon.a:(.literal .text .literal.* .text.*) */
     *libm.a:(.literal .text .literal.* .text.*)
     *libsmartconfig.a:(.literal .text .literal.* .text.*)
     *(.irom0.literal .irom.literal .irom.text.literal .irom0.text .irom.text .irom.text.*)

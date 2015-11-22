@@ -15,6 +15,7 @@ static Topic* _mqttError = new Topic("mqtt/error", &_mqttErrorString, 0,
 
 IROM Topic::Topic(const char* name, void* instance, Xdr putter, Xdr getter,
 		int flags) {
+	INFO(" add topic : %s",name);
 	_name = name;
 	_instance = instance;
 	_putter = putter;
@@ -172,12 +173,14 @@ IROM TopicPublisher::~TopicPublisher() {
 }
 
 IROM void TopicPublisher::nextTopic() {
+uint32_t count=0;
 while (true) {
 	_currentTopic = _currentTopic->next();
 	if (_currentTopic == 0)
 		_currentTopic = Topic::first();
-	if (_currentTopic->hasGetter() && (_currentTopic->flags() & Topic::F_POLL))
+	if (_currentTopic->hasGetter() && ((_currentTopic->flags() & Topic::F_NO_POLL)==0))
 		break;
+	if ( count++ > 100 ) INFO(" no next Topic ! %s",_currentTopic->getName());
 }
 }
 
