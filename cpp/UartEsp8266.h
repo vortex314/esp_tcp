@@ -44,8 +44,8 @@ public:
 	IROM bool isConnected();
 	IROM virtual Erc setBaudrate(uint32_t baudrate);
 	IROM virtual uint32_t getBaudrate();
-	IROM virtual Erc setMode(Str& str);
-	IROM virtual void getMode(Str& str);
+	IROM virtual Erc setMode(const char* str);
+	IROM virtual void getMode(char* str);
 
 };
 

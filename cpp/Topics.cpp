@@ -48,17 +48,16 @@ public:
 		return E_OK;
 	}
 	IROM static Erc setMode(void* pv, Cbor& cbor) {
-		Str mode(4);
+		char mode[4];
 		UartEsp8266* uart = (UartEsp8266*) pv;
-		if (cbor.get(mode)) {
-			INFO(" set Mode : %s ", mode.c_str());
+		if (cbor.get(mode,3)) {
+			INFO(" set Mode : %s ", mode);
 			return uart->setMode(mode);
-			return E_OK;
 		}
 		return EINVAL;
 	}
 	IROM static Erc getMode(void* pv, Cbor& cbor) {
-		Str mode(4);
+		char mode[4];
 		UartEsp8266* uart = (UartEsp8266*) pv;
 		uart->getMode(mode);
 		cbor.add(mode);
