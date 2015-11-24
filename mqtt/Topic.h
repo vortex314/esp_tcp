@@ -58,7 +58,11 @@ public:
 	IROM static Erc getConstantInt(	void *instance, Cbor& bytes);
 	IROM static Erc getConstantBoolean(	void *instance, Cbor& bytes);
 	IROM static Topic* find(Str& str);
-
+	IROM int getFlags() const;
+	IROM Xdr getGetter() const;
+	IROM void* getInstance() const;
+	IROM const Topic*& getNext() const;
+	IROM Xdr getPutter() const;
 };
 
 class TopicPublisher: public Handler {

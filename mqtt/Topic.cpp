@@ -15,7 +15,7 @@ static Topic* _mqttError = new Topic("mqtt/error", &_mqttErrorString, 0,
 
 IROM Topic::Topic(const char* name, void* instance, Xdr putter, Xdr getter,
 		int flags) {
-	INFO(" add topic : %s",name);
+	INFO(" add topic : %s", name);
 	_name = name;
 	_instance = instance;
 	_putter = putter;
@@ -32,8 +32,6 @@ IROM Topic::Topic(const char* name, void* instance, Xdr putter, Xdr getter,
 		cursor->_next = this;
 	}
 }
-
-
 
 IROM Topic::~Topic() {
 
@@ -91,7 +89,7 @@ IROM Erc Topic::getConstantChar(void *instance, Cbor& cbor) {
 
 IROM Topic* Topic::find(Str& str) {
 	Topic *pt;
-	INFO(" find %s",str.c_str());
+	INFO(" find %s", str.c_str());
 	for (pt = first(); pt != 0; pt = pt->next()) {
 		if (strncmp(pt->_name, str.c_str(), str.length()) == 0)
 			break;
@@ -105,7 +103,7 @@ IROM TopicSubscriber::TopicSubscriber(Mqtt* mqtt) :
 		Handler("TopicMgr"), _topic(MQTT_SIZE_TOPIC), _value(MQTT_SIZE_VALUE), _mqttErrorString(
 				100) {
 	_mqtt = mqtt;
-	_src=0;
+	_src = 0;
 	_mqttError = new Topic("mqtt/error", &_mqttErrorString, 0, Topic::getString,
 			Topic::F_QOS0);
 
@@ -145,12 +143,15 @@ IROM bool TopicSubscriber::dispatch(Msg& msg) {
 //			_topic.substr(_topic,strlen("PUT/")+_mqtt->_prefix.length()); //TODO
 			if ((pt = Topic::find(_topic))) {
 				INFO(" found topic :%s to update ", pt->getName());
-				_value.offset(0);
-				erc = pt->putter(_value);
-				if (erc) {
-					_mqttErrorString.clear() << "PUT failed on " << _topic
-							<< ":" << (int) erc;
-					Msg::publish(_mqttError, SIG_CHANGE);
+				if (pt->getPutter() != 0) {
+					_value.offset(0);
+					erc = pt->putter(_value);
+					if (erc) {
+						_mqttErrorString.clear() << "PUT failed on " << _topic
+								<< ":" << (int) erc;
+						Msg::publish(_mqttError, SIG_CHANGE);
+					}
+				} else {
 				}
 			}
 		}
@@ -173,14 +174,16 @@ IROM TopicPublisher::~TopicPublisher() {
 }
 
 IROM void TopicPublisher::nextTopic() {
-uint32_t count=0;
+uint32_t count = 0;
 while (true) {
 	_currentTopic = _currentTopic->next();
 	if (_currentTopic == 0)
 		_currentTopic = Topic::first();
-	if (_currentTopic->hasGetter() && ((_currentTopic->flags() & Topic::F_NO_POLL)==0))
+	if (_currentTopic->hasGetter()
+			&& ((_currentTopic->flags() & Topic::F_NO_POLL) == 0))
 		break;
-	if ( count++ > 100 ) INFO(" no next Topic ! %s",_currentTopic->getName());
+	if (count++ > 100)
+		INFO(" no next Topic ! %s", _currentTopic->getName());
 }
 }
 
@@ -222,3 +225,21 @@ CONNECTED: {
 PT_END()
 }
 
+
+
+int Topic::getFlags() const {
+return _flags;
+}
+
+Xdr Topic::getGetter() const {
+return _getter;
+}
+
+void* Topic::getInstance() const {
+return _instance;
+}
+
+
+Xdr Topic::getPutter() const {
+return _putter;
+}

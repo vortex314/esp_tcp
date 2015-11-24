@@ -87,12 +87,40 @@ static void do_global_ctors(void) {
 char deviceName[40];
 
 extern IROM void TopicsCreator();
+#include "CborQueue.h"
+CborQueue queue(1000);
 
 extern "C" IROM void MsgInit() {
 	INFO(" Start Message Pump ");
 	do_global_ctors();
 	Msg::init();
 //	initPins();
+
+	/* int i;
+	Cbor cbor(100);
+	for (i = 0; i < 100; i++) {
+		int erc;
+		cbor.clear();
+		cbor.add(true).add(1.23).add("Hi di hi").add(12);
+		erc = queue.put(cbor);
+		if (erc != 0)
+			INFO(" cborqueue put failed %d", erc);
+		cbor.clear();
+		if ((erc=queue.get(cbor)) == E_OK) {
+			bool b;
+			cbor.get(b);
+			float f;
+			cbor.get(f);
+			char str[20];
+			cbor.get(str, 20);
+			uint32_t l;
+			cbor.get(l);
+			if (l != 12)
+				INFO(" couldn't get cbor uint32_t %d", i);
+		} else {
+			INFO(" couldn't get cbor %d : %d ", i,erc);
+		}
+	}*/
 
 	ets_sprintf(deviceName, "limero314/ESP_%08X/", system_get_chip_id());
 

@@ -35,6 +35,8 @@
 									<listOptionValue builtIn="false" value="/home/lieven/esp-open-sdk/lx106-hal/include/"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_cbor/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_cbor/cpp}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_cbor/wifi}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_cbor/mqtt}&quot;"/>
 								</option>
 								<option id="gnu.c.compiler.option.misc.other.886301534" name="Other flags" superClass="gnu.c.compiler.option.misc.other" useByScannerDiscovery="false" value="-c -fmessage-length=0 -Os -Wpointer-arith -Wundef -Werror -Wl,-EL -fno-inline-functions -nostdlib -mlongcalls -mtext-section-literals -fno-jump-tables -D__ets__ -DICACHE_FLASH -ffunction-sections -fdata-sections" valueType="string"/>
 								<option id="gnu.c.compiler.option.warnings.nowarn.1650923941" name="Inhibit all warnings (-w)" superClass="gnu.c.compiler.option.warnings.nowarn" useByScannerDiscovery="false" value="true" valueType="boolean"/>
@@ -58,6 +60,8 @@
 									<listOptionValue builtIn="false" value="/home/lieven/esp-open-sdk/lx106-hal/include/"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_cbor/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_cbor/cpp}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_cbor/wifi}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_cbor/mqtt}&quot;"/>
 								</option>
 								<option id="gnu.cpp.compiler.option.preprocessor.def.730202308" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="ICACHE_FLASH"/>
@@ -118,18 +122,19 @@
 									<listOptionValue builtIn="false" value="/home/lieven/esp-open-sdk/lx106-hal/include/"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_cbor/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_cbor/cpp}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_cbor/wifi}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_cbor/mqtt}&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.160379888" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 							</tool>
 						</toolChain>
 					</folderInfo>
-					<fileInfo id="cdt.managedbuild.config.gnu.cross.exe.debug.1105106795.1148671561" name="gpio.c" rcbsApplicability="disable" resourcePath="gpio.c" toolsToInvoke="cdt.managedbuild.tool.gnu.cross.c.compiler.1508331245.493136054">
-						<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.1508331245.493136054" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler.1508331245"/>
-					</fileInfo>
 					<fileInfo id="cdt.managedbuild.config.gnu.cross.exe.debug.1105106795.1766361295" name="esptool.py" rcbsApplicability="disable" resourcePath="tools/esptool.py" toolsToInvoke=""/>
 					<sourceEntries>
+						<entry excluding="wifi|mqtt|core_dump|cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="cpp"/>
-						<entry excluding="core_dump|cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="mqtt"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="wifi"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -183,6 +188,8 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_cpp/cpp}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_cbor/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_cbor/cpp}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_cbor/wifi}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_cbor/mqtt}&quot;"/>
 								</option>
 								<option id="gnu.c.compiler.option.preprocessor.def.symbols.2060140780" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="ICACHE_FLASH"/>
@@ -213,6 +220,8 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_cpp/cpp}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_cbor/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_cbor/cpp}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_cbor/wifi}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_cbor/mqtt}&quot;"/>
 								</option>
 								<option id="gnu.cpp.compiler.option.preprocessor.def.1868884921" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="ICACHE_FLASH"/>
@@ -249,14 +258,18 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_cpp/cpp}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_cbor/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_cbor/cpp}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_cbor/wifi}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_cbor/mqtt}&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.492121209" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 							</tool>
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="core_dump|cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="wifi|mqtt|core_dump|cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="cpp"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="mqtt"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="wifi"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
