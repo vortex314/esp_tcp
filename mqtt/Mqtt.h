@@ -16,7 +16,7 @@
 #include "MqttConstants.h"
 #include "Log.h"
 #include "MqttMsg.h"
-
+#include <CborQueue.h>
 #include "Handler.h"
 
 //#include "Event.h"
@@ -41,6 +41,11 @@ class MqttPinger;
 class Mqtt;
 #include "MqttFramer.h"
 
+enum {
+	CMD_MQTT_PUBLISH,	// topic, bytes, flags
+	CMD_MQTT_PUBLISH_TOPIC // topic ptr
+};
+
 class Mqtt: public Handler {
 public:
 	Str _prefix;
@@ -51,6 +56,7 @@ public:
 	MqttMsg _mqttOut; //
 	bool _isConnected;
 	MqttFramer* _framer;
+	CborQueue _queue;
 
 private:
 	uint32_t _retries;

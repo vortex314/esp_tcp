@@ -18,7 +18,7 @@ uint16_t IROM Mqtt::nextMessageId() {
 
 IROM Mqtt::Mqtt(MqttFramer* framer) :
 		Handler("Mqtt"), _prefix(MQTT_SIZE_TOPIC), _mqttOut(MQTT_SIZE_VALUE), _framer(
-				framer) {
+				framer),_queue(500) {
 	_mqttPublisher = new MqttPublisher(*this);
 	_mqttSubscriber = new MqttSubscriber(*this);
 	_mqttSubscription = new MqttSubscription(*this);
@@ -60,6 +60,7 @@ void IROM Mqtt::sendConnect() {
 }
 Str loggerLine(100);
 Handler* IROM Mqtt::publish(Str& topic, Bytes& message, uint32_t flags) {
+
 	loggerLine.clear() << topic << " : ";
 	((Cbor&) message).toString(loggerLine);
 	INFO(" publish : %s ", loggerLine.c_str());

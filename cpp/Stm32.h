@@ -15,26 +15,27 @@
 #include "UartEsp8266.h"
 #include "Gpio.h"
 #include "Cbor.h"
+#include <CborQueue.h>
 
 // <cmd><messageId><expectedLength><expected_acks><blocksPerAck><block1>...<blokckn>
 // <cmd><messageId><erc><bytes>
 // GET-1234-10-1-0x11 0xEE -> GET-1234-erc
 
 enum Stm32Cmd {
-	CMD_IDLE = 0,
-	CMD_RESET,
-	CMD_GET,
-	CMD_GET_VERSION,
-	CMD_GET_ID,
-	CMD_READ_MEMORY,
-	CMD_WRITE_MEMORY,
-	CMD_GO,
-	CMD_ERASE,
-	CMD_ERASE_EXTENDED,
-	CMD_WRITE_PROTECT,
-	CMD_WRITE_UNPROTECT,
-	CMD_READOUT_PROTECT,
-	CMD_READOUT_UNPROTECT
+	CMD_STM32_IDLE = 0,
+	CMD_STM32_RESET,
+	CMD_STM32_GET,
+	CMD_STM32_GET_VERSION,
+	CMD_STM32_GET_ID,
+	CMD_STM32_READ_MEMORY,
+	CMD_STM32_WRITE_MEMORY,
+	CMD_STM32_GO,
+	CMD_STM32_ERASE,
+	CMD_STM32_ERASE_EXTENDED,
+	CMD_STM32_WRITE_PROTECT,
+	CMD_STM32_WRITE_UNPROTECT,
+	CMD_STM32_READOUT_PROTECT,
+	CMD_STM32_READOUT_UNPROTECT
 };
 class Stm32;
 class Msg;
@@ -50,13 +51,15 @@ private:
 	UartEsp8266* _uart;
 	Gpio* _pinReset;
 	Gpio* _pinBoot0;
-	int _cmd;
 	uint32_t _messageId;
 	Topic* _topic;
 
 	Cbor _in;
 	Cbor _out;
 	Bytes _uartIn;
+	CborQueue _queue;
+	uint32_t _cmd;
+	uint32_t _retries;
 
 public:
 	Stm32(UartEsp8266* uart, Gpio* reset, Gpio* boot0);

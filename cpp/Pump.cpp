@@ -88,37 +88,41 @@ char deviceName[40];
 
 extern IROM void TopicsCreator();
 #include "CborQueue.h"
-CborQueue queue(1000);
+
 
 extern "C" IROM void MsgInit() {
 	INFO(" Start Message Pump ");
 	do_global_ctors();
 	Msg::init();
 //	initPins();
-
-	/* int i;
-	Cbor cbor(100);
+/*
+	CborQueue queue(1000);
+	int i;
+	Cbor cbor(0);
+	Cbor ret(0);
 	for (i = 0; i < 100; i++) {
 		int erc;
-		cbor.clear();
-		cbor.add(true).add(1.23).add("Hi di hi").add(12);
-		erc = queue.put(cbor);
+		erc = queue.putMap(cbor);
 		if (erc != 0)
-			INFO(" cborqueue put failed %d", erc);
+			INFO(" putMap put failed %d", erc);		cbor.add(true).add(1.23).add("Hi di hi").add(12);
+		erc = queue.putRelease(cbor);
+		if (erc != 0)
+			INFO(" putRelease put failed %d", erc);
 		cbor.clear();
-		if ((erc=queue.get(cbor)) == E_OK) {
+		if ((erc = queue.getMap(ret)) == E_OK) {
 			bool b;
-			cbor.get(b);
+			ret.get(b);
 			float f;
-			cbor.get(f);
+			ret.get(f);
 			char str[20];
-			cbor.get(str, 20);
+			ret.get(str, 20);
 			uint32_t l;
-			cbor.get(l);
+			ret.get(l);
 			if (l != 12)
 				INFO(" couldn't get cbor uint32_t %d", i);
+			queue.getRelease(ret);
 		} else {
-			INFO(" couldn't get cbor %d : %d ", i,erc);
+			INFO(" couldn't getMap cbor %d : %d ", i, erc);
 		}
 	}*/
 
