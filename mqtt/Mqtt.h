@@ -56,7 +56,7 @@ public:
 	MqttMsg _mqttOut; //
 	bool _isConnected;
 	MqttFramer* _framer;
-	CborQueue _queue;
+
 
 private:
 	uint32_t _retries;
@@ -72,7 +72,7 @@ public:
 	IROM void setPrefix(const char * prefix);
 	IROM bool isConnected();
 	IROM Handler* subscribe(Str& topic);
-	IROM Handler* publish(Str& topic, Bytes& message, uint32_t flags);
+	IROM Handler* publish(const char* topic, Bytes& message, uint32_t flags);
 private:
 	IROM void sendSubscribe(uint8_t flags);
 };
@@ -115,7 +115,7 @@ class MqttPublisher: public Handler {
 public:
 	IROM MqttPublisher(Mqtt& mqtt);
 	IROM bool dispatch(Msg& msg);
-	IROM Handler* publish(Str& topic, Bytes& msg, uint32_t flags);
+	IROM Handler* publish(const char* , Bytes& msg, uint32_t flags);
 	// will send PUB_OK,PUB_FAIL
 private:
 	IROM void sendPublish();
@@ -129,6 +129,7 @@ private:
 	uint16_t _messageId;
 	uint32_t _flags;
 	uint16_t _retries;
+	CborQueue _queue;
 };
 
 class MqttSubscription: public Handler {

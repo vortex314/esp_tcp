@@ -104,8 +104,8 @@ IROM TopicSubscriber::TopicSubscriber(Mqtt* mqtt) :
 				100) {
 	_mqtt = mqtt;
 	_src = 0;
-	_mqttError = new Topic("mqtt/error", &_mqttErrorString, 0, Topic::getString,
-			Topic::F_QOS0);
+/*	_mqttError = new Topic("mqtt/error", &_mqttErrorString, 0, Topic::getString,
+			Topic::F_QOS0);*/
 
 }
 
@@ -213,8 +213,7 @@ CONNECTED: {
 		erc = topic->getter(_value);
 		if (erc == E_OK) {
 			_topic = topic->getName();
-			_mqtt->publish(_topic, _value, (uint32_t) (topic->flags() & 0x7));
-			PT_YIELD_UNTIL(_mqtt->_mqttPublisher->isReady());
+			_mqtt->publish(_topic.c_str(), _value, (uint32_t) (topic->flags() & 0x7));
 			if (topic == _changedTopic) {
 				_changedTopic = 0;
 			}

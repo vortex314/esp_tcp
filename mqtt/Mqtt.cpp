@@ -18,13 +18,13 @@ uint16_t IROM Mqtt::nextMessageId() {
 
 IROM Mqtt::Mqtt(MqttFramer* framer) :
 		Handler("Mqtt"), _prefix(MQTT_SIZE_TOPIC), _mqttOut(MQTT_SIZE_VALUE), _framer(
-				framer),_queue(500) {
+				framer) {
 	_mqttPublisher = new MqttPublisher(*this);
 	_mqttSubscriber = new MqttSubscriber(*this);
 	_mqttSubscription = new MqttSubscription(*this);
 	_mqttPinger = new MqttPinger(this);
 
-	_mqttPublisher->stop();
+//	_mqttPublisher->stop();
 	_mqttSubscriber->stop();
 	_mqttPinger->stop();
 	_mqttSubscription->stop();
@@ -59,11 +59,13 @@ void IROM Mqtt::sendConnect() {
 	_framer->send(_mqttOut);
 }
 Str loggerLine(100);
-Handler* IROM Mqtt::publish(Str& topic, Bytes& message, uint32_t flags) {
+Handler* IROM Mqtt::publish(const char* topic, Bytes& message, uint32_t flags) {
 
 	loggerLine.clear() << topic << " : ";
 	((Cbor&) message).toString(loggerLine);
 	INFO(" publish : %s ", loggerLine.c_str());
+	if (!isConnected())
+		return 0;
 	return _mqttPublisher->publish(topic, message, flags);
 }
 
@@ -89,7 +91,7 @@ bool IROM Mqtt::dispatch(Msg& msg) {
 		_isConnected = false;
 		Msg::publish(this, SIG_DISCONNECTED);
 		_mqttPinger->stop();
-		_mqttPublisher->stop(); // don't start if nothing to publish !!
+//		_mqttPublisher->stop(); // don't start if nothing to publish !!
 		_mqttSubscriber->stop();
 		_mqttSubscription->stop();
 		while (true) // DISCONNECTED STATE
@@ -186,25 +188,30 @@ return true;
 
 IROM MqttPublisher::MqttPublisher(Mqtt& mqtt) :
 Handler("Publisher"), _mqtt(mqtt), _topic(MQTT_SIZE_TOPIC), _message(
-MQTT_SIZE_VALUE) {
+MQTT_SIZE_VALUE), _queue(500) {
 _flags = 0;
 _messageId = 0;
 _retries = 0;
 _state = ST_READY;
 }
 
-Handler* IROM MqttPublisher::publish(Str& topic, Bytes& msg, uint32_t flags) {
+Handler* IROM MqttPublisher::publish(const char* topic, Bytes& msg, uint32_t flags) {
 if (!_mqtt.isConnected())
 return 0;
-if (isRunning())
+/*
+ _retries = 0;
+ _topic = topic;
+ _message = msg;
+ _messageId = Mqtt::nextMessageId();
+ _flags = flags;
+ restart();
+ return this;*/
+
+INFO(" publish queue (%d/%d) before ", _queue.getUsed(), _queue.getCapacity());
+if (_queue.putf("isBi", CMD_MQTT_PUBLISH, topic, &msg, flags))
 return 0;
-_retries = 0;
-_topic = topic;
-_message = msg;
-_messageId = Mqtt::nextMessageId();
-_flags = flags;
-restart();
 return this;
+
 }
 
 void IROM MqttPublisher::sendPublish() {
@@ -233,25 +240,28 @@ _mqtt._framer->send(_mqtt._mqttOut);
 }
 
 bool IROM MqttPublisher::dispatch(Msg& msg) {
+Cbor cbor(0);
+uint32_t cmd;
 PT_BEGIN()
-//READY:
-{
-_state = ST_READY;
-PT_YIELD_UNTIL(msg.is(0, SIG_TICK));
-_state = ST_BUSY;
+READY: {
+PT_YIELD_UNTIL(_queue.hasData() && _mqtt.isConnected());
+
+if ( _queue.getf("iSBi", &cmd, &_topic, &_message, &_flags) ) goto READY;
+
+_messageId = Mqtt::nextMessageId();
+
 if ((_flags & MQTT_QOS_MASK) == MQTT_QOS0_FLAG) {
 	sendPublish();
 	PT_YIELD_UNTIL(msg.is(_mqtt._framer, SIG_TXD));
 	Msg::publish(this, SIG_ERC, 0);
-	PT_EXIT()
-	;
+	goto READY;
 } else if ((_flags & MQTT_QOS_MASK) == MQTT_QOS1_FLAG)
 	goto QOS1_ACK;
 else if ((_flags & MQTT_QOS_MASK) == MQTT_QOS2_FLAG)
 	goto QOS2_REC;
-PT_EXIT()
-;
+goto READY;
 }
+
 QOS1_ACK: {
 // INFO("QOS1_ACK");
 for (_retries = 0; _retries < MAX_RETRIES; _retries++) {
@@ -260,20 +270,19 @@ for (_retries = 0; _retries < MAX_RETRIES; _retries++) {
 	PT_YIELD_UNTIL(msg.is(_mqtt._framer,SIG_RXD,MQTT_MSG_PUBACK) || timeout());
 	if (msg.is(_mqtt._framer, SIG_RXD, MQTT_MSG_PUBACK)) {
 		int id;
-		msg.get(id); 	// skip type in  <src><signal><type><msgId><qos><topic><value>
+		msg.get(id); // skip type in  <src><signal><type><msgId><qos><topic><value>
 		msg.get(id);
 //				INFO(" messageId compare %d : %d ",id,_messageId);
 		if (id == _messageId) {
 			Msg::publish(this, SIG_ERC, 0);
-			PT_EXIT()
-			;
+			goto READY;
 		}
 	}
 }
 Msg::publish(this, SIG_ERC, ETIMEDOUT);
-PT_EXIT()
-;
+goto READY;
 }
+
 QOS2_REC: {
 // INFO("QOS2_REC");
 for (_retries = 0; _retries < MAX_RETRIES; _retries++) {
@@ -290,9 +299,9 @@ for (_retries = 0; _retries < MAX_RETRIES; _retries++) {
 	}
 }
 Msg::publish(this, SIG_ERC, ETIMEDOUT);
-PT_EXIT()
-;
+goto READY;
 }
+
 QOS2_COMP: {
 // INFO("QOS2_COMP");
 for (_retries = 0; _retries < MAX_RETRIES; _retries++) {
@@ -303,15 +312,14 @@ for (_retries = 0; _retries < MAX_RETRIES; _retries++) {
 		int id;
 		if (msg.get(id) && id == _messageId) {
 			Msg::publish(this, SIG_ERC, 0);
-			PT_EXIT()
-			;
+			goto READY;
 		}
 	}
 }
 Msg::publish(this, SIG_ERC, ETIMEDOUT);
-PT_EXIT()
-;
+goto READY;
 }
+
 PT_END()
 }
 

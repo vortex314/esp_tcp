@@ -35,8 +35,9 @@
  */
 #include <Stm32.h>
 
-Stm32::Stm32(UartEsp8266* uart, Gpio* pinReset, Gpio* pinBoot) :
+Stm32::Stm32(Mqtt* mqtt,UartEsp8266* uart, Gpio* pinReset, Gpio* pinBoot) :
 		Handler("Stm32"), _in(256), _out(256), _uartIn(256), _queue(1000) {
+	_mqtt = mqtt;
 	_uart = uart;
 	_pinBoot0 = pinBoot;
 	_pinReset = pinReset;
@@ -46,7 +47,7 @@ Stm32::Stm32(UartEsp8266* uart, Gpio* pinReset, Gpio* pinBoot) :
 	_pinBoot0 = pinBoot;
 	_errno = 0;
 	_topic = new Topic("stm32/cmd", this, stm32CmdIn, stm32CmdOut,
-			Topic::F_QOS2);
+			Topic::F_QOS2+Topic::F_NO_POLL);
 	_retries = 0;
 }
 
@@ -60,22 +61,17 @@ bool Stm32::dispatch(Msg& msg) {
 	}
 	START: {
 		PT_YIELD_UNTIL(_queue.hasData());
-		erc = _queue.getMap(cbor);
-		if (cbor.get( _cmd)) {
-			if (_cmd == CMD_STM32_RESET)
-				goto STATE_RESET;
-			if (_cmd == CMD_STM32_GET)
-				goto STATE_GET;
-		}
+		_queue.getf("ii", &_cmd, &_messageId);
+		if (_cmd == CMD_STM32_RESET)
+			goto STATE_RESET;
+		if (_cmd == CMD_STM32_GET)
+			goto STATE_GET;
 		goto START;
 	}
 	STATE_RESET: {
 		// extract data to work with
-		cbor.scanf("i", &_messageId);
-		_queue.getRelease(cbor);
 		erc = E_OK;
-		_out.add(_messageId).add(erc);
-		cbor.addf("isBi", CMD_MQTT_PUBLISH, "stm32/cmd", &_out,MQTT_QOS2_FLAG);
+
 		_uart->setMode("8E1");
 		_uart->setBaudrate(115200);
 		_pinReset->digitalWrite(0);
@@ -85,7 +81,7 @@ bool Stm32::dispatch(Msg& msg) {
 		timeout(10);
 		PT_YIELD_UNTIL(timeout());
 		uartClear();
-		_retries=0;
+		_retries = 0;
 		while (_retries++ < 100) {
 			_uart->write(STM32_SYNC);
 			timeout(10);
@@ -102,6 +98,9 @@ bool Stm32::dispatch(Msg& msg) {
 			_errno = E_OK;
 		else
 			_errno = EINVAL;
+		_out.clear();
+		_out.add(_cmd).add(_messageId).add(erc);
+		_mqtt->publish("stm32/cmd", _out, MQTT_QOS2_FLAG);
 		goto START;
 	}
 	STATE_GET: {

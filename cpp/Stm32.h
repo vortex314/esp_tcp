@@ -48,6 +48,7 @@ private:
 	static const uint8_t STM32_ACK = 0x79;
 	static const uint8_t STM32_NACK = 0x1F;
 	int _errno;
+	Mqtt* _mqtt;
 	UartEsp8266* _uart;
 	Gpio* _pinReset;
 	Gpio* _pinBoot0;
@@ -62,7 +63,7 @@ private:
 	uint32_t _retries;
 
 public:
-	Stm32(UartEsp8266* uart, Gpio* reset, Gpio* boot0);
+	Stm32(Mqtt* mqtt,UartEsp8266* uart, Gpio* reset, Gpio* boot0);
 	virtual ~Stm32();
 	virtual bool dispatch(Msg& msg);
 	bool CmdReset(Msg& msg);

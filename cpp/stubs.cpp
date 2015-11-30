@@ -204,7 +204,7 @@ IROM void _kill_r(int id){
 caddr_t
 IROM _sbrk_rr (int incr)
 {
-	ASSERT(false);
+	INFO(" _sbrk_r CALLED !!!!! ");
 	return 0;
 	/*
   extern char end;		// Defined by the linker
