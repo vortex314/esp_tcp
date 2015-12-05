@@ -88,11 +88,32 @@ char deviceName[40];
 
 extern IROM void TopicsCreator();
 #include "CborQueue.h"
+#include "Json.h"
 
 extern "C" IROM void MsgInit() {
 	INFO(" Start Message Pump ");
 	do_global_ctors();
 	Msg::init();
+
+	int i,j;bool b;
+	Str s(20);
+	Json json(100);
+	for (i = 0; i < 3; i++) {
+		INFO(" JSON TEST ");
+		json.clear();
+		json.addArray();
+		json.add(100);
+		json.add("Hello world");
+		json.add(false);
+//	json.add(1.23);
+		json.addNull();
+		json.addMap().addKey("key").add("value").addBreak();
+		json.addBreak();
+		INFO("json:%s", json.c_str());
+		json.parse();
+		json.scanf("[iSb{",&j,&s,&b);
+		INFO(" json : [%d,'%s',%d]",j,s.c_str(),b);
+	}
 //	initPins();
 	/*
 	 CborQueue queue(1000);
@@ -120,13 +141,14 @@ extern "C" IROM void MsgInit() {
 	 INFO(" couldn't get  %d : %d ", i, erc);
 	 ((Bytes)cbor).toHex(string.clear());
 	 INFO("hex : %s",string.c_str());
-	 /*
+
 	 erc = queue.getf("bfsi", &b, &f, str, 20, &l);
 	 if (erc)
 	 INFO(" couldn't getf  %d : %d ", i, erc);
 	 if (l != 12)
 	 INFO(" couldn't get cbor uint32_t %d", i);*/
 //}
+	INFO(" PUMPING ");
 	ets_sprintf(deviceName, "limero314/ESP_%08X/", system_get_chip_id());
 
 	CreateMutex(&mutex);

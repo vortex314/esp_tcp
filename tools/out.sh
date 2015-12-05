@@ -6,7 +6,7 @@ PROJECT=$1
 echo "---------------" $PROJECT "------------------------"
 ./reset $USB
 ../tools/esptool.py --port $USB  read_mac
-# ../tools/esptool.py --port $USB  erase_flash
+../tools/esptool.py --port $USB  erase_flash
 ../tools/esptool.py elf2image ../Debug/$PROJECT
 ./esptool2 -debug -bin -boot2 -1024 -dio -40 ../Debug/$PROJECT $PROJECT.bin .text .data .rodata # was 4096
 ../tools/esptool.py --p $USB -b 576000 write_flash  -ff 40m -fm dio -fs 8m 0x00000 rboot.bin 0x02000 $PROJECT.bin \

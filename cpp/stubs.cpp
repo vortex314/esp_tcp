@@ -202,9 +202,10 @@ IROM void _kill_r(int id){
 #include "osapi.h"
 #include "util.h"
 caddr_t
-IROM _sbrk_rr (int incr)
+IROM _sbrk_r (int incr)
 {
 	INFO(" _sbrk_r CALLED !!!!! ");
+	while(1);
 	return 0;
 	/*
   extern char end;		// Defined by the linker
