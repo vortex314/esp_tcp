@@ -90,29 +90,61 @@ extern IROM void TopicsCreator();
 #include "CborQueue.h"
 #include "Json.h"
 
+class Stm32 {
+public:
+	static const char* fields[];
+	enum Fields {
+		CMD, MSG_ID, ADDRESS
+	};
+	enum Cmds {
+		RESET, STATUS, GO
+	};
+	static const char* cmds[3];
+
+	static const char* load() {
+		const char* fs[] = { "aaaa", "bbbb" };
+		return fs[0];
+	}
+
+	static const char* enumToString(uint32_t i) {
+		if (i >= 0 && i < sizeof(cmds))
+			return cmds[i];
+		return "";
+	}
+
+	static int stringToEnum(const char* s) {
+		uint32_t i;
+		for (i = 0; i < sizeof(cmds); i++)
+			if (strcmp(cmds[i], s) == 0)
+				return i;
+		return -1;
+	}
+
+};
+
+const char* Stm32::cmds[] = { "RESET", "STATUS", "GO" };
+const char* Stm32::fields[] = { "cmd", "msgId", "address", "bytes" };
+
 extern "C" IROM void MsgInit() {
 	INFO(" Start Message Pump ");
 	do_global_ctors();
 	Msg::init();
-
-	int i,j;bool b;
+	INFO(" %s : %d ", Stm32::enumToString(Stm32::STATUS),
+				Stm32::stringToEnum("STATUS"));
+	int i, j;
+	bool b;
 	Str s(20);
 	Json json(100);
 	for (i = 0; i < 3; i++) {
 		INFO(" JSON TEST ");
 		json.clear();
-		json.addArray();
-		json.add(100);
-		json.add("Hello world");
-		json.add(false);
-//	json.add(1.23);
-		json.addNull();
+		json.addArray().add(100).add("Hello world").add(false).addNull();
 		json.addMap().addKey("key").add("value").addBreak();
 		json.addBreak();
 		INFO("json:%s", json.c_str());
 		json.parse();
-		json.scanf("[iSb{",&j,&s,&b);
-		INFO(" json : [%d,'%s',%d]",j,s.c_str(),b);
+		json.scanf("[iSb{", &j, &s, &b);
+		INFO(" json : [%d,'%s',%d]", j, s.c_str(), b);
 	}
 //	initPins();
 	/*
@@ -148,14 +180,16 @@ extern "C" IROM void MsgInit() {
 	 if (l != 12)
 	 INFO(" couldn't get cbor uint32_t %d", i);*/
 //}
-	INFO(" PUMPING ");
+	INFO(" PUMPING ");ets_delay_us(100000);
 	ets_sprintf(deviceName, "limero314/ESP_%08X/", system_get_chip_id());
 
 	CreateMutex(&mutex);
 	msg = new Msg(256);
+	INFO(" PUMPING ");ets_delay_us(100000);
 
-	flash = new Flash();
-	flash->init();
+//	flash = new Flash();
+//	flash->init();
+	INFO(" PUMPING ");ets_delay_us(100000);
 
 	wifi = new Wifi();
 	tcp = new Tcp(wifi);
