@@ -29,6 +29,8 @@ extern "C" {
 #include "MqttMsg.h"
 #include "Mqtt.h"
 #include "Topic.h"
+#include "Gpio.h"
+#include "Stm32.h"
 
 mutex_t mutex;
 
@@ -42,6 +44,9 @@ Mqtt* mqtt;
 MqttFramer* mqttFramer;
 TopicSubscriber* topicSubscriber;
 TopicPublisher* topicPublisher;
+Gpio* gpioReset;
+Gpio* gpioFlash;
+Stm32* stm32;
 
 #define MSG_TASK_PRIO        		1
 #define MSG_TASK_QUEUE_SIZE    	100
@@ -88,64 +93,13 @@ char deviceName[40];
 
 extern IROM void TopicsCreator();
 #include "CborQueue.h"
-#include "Json.h"
-
-class Stm32 {
-public:
-	static const char* fields[];
-	enum Fields {
-		CMD, MSG_ID, ADDRESS
-	};
-	enum Cmds {
-		RESET, STATUS, GO
-	};
-	static const char* cmds[3];
-
-	static const char* load() {
-		const char* fs[] = { "aaaa", "bbbb" };
-		return fs[0];
-	}
-
-	static const char* enumToString(uint32_t i) {
-		if (i >= 0 && i < sizeof(cmds))
-			return cmds[i];
-		return "";
-	}
-
-	static int stringToEnum(const char* s) {
-		uint32_t i;
-		for (i = 0; i < sizeof(cmds); i++)
-			if (strcmp(cmds[i], s) == 0)
-				return i;
-		return -1;
-	}
-
-};
-
-const char* Stm32::cmds[] = { "RESET", "STATUS", "GO" };
-const char* Stm32::fields[] = { "cmd", "msgId", "address", "bytes" };
 
 extern "C" IROM void MsgInit() {
 	INFO(" Start Message Pump ");
 	do_global_ctors();
 	Msg::init();
-	INFO(" %s : %d ", Stm32::enumToString(Stm32::STATUS),
-				Stm32::stringToEnum("STATUS"));
-	int i, j;
-	bool b;
-	Str s(20);
-	Json json(100);
-	for (i = 0; i < 3; i++) {
-		INFO(" JSON TEST ");
-		json.clear();
-		json.addArray().add(100).add("Hello world").add(false).addNull();
-		json.addMap().addKey("key").add("value").addBreak();
-		json.addBreak();
-		INFO("json:%s", json.c_str());
-		json.parse();
-		json.scanf("[iSb{", &j, &s, &b);
-		INFO(" json : [%d,'%s',%d]", j, s.c_str(), b);
-	}
+
+
 //	initPins();
 	/*
 	 CborQueue queue(1000);
@@ -196,6 +150,10 @@ extern "C" IROM void MsgInit() {
 	mqttFramer = new MqttFramer(tcp);
 	mqtt = new Mqtt(mqttFramer);
 	led = new LedBlink(tcp);
+	gpioReset = new Gpio(2);
+	gpioFlash = new Gpio(0);
+	stm32 = new Stm32(mqtt,UartEsp8266::getUart0(),gpioReset,gpioFlash);
+
 //	topicMgr = new TopicMgr(mqtt);
 
 	new Topic("system/online", (void*) true, 0, Topic::getConstantBoolean,
@@ -208,6 +166,7 @@ extern "C" IROM void MsgInit() {
 	wifi->config((const char*) STA_SSID, (const char*) STA_PASS);
 	tcp->config("iot.eclipse.org", 1883);
 	mqtt->setPrefix(deviceName);
+
 
 	system_os_task(MSG_TASK, MSG_TASK_PRIO, MsgQueue, MSG_TASK_QUEUE_SIZE);
 	Msg::publish(__FUNCTION__, SIG_INIT);

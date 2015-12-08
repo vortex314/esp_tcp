@@ -34,25 +34,33 @@
 
  */
 #include <Stm32.h>
+#include <Stm32Cmd.h>
 
-Stm32::Stm32(Mqtt* mqtt,UartEsp8266* uart, Gpio* pinReset, Gpio* pinBoot) :
-		Handler("Stm32"), _in(256), _out(256), _uartIn(256), _queue(1000) {
+Stm32::Stm32(Mqtt* mqtt, UartEsp8266* uart, Gpio* pinReset, Gpio* pinBoot) :
+		Handler("Stm32"), _request(256), _response(256), _uartIn(256), _queue(
+				1000) {
 	_mqtt = mqtt;
 	_uart = uart;
 	_pinBoot0 = pinBoot;
 	_pinReset = pinReset;
-	_cmd = CMD_STM32_IDLE;
+	_cmd = Stm32Cmd::STATUS;
 	_messageId = 0;
 	_pinReset = pinReset;
 	_pinBoot0 = pinBoot;
 	_errno = 0;
-	_topic = new Topic("stm32/cmd", this, stm32CmdIn, stm32CmdOut,
-			Topic::F_QOS2+Topic::F_NO_POLL);
+	_topic = new Topic("stm32/cmd", this, stm32CmdIn, 0,
+			Topic::F_QOS2 + Topic::F_NO_POLL);
 	_retries = 0;
 }
 
+
+void Stm32::status(const char* s) {
+	Cbor str(30);
+	str.add(s);
+	_mqtt->publish("stm32/status",str,Topic::F_QOS0);
+}
+
 bool Stm32::dispatch(Msg& msg) {
-	Cbor cbor(0);
 	int erc;
 	bool ackReceived;
 	PT_BEGIN()
@@ -60,18 +68,24 @@ bool Stm32::dispatch(Msg& msg) {
 		PT_WAIT_UNTIL(msg.is(0, SIG_INIT));
 	}
 	START: {
-		PT_YIELD_UNTIL(_queue.hasData());
+		_response.clear();
+		status("Ready");
+		timeout(5000);
+		PT_YIELD_UNTIL(_queue.hasData() || timeout());
+		if (timeout())
+			goto START;
+		_queue.get(_request);
 		_queue.getf("ii", &_cmd, &_messageId);
-		if (_cmd == CMD_STM32_RESET)
+		if (_cmd == Stm32Cmd::RESET)
 			goto STATE_RESET;
-		if (_cmd == CMD_STM32_GET)
+		if (_cmd == Stm32Cmd::GET)
 			goto STATE_GET;
 		goto START;
 	}
 	STATE_RESET: {
 		// extract data to work with
 		erc = E_OK;
-
+		status("Resetting");
 		_uart->setMode("8E1");
 		_uart->setBaudrate(115200);
 		_pinReset->digitalWrite(0);
@@ -98,9 +112,9 @@ bool Stm32::dispatch(Msg& msg) {
 			_errno = E_OK;
 		else
 			_errno = EINVAL;
-		_out.clear();
-		_out.add(_cmd).add(_messageId).add(erc);
-		_mqtt->publish("stm32/cmd", _out, MQTT_QOS2_FLAG);
+		status(strerror(_errno));
+		_response.cmd(_cmd).erc(_errno);
+		_mqtt->publish("stm32/cmd", _response, MQTT_QOS2_FLAG);
 		goto START;
 	}
 	STATE_GET: {
