@@ -77,6 +77,7 @@ public:
 	IROM static Erc stm32CmdIn(void* instance, Cbor& cbor);
 	IROM void status(Str& str);
 	IROM void status(const char* str);
+	IROM void log(const char* str);
 //	static Erc stm32CmdOut(void* instance, Cbor& cbor);
 };
 

@@ -73,6 +73,7 @@ public:
 	IROM bool isConnected();
 	IROM Handler* subscribe(Str& topic);
 	IROM Handler* publish(const char* topic, Bytes& message, uint32_t flags);
+	IROM void error(Str& s);
 private:
 	IROM void sendSubscribe(uint8_t flags);
 };
@@ -90,6 +91,7 @@ public:
 	IROM MqttSubscriber(Mqtt& mqtt);
 	IROM bool dispatch(Msg& msg);
 	IROM void sendPubRec();
+	IROM void sendPubComp();
 	IROM void callBack();
 	// will invoke
 private:

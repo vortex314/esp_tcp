@@ -104,8 +104,8 @@ IROM TopicSubscriber::TopicSubscriber(Mqtt* mqtt) :
 				100) {
 	_mqtt = mqtt;
 	_src = 0;
-/*	_mqttError = new Topic("mqtt/error", &_mqttErrorString, 0, Topic::getString,
-			Topic::F_QOS0);*/
+	/*	_mqttError = new Topic("mqtt/error", &_mqttErrorString, 0, Topic::getString,
+	 Topic::F_QOS0);*/
 
 }
 
@@ -123,24 +123,32 @@ IROM bool TopicSubscriber::dispatch(Msg& msg) {
 		return true;
 	}
 	PT_BEGIN()
-	PT_WAIT_UNTIL(_mqtt->isConnected());
+	WAIT_CONNECT: {
+		PT_WAIT_UNTIL(_mqtt->isConnected());
+	}
+	 {
 //-------------------------------------------------- subscribe to PUT/.../#
-	INFO("subscribe");
-	_tempStr.clear() << "PUT/";
-	_mqtt->getPrefix(_tempStr);
-	_tempStr << "#";
-	_src = _mqtt->subscribe(_tempStr);	// TODO could be zero
-	INFO("subscribing : %X", _src);
-	PT_YIELD_UNTIL(_mqtt->_mqttPublisher->isReady());
+		INFO("subscribe");
+		_tempStr.clear() << "PUT/";
+		_mqtt->getPrefix(_tempStr);
+		_tempStr << "#";
+		_src = _mqtt->subscribe(_tempStr);	// TODO could be zero
+		INFO("subscribing : %X", _src);
+		PT_YIELD_UNTIL(_mqtt->_mqttPublisher->isReady());
+	}
 //-------------------------------------------------- wait PUT cmd
 	while (true) {
 		_topic.clear();
 		_value.clear();
-		PT_YIELD_UNTIL(msg.is(_mqtt->_mqttSubscriber, SIG_RXD));
+		uint32_t src, addr;
+		PT_YIELD_UNTIL(
+				msg.is(_mqtt->_mqttSubscriber, SIG_RXD)
+						|| !_mqtt->isConnected());
+		if (!_mqtt->isConnected())
+			goto WAIT_CONNECT;
 		INFO(" PUBLISH received  ");
-		if (msg.scanf("SB", &_topic, &_value)) {
+		if (msg.scanf("SB", &src, &addr, &_topic, &_value)) {
 			INFO(" PUBLISH scanned %s  ", _topic.c_str());
-//			_topic.substr(_topic,strlen("PUT/")+_mqtt->_prefix.length()); //TODO
 			if ((pt = Topic::find(_topic))) {
 				INFO(" found topic :%s to update ", pt->getName());
 				if (pt->getPutter() != 0) {
@@ -152,6 +160,9 @@ IROM bool TopicSubscriber::dispatch(Msg& msg) {
 						Msg::publish(_mqttError, SIG_CHANGE);
 					}
 				} else {
+					Str str(100);
+					str << " topic not found " << _topic;
+					_mqtt->error(str);
 				}
 			}
 		}
@@ -201,7 +212,7 @@ DISCONNECTED: {
 CONNECTED: {
 
 	while (_mqtt->isConnected()) {
-		timeout(1000);
+		timeout(100000);
 		PT_YIELD_UNTIL(msg.is(0, SIG_CHANGE) || timeout());
 		if (timeout()) {
 			topic = _currentTopic;
@@ -213,7 +224,8 @@ CONNECTED: {
 		erc = topic->getter(_value);
 		if (erc == E_OK) {
 			_topic = topic->getName();
-			_mqtt->publish(_topic.c_str(), _value, (uint32_t) (topic->flags() & 0x7));
+			_mqtt->publish(_topic.c_str(), _value,
+					(uint32_t) (topic->flags() & 0x7));
 			if (topic == _changedTopic) {
 				_changedTopic = 0;
 			}
@@ -223,8 +235,6 @@ CONNECTED: {
 }
 PT_END()
 }
-
-
 
 int Topic::getFlags() const {
 return _flags;
@@ -237,7 +247,6 @@ return _getter;
 void* Topic::getInstance() const {
 return _instance;
 }
-
 
 Xdr Topic::getPutter() const {
 return _putter;

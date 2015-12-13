@@ -18,7 +18,7 @@ public:
 		CMD = 1, MSG_ID, ADDRESS, BYTES,ERC
 	} Field;
 	typedef enum {
-		STATUS = 1, RESET, GO, READ_PAGE,GET
+		 INVALID,RESET, GO, READ_PAGE,GET
 	} Cmd;
 	IROM Stm32Cmd& cmd(Cmd cmd);
 	IROM bool getCmd(Cmd& cmd);

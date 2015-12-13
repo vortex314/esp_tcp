@@ -68,7 +68,6 @@ inline void Post(const char* src, Signal signal) {
 void IROM MSG_TASK(os_event_t *e) {
 	while (msg->receive()) {
 		Handler::dispatchToChilds(*msg);
-		msg->free();
 	}
 	SysWatchDog = Sys::millis() + 1000; // if not called within 1 second calls dump_stack;
 }
@@ -99,51 +98,54 @@ extern "C" IROM void MsgInit() {
 	do_global_ctors();
 	Msg::init();
 
-
 //	initPins();
-	/*
-	 CborQueue queue(1000);
-	 int i;
-	 Cbor cbor(30);
-	 Cbor ret(0);
-	 Str string(40);
-	 for (i = 0; i < 10; i++) {
-	 uint32_t erc;
-	 bool b;
-	 double f;
-	 char str[20];
-	 uint32_t l;
 
-	 cbor.clear();
-	 cbor.addf("bsi", true, " Hi di hi", 12);
-	 ((Bytes)cbor).toHex(string.clear());
-	 INFO("hex- : %s",string.c_str());
+	CborQueue queue(1000);
+	int i;
+	Cbor cbor(30);
+	Cbor ret(0);
+	Str string(40);
+	for (i = 0; i < 10; i++) {
+		uint32_t erc;
+		bool b;
+		double f;
+		char str[20];
+		uint32_t l;
 
-	 erc = queue.putf("bsi", true, " Hi di hi", 12);
-	 if (erc)
-	 INFO(" couldn't putf  %d : %d ", i, erc);
-	 erc = queue.get(cbor);
-	 if (erc)
-	 INFO(" couldn't get  %d : %d ", i, erc);
-	 ((Bytes)cbor).toHex(string.clear());
-	 INFO("hex : %s",string.c_str());
+		cbor.clear();
+		cbor.addf("bsi", true, " Hi di hi", 12);
+		((Bytes) cbor).toHex(string.clear());
+		INFO("hex- : %s", string.c_str());
 
-	 erc = queue.getf("bfsi", &b, &f, str, 20, &l);
-	 if (erc)
-	 INFO(" couldn't getf  %d : %d ", i, erc);
-	 if (l != 12)
-	 INFO(" couldn't get cbor uint32_t %d", i);*/
-//}
-	INFO(" PUMPING ");ets_delay_us(100000);
+		erc = queue.putf("bsi", true, " Hi di hi", 12);
+		if (erc)
+			INFO(" couldn't putf  %d : %d ", i, erc);
+/*		erc = queue.get(cbor);
+		if (erc)
+			INFO(" couldn't get  %d : %d ", i, erc);
+		((Bytes) cbor).toHex(string.clear());
+		INFO("hex : %s", string.c_str()); */
+
+		erc = queue.getf("bsi", &b,  str, 20, &l);
+		if (erc)
+			INFO(" couldn't getf  %d : %d ", i, erc);
+		if (l != 12)
+			INFO(" couldn't get cbor uint32_t %d", i);
+
+	}
+	INFO(" PUMPING ");
+	ets_delay_us(100000);
 	ets_sprintf(deviceName, "limero314/ESP_%08X/", system_get_chip_id());
 
 	CreateMutex(&mutex);
 	msg = new Msg(256);
-	INFO(" PUMPING ");ets_delay_us(100000);
+	INFO(" PUMPING ");
+	ets_delay_us(100000);
 
 //	flash = new Flash();
 //	flash->init();
-	INFO(" PUMPING ");ets_delay_us(100000);
+	INFO(" PUMPING ");
+	ets_delay_us(100000);
 
 	wifi = new Wifi();
 	tcp = new Tcp(wifi);
@@ -152,7 +154,7 @@ extern "C" IROM void MsgInit() {
 	led = new LedBlink(tcp);
 	gpioReset = new Gpio(2);
 	gpioFlash = new Gpio(0);
-	stm32 = new Stm32(mqtt,UartEsp8266::getUart0(),gpioReset,gpioFlash);
+	stm32 = new Stm32(mqtt, UartEsp8266::getUart0(), gpioReset, gpioFlash);
 
 //	topicMgr = new TopicMgr(mqtt);
 
@@ -163,10 +165,11 @@ extern "C" IROM void MsgInit() {
 
 	TopicsCreator();
 
+	INFO(" SSID : %s, PSWD : %s",(const char*) STA_SSID, (const char*) STA_PASS);
+
 	wifi->config((const char*) STA_SSID, (const char*) STA_PASS);
 	tcp->config("iot.eclipse.org", 1883);
 	mqtt->setPrefix(deviceName);
-
 
 	system_os_task(MSG_TASK, MSG_TASK_PRIO, MsgQueue, MSG_TASK_QUEUE_SIZE);
 	Msg::publish(__FUNCTION__, SIG_INIT);

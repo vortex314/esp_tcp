@@ -36,11 +36,8 @@ public:
 		F_NO_POLL = 8
 	};
 
-	IROM Topic(const char* name, void* instance, Xdr putter, Xdr getter,int flags);
-	IROM virtual ~Topic();
-	IROM static Topic* first();
-	IROM Topic* next();
-	IROM const char* getName() {
+	IROM Topic(const char* name, void* instance, Xdr putter, Xdr getter,
+			int flags);IROM virtual ~Topic();IROM static Topic* first();IROM Topic* next();IROM const char* getName() {
 		return _name;
 	}
 	IROM bool match(Str& name);IROM Erc putter(Cbor& cbor);IROM Erc getter(
@@ -50,19 +47,12 @@ public:
 	IROM int flags() {
 		return _flags;
 	}
-	IROM void changed();
-	IROM static Erc getInteger(void *instance, Cbor& bytes);
-	IROM static Erc getUI32(void *instance, Cbor& bytes);
-	IROM static Erc getString(	void *instance, Cbor& bytes);
-	IROM static Erc getConstantChar(void *instance, Cbor& bytes);
-	IROM static Erc getConstantInt(	void *instance, Cbor& bytes);
-	IROM static Erc getConstantBoolean(	void *instance, Cbor& bytes);
-	IROM static Topic* find(Str& str);
-	IROM int getFlags() const;
-	IROM Xdr getGetter() const;
-	IROM void* getInstance() const;
-	IROM const Topic*& getNext() const;
-	IROM Xdr getPutter() const;
+	IROM void changed();IROM static Erc getInteger(void *instance, Cbor& bytes);IROM static Erc getUI32(
+			void *instance, Cbor& bytes);IROM static Erc getString(
+			void *instance, Cbor& bytes);IROM static Erc getConstantChar(
+			void *instance, Cbor& bytes);IROM static Erc getConstantInt(
+			void *instance, Cbor& bytes);IROM static Erc getConstantBoolean(
+			void *instance, Cbor& bytes);IROM static Topic* find(Str& str);IROM int getFlags() const;IROM Xdr getGetter() const;IROM void* getInstance() const;IROM const Topic*& getNext() const;IROM Xdr getPutter() const;
 };
 
 class TopicPublisher: public Handler {
@@ -89,8 +79,9 @@ private:
 
 	Str _mqttErrorString;
 public:
-	IROM TopicSubscriber(Mqtt* mqtt);IROM virtual ~TopicSubscriber();IROM bool dispatch(
-			Msg& msg);
+	IROM TopicSubscriber(Mqtt* mqtt); //
+	IROM virtual ~TopicSubscriber(); //
+	IROM bool dispatch(Msg& msg);
 };
 
 #endif /* TOPIC_H_ */

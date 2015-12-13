@@ -43,7 +43,7 @@ Stm32::Stm32(Mqtt* mqtt, UartEsp8266* uart, Gpio* pinReset, Gpio* pinBoot) :
 	_uart = uart;
 	_pinBoot0 = pinBoot;
 	_pinReset = pinReset;
-	_cmd = Stm32Cmd::STATUS;
+	_cmd = Stm32Cmd::INVALID;
 	_messageId = 0;
 	_pinReset = pinReset;
 	_pinBoot0 = pinBoot;
@@ -55,9 +55,17 @@ Stm32::Stm32(Mqtt* mqtt, UartEsp8266* uart, Gpio* pinReset, Gpio* pinBoot) :
 
 
 void Stm32::status(const char* s) {
+	if ( !_mqtt->isConnected()) return;
 	Cbor str(30);
 	str.add(s);
 	_mqtt->publish("stm32/status",str,Topic::F_QOS0);
+}
+
+void Stm32::log(const char* s) {
+	if ( !_mqtt->isConnected()) return;
+	Cbor str(30);
+	str.add(s);
+	_mqtt->publish("stm32/log",str,Topic::F_QOS0);
 }
 
 bool Stm32::dispatch(Msg& msg) {
@@ -75,7 +83,8 @@ bool Stm32::dispatch(Msg& msg) {
 		if (timeout())
 			goto START;
 		_queue.get(_request);
-		_queue.getf("ii", &_cmd, &_messageId);
+		_request.scanf("ii", &_cmd, &_messageId);
+		INFO(" received command");
 		if (_cmd == Stm32Cmd::RESET)
 			goto STATE_RESET;
 		if (_cmd == Stm32Cmd::GET)
@@ -126,6 +135,7 @@ PT_END()
 
 Erc Stm32::stm32CmdIn(void* instance, Cbor& cbor) {
 Stm32* stm32 = (Stm32*) instance;
+INFO("put message for STM32");
 return stm32->_queue.put(cbor);
 }
 

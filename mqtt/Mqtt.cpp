@@ -48,6 +48,10 @@ void IROM Mqtt::getPrefix(Str& s) {
 	s << _prefix;
 }
 
+void Mqtt::error(Str& s) {
+	publish("mqtt/error",s,MQTT_QOS0_FLAG);
+}
+
 void IROM Mqtt::sendConnect() {
 	Str str("false");
 	Str online("system/online");
@@ -195,7 +199,8 @@ _retries = 0;
 _state = ST_READY;
 }
 
-Handler* IROM MqttPublisher::publish(const char* topic, Bytes& msg, uint32_t flags) {
+Handler* IROM MqttPublisher::publish(const char* topic, Bytes& msg,
+uint32_t flags) {
 if (!_mqtt.isConnected())
 return 0;
 /*
@@ -246,7 +251,8 @@ PT_BEGIN()
 READY: {
 PT_YIELD_UNTIL(_queue.hasData() && _mqtt.isConnected());
 
-if ( _queue.getf("iSBi", &cmd, &_topic, &_message, &_flags) ) goto READY;
+if (_queue.getf("iSBi", &cmd, &_topic, &_message, &_flags))
+	goto READY;
 
 _messageId = Mqtt::nextMessageId();
 
@@ -342,15 +348,23 @@ _mqtt._framer->send(_mqtt._mqttOut);
 timeout(TIME_WAIT_REPLY);
 }
 
+void IROM MqttSubscriber::sendPubComp() {
+_mqtt._mqttOut.PubComp(_messageId);
+_mqtt._framer->send(_mqtt._mqttOut);
+timeout(TIME_WAIT_REPLY);
+}
+
 void IROM MqttSubscriber::callBack() {
 loggerLine.clear() << _topic << " : ";
 ((Cbor&) _message).toString(loggerLine);
 INFO(" PUBLISH received : %s ", loggerLine.c_str());
-Msg pub(256);
+// Msg pub(256);
 Str _shortTopic(40);
 _shortTopic.clear().substr(_topic, 4 + _mqtt._prefix.length()); // skip "/PUT" +<prefix.length>
-pub.create(this, SIG_RXD).addf("SB", &_shortTopic, &_message);
-pub.send();
+INFO(" PUBLISH translated : %s ", _shortTopic.c_str());
+Msg::_queue->putf("uuSB",this,SIG_RXD,&_shortTopic, &_message);
+//pub.create(this, SIG_RXD).addf("SB", &_shortTopic, &_message);
+//pub.send();
 }
 
 // #define PT_WAIT_FOR( ___pt, ___signals, ___timeout ) listen(___signals,___timeout);PT_YIELD(___pt);
@@ -385,27 +399,23 @@ if (_qos == MQTT_QOS0_FLAG) {
 
 }
 } else if (!_mqtt.isConnected()) {
-PT_EXIT()
-;
+PT_EXIT();
 }
 goto READY;
 }
 QOS2_WAIT_REL: {
-for (_retries = 0; _retries < MAX_RETRIES; _retries++) {
-sendPubRec();
-timeout(TIME_WAIT_REPLY);
-PT_YIELD_UNTIL(
-		!_mqtt.isConnected() || msg.is(_mqtt._framer,SIG_RXD,MQTT_MSG_PUBREL) || timeout());
-if (msg.is(_mqtt._framer, SIG_RXD, MQTT_MSG_PUBREL)) {
-	callBack();
-	msg.scanf("i", &_messageId);
-	_mqtt._mqttOut.PubComp(_messageId);
-	_mqtt._framer->send(_mqtt._mqttOut);
-	goto READY;
-}
-}
-goto READY;
-}
+	for (_retries = 0; _retries < MAX_RETRIES; _retries++) {
+		sendPubRec();
+		PT_YIELD_UNTIL(
+			!_mqtt.isConnected() || msg.is(_mqtt._framer,SIG_RXD,MQTT_MSG_PUBREL) || timeout());
+		if (msg.is(_mqtt._framer, SIG_RXD, MQTT_MSG_PUBREL)) {
+			callBack();
+			sendPubComp();
+			break;
+			}
+		}
+		goto READY;
+	}
 PT_END()
 }
 
