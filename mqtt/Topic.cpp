@@ -147,7 +147,7 @@ IROM bool TopicSubscriber::dispatch(Msg& msg) {
 		if (!_mqtt->isConnected())
 			goto WAIT_CONNECT;
 		INFO(" PUBLISH received  ");
-		if (msg.scanf("SB", &src, &addr, &_topic, &_value)) {
+		if (msg.scanf("SB", &_topic, &_value)) {
 			INFO(" PUBLISH scanned %s  ", _topic.c_str());
 			if ((pt = Topic::find(_topic))) {
 				INFO(" found topic :%s to update ", pt->getName());
