@@ -4,6 +4,7 @@
  *  Created on: Sep 5, 2015
  *      Author: lieven
  */
+#include <osapi.h>
 #include "Sys.h"
 
 const char* space = "                                 ";
@@ -68,6 +69,7 @@ void IROM SysLog(SysLogLevel level, const char* file, const char* function,
 	ets_snprintf(lastLog, sizeof(lastLog), "%10u | %s | %s\n", time, dst,
 			buffer);
 	uart0WriteBytes(lastLog, strlen(lastLog));
+	os_delay_us(1000);
 //	os_printf_plus();
 	ReleaseMutex(&logMutex);
 }

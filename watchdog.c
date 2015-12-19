@@ -4,8 +4,7 @@
  *  Created on: Oct 26, 2015
  *      Author: lieven
  */
-
-
+#include "Sys.h"
 #include "stdint.h"
 #include "ets_sys.h"
 #include "os_type.h"
@@ -101,7 +100,6 @@ void ICACHE_FLASH_ATTR hw_timer_init(FRC1_TIMER_SOURCE_TYPE source_type, u8 req)
 	ETS_FRC1_INTR_ENABLE();
 }
 
-
 /*
  NOTE:
  1 if use nmi source, for autoload timer , the timer setting val can't be less than 100.
@@ -121,7 +119,7 @@ void dump_stack(uint32_t* lv) {
 	while (ptr < end) {
 		if ((*ptr > 0x40000000 && *ptr < 0x60000000) // only print CODE locations
 //		|| (*ptr > 0x3ff00000 && *ptr < 0x40000000) // data
-				)
+		)
 			os_printf_plus("@(#):%8X:%8X\n", ptr, *ptr);
 		ptr += sizeof(uint32_t);
 	}
@@ -142,13 +140,13 @@ void hw_test_timer_cb(void) {
 
 }
 
-void ICACHE_FLASH_ATTR clockInit(void)
-{
+void IROM feedWatchDog() {
+	SysWatchDog = SysUpTime+500;
+}
+
+void IROM initWatchDog(void) {
 	hw_timer_init(FRC1_SOURCE, 1);
 	hw_timer_set_func(hw_test_timer_cb);
 	hw_timer_arm(1000);
 }
-
-
-
 

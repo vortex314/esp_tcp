@@ -23,7 +23,7 @@
 #include "Msg.h"
 
 //************************************** CONSTANTS ****************************
-#define TIME_KEEP_ALIVE 10000
+#define TIME_KEEP_ALIVE 20000
 #define TIME_WAIT_REPLY 2000
 #define TIME_CONNECT 5000
 #define TIME_WAIT_CONNECT 5000

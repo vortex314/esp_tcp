@@ -12,7 +12,7 @@
 uint8_t StrToIP(const char* str, void *ip);
 
 IROM Tcp::Tcp(Wifi* wifi) :
-		Handler("Tcp"), _rxd(256), _txd(256) {
+		Handler("Tcp"), _rxd(256), _txd(256), _buffer(100) {
 	_wifi = wifi;
 	INFO("TCP : ctor");
 	os_strcpy(_host, "www.google.com");
@@ -24,10 +24,11 @@ IROM Tcp::Tcp(Wifi* wifi) :
 	_conn.state = ESPCONN_NONE;
 	_conn.proto.tcp = (esp_tcp *) malloc(sizeof(esp_tcp));
 	ets_memset(_conn.proto.tcp, 0, sizeof(esp_tcp));
-	_bytesTxd=0;
-	_overflowTxd=0;
-	_connections=0;
-	_srcPort=0;
+	_bytesTxd = 0;
+	_bytesRxd = 0;
+	_overflowTxd = 0;
+	_connections = 0;
+	_srcPort = 0;
 }
 
 IROM Tcp::~Tcp() {
@@ -46,6 +47,7 @@ Erc IROM Tcp::write(uint8_t* pb, uint32_t length) {
 	};
 	if (i < length) {
 		_overflowTxd++;
+		ERROR("TCP BUFFER OVERFLOW");
 	}
 	send();
 	return E_OK;
@@ -105,15 +107,24 @@ void IROM Tcp::disconnectCb(void *arg) {
 }
 
 void IROM Tcp::send() { // send buffered data, max 100 bytes
-	uint8_t buffer[100];
-	uint32_t length = 0;
-	while (_txd.hasData() && length < sizeof(buffer)) {
-		buffer[length++] = _txd.read();
-	}
-	if (length) {
-		_bytesTxd += length;
+	while (true) {
+		if (_buffer.length()) {
+			// retry send same data
+		} else {
+			while (_txd.hasData() && _buffer.hasSpace(1)) {
+				_buffer.write(_txd.read());
+			}
+		}
+		if (_buffer.length() == 0)
+			return;
+		int8_t erc = espconn_sent(&_conn, _buffer.data(), _buffer.length());
+		if (erc == 0) {
+			_bytesTxd += _buffer.length();
+			_buffer.clear();
 //		INFO(" TCP:send %d bytes", length);
-		espconn_sent(&_conn, buffer, length);
+		} else {
+			return;
+		}
 	}
 }
 

@@ -49,7 +49,7 @@ void IROM Mqtt::getPrefix(Str& s) {
 }
 
 void Mqtt::error(Str& s) {
-	publish("mqtt/error",s,MQTT_QOS0_FLAG);
+	publish("mqtt/error", s, MQTT_QOS0_FLAG);
 }
 
 void IROM Mqtt::sendConnect() {
@@ -95,7 +95,7 @@ bool IROM Mqtt::dispatch(Msg& msg) {
 		_isConnected = false;
 		Msg::publish(this, SIG_DISCONNECTED);
 		_mqttPinger->stop();
-//		_mqttPublisher->stop(); // don't start if nothing to publish !!
+		_mqttPublisher->stop(); // don't start if nothing to publish !!
 		_mqttSubscriber->stop();
 		_mqttSubscription->stop();
 		while (true) // DISCONNECTED STATE
@@ -123,6 +123,7 @@ bool IROM Mqtt::dispatch(Msg& msg) {
 				_isConnected = true;
 				_mqttSubscriber->restart();
 				_mqttPinger->restart();
+				_mqttPublisher->restart();
 				goto RECEIVING;
 			}
 		}
@@ -249,22 +250,25 @@ Cbor cbor(0);
 uint32_t cmd;
 PT_BEGIN()
 READY: {
-PT_YIELD_UNTIL(_queue.hasData() && _mqtt.isConnected());
+PT_YIELD_UNTIL(_queue.hasData());
 
-if (_queue.getf("iSBi", &cmd, &_topic, &_message, &_flags))
+if (_queue.getf("iSBi", &cmd, &_topic, &_message, &_flags) != E_OK) {
+	INFO("getf failed.");
 	goto READY;
+}
 
 _messageId = Mqtt::nextMessageId();
 
 if ((_flags & MQTT_QOS_MASK) == MQTT_QOS0_FLAG) {
 	sendPublish();
-	PT_YIELD_UNTIL(msg.is(_mqtt._framer, SIG_TXD));
-	Msg::publish(this, SIG_ERC, 0);
+//	PT_YIELD_UNTIL(msg.is(_mqtt._framer, SIG_TXD));
+//	Msg::publish(this, SIG_ERC, 0);
 	goto READY;
-} else if ((_flags & MQTT_QOS_MASK) == MQTT_QOS1_FLAG)
+} else if ((_flags & MQTT_QOS_MASK) == MQTT_QOS1_FLAG) {
 	goto QOS1_ACK;
-else if ((_flags & MQTT_QOS_MASK) == MQTT_QOS2_FLAG)
+} else if ((_flags & MQTT_QOS_MASK) == MQTT_QOS2_FLAG) {
 	goto QOS2_REC;
+}
 goto READY;
 }
 
@@ -275,12 +279,12 @@ for (_retries = 0; _retries < MAX_RETRIES; _retries++) {
 	timeout(TIME_WAIT_REPLY);
 	PT_YIELD_UNTIL(msg.is(_mqtt._framer,SIG_RXD,MQTT_MSG_PUBACK) || timeout());
 	if (msg.is(_mqtt._framer, SIG_RXD, MQTT_MSG_PUBACK)) {
-		int id;
-		msg.get(id); // skip type in  <src><signal><type><msgId><qos><topic><value>
+		int mqttType,id;
+		msg.get(mqttType); // skip type in  <src><signal><type><msgId><qos><topic><value>
 		msg.get(id);
-//				INFO(" messageId compare %d : %d ",id,_messageId);
+		INFO(" messageId compare %d : %d ", id, _messageId);
 		if (id == _messageId) {
-			Msg::publish(this, SIG_ERC, 0);
+//			Msg::publish(this, SIG_ERC, 0);
 			goto READY;
 		}
 	}
@@ -293,18 +297,22 @@ QOS2_REC: {
 // INFO("QOS2_REC");
 for (_retries = 0; _retries < MAX_RETRIES; _retries++) {
 	sendPublish();
-	timeout(TIME_WAIT_REPLY);
+	WAIT_REPLY: timeout(TIME_WAIT_REPLY);
 	PT_YIELD_UNTIL(msg.is(_mqtt._framer,SIG_RXD,MQTT_MSG_PUBREC) || timeout());
 	if (msg.is(_mqtt._framer, SIG_RXD, MQTT_MSG_PUBREC)) {
-		int id;
-		msg.get(id);
+		int mqttType,id;
+		msg.get(mqttType);
 //				INFO(" messageId compare %d : %d ",id,_messageId);
+		msg.get(id);
+		INFO(" messageId compare %d : %d ", id, _messageId);
 		if (id == _messageId) {
 			goto QOS2_COMP;
+		} else {	// wrong PUBREC, don't resend
+			goto WAIT_REPLY;
 		}
 	}
 }
-Msg::publish(this, SIG_ERC, ETIMEDOUT);
+//Msg::publish(this, SIG_ERC, ETIMEDOUT);
 goto READY;
 }
 
@@ -312,13 +320,17 @@ QOS2_COMP: {
 // INFO("QOS2_COMP");
 for (_retries = 0; _retries < MAX_RETRIES; _retries++) {
 	sendPubRel();
+	WAIT_REPLY1:
 	timeout(TIME_WAIT_REPLY);
 	PT_YIELD_UNTIL(msg.is(_mqtt._framer,SIG_RXD,MQTT_MSG_PUBCOMP) || timeout());
 	if (msg.is(_mqtt._framer, SIG_RXD, MQTT_MSG_PUBCOMP)) {
-		int id;
+		int mqttType,id;
+		msg.get(mqttType);
 		if (msg.get(id) && id == _messageId) {
-			Msg::publish(this, SIG_ERC, 0);
+//			Msg::publish(this, SIG_ERC, 0);
 			goto READY;
+		} else {	// wrong pubcomp, don't resend PUBREL
+			goto WAIT_REPLY1;
 		}
 	}
 }
@@ -362,7 +374,7 @@ INFO(" PUBLISH received : %s ", loggerLine.c_str());
 Str _shortTopic(40);
 _shortTopic.clear().substr(_topic, 4 + _mqtt._prefix.length()); // skip "/PUT" +<prefix.length>
 INFO(" PUBLISH translated : %s ", _shortTopic.c_str());
-Msg::_queue->putf("uuSB",this,SIG_RXD,&_shortTopic, &_message);
+Msg::_queue->putf("uuSB", this, SIG_RXD, &_shortTopic, &_message);
 //pub.create(this, SIG_RXD).addf("SB", &_shortTopic, &_message);
 //pub.send();
 }
@@ -375,15 +387,18 @@ PT_BEGIN()
 READY: {
 timeout(100000000);
 PT_YIELD_UNTIL(
-	msg.is(_mqtt._framer, SIG_RXD, MQTT_MSG_PUBLISH) || !_mqtt.isConnected() || timeout());
+	msg.is(_mqtt._framer, SIG_RXD, MQTT_MSG_PUBLISH) || !_mqtt.isConnected());
 if (msg.is(_mqtt._framer, SIG_RXD, MQTT_MSG_PUBLISH)) { // <type><msgId><qos><topic><value>
 int _qos = 0;
 int _type = 0;
 
 _topic.clear();
 _message.clear();
-
-msg.scanf("iiiSS", &_type, &_messageId, &_qos, &_topic, &_message);
+INFO("IN");
+if (msg.scanf("iiiSS", &_type, &_messageId, &_qos, &_topic, &_message) != E_OK) {
+	INFO("scanf failed");
+	goto READY;
+}
 
 if (_qos == MQTT_QOS0_FLAG) {
 
@@ -399,23 +414,24 @@ if (_qos == MQTT_QOS0_FLAG) {
 
 }
 } else if (!_mqtt.isConnected()) {
-PT_EXIT();
+PT_EXIT()
+;
 }
 goto READY;
 }
 QOS2_WAIT_REL: {
-	for (_retries = 0; _retries < MAX_RETRIES; _retries++) {
-		sendPubRec();
-		PT_YIELD_UNTIL(
-			!_mqtt.isConnected() || msg.is(_mqtt._framer,SIG_RXD,MQTT_MSG_PUBREL) || timeout());
-		if (msg.is(_mqtt._framer, SIG_RXD, MQTT_MSG_PUBREL)) {
-			callBack();
-			sendPubComp();
-			break;
-			}
-		}
-		goto READY;
-	}
+for (_retries = 0; _retries < MAX_RETRIES; _retries++) {
+sendPubRec();
+PT_YIELD_UNTIL(
+		!_mqtt.isConnected() || msg.is(_mqtt._framer,SIG_RXD,MQTT_MSG_PUBREL) || timeout());
+if (msg.is(_mqtt._framer, SIG_RXD, MQTT_MSG_PUBREL)) {
+	callBack();
+	sendPubComp();
+	break;
+}
+}
+goto READY;
+}
 PT_END()
 }
 

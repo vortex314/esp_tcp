@@ -58,18 +58,23 @@ extern "C" void MsgInit();
 extern uint64_t SysWatchDog;
 os_event_t MsgQueue[MSG_TASK_QUEUE_SIZE];
 os_timer_t pumpTimer;
-extern uint64_t SysWatchDog;
+extern "C" void feedWatchDog();
 
 inline void Post(const char* src, Signal signal) {
 	system_os_post((uint8_t) MSG_TASK_PRIO, (os_signal_t) signal,
 			(os_param_t) src);
 }
+uint32_t used=0;
 
 void IROM MSG_TASK(os_event_t *e) {
+//	if (Msg::_queue->getUsed()>used) {
+//		used=Msg::_queue->getUsed();
+//		INFO(" used : %d",used);
+//	}
 	while (msg->receive()) {
 		Handler::dispatchToChilds(*msg);
 	}
-	SysWatchDog = Sys::millis() + 1000; // if not called within 1 second calls dump_stack;
+	feedWatchDog(); // if not called within 1 second calls dump_stack;
 }
 
 const char* CLOCK_ID = "CLOCK";
@@ -105,7 +110,7 @@ extern "C" IROM void MsgInit() {
 	Cbor cbor(30);
 	Cbor ret(0);
 	Str string(40);
-	for (i = 0; i < 10; i++) {
+	for (i = 0; i < 1000; i++) {
 		uint32_t erc;
 		bool b;
 		double f;
@@ -115,22 +120,33 @@ extern "C" IROM void MsgInit() {
 		cbor.clear();
 		cbor.addf("bsi", true, " Hi di hi", 12);
 		((Bytes) cbor).toHex(string.clear());
-		INFO("hex- : %s", string.c_str());
+//		INFO("hex- : %s", string.c_str());
 
 		erc = queue.putf("bsi", true, " Hi di hi", 12);
-		if (erc)
+		if (erc) {
 			INFO(" couldn't putf  %d : %d ", i, erc);
-/*		erc = queue.get(cbor);
-		if (erc)
-			INFO(" couldn't get  %d : %d ", i, erc);
-		((Bytes) cbor).toHex(string.clear());
-		INFO("hex : %s", string.c_str()); */
-
-		erc = queue.getf("bsi", &b,  str, 20, &l);
-		if (erc)
+			break;
+		}
+		erc = queue.putf("bsi", true, " Hi di hi", 12);
+		if (erc) {
+			INFO(" couldn't putf  %d : %d ", i, erc);
+			break;
+		}
+		/*		erc = queue.get(cbor);
+		 if (erc)
+		 INFO(" couldn't get  %d : %d ", i, erc);
+		 ((Bytes) cbor).toHex(string.clear());
+		 INFO("hex : %s", string.c_str()); */
+		erc = queue.getf("bsi", &b, str, 20, &l);
+		erc = queue.getf("bsi", &b, str, 20, &l);
+		if (erc) {
 			INFO(" couldn't getf  %d : %d ", i, erc);
-		if (l != 12)
+			break;
+		}
+		if (l != 12) {
 			INFO(" couldn't get cbor uint32_t %d", i);
+			break;
+		}
 
 	}
 	INFO(" PUMPING ");
@@ -165,7 +181,8 @@ extern "C" IROM void MsgInit() {
 
 	TopicsCreator();
 
-	INFO(" SSID : %s, PSWD : %s",(const char*) STA_SSID, (const char*) STA_PASS);
+	INFO(" SSID : %s, PSWD : %s", (const char*) STA_SSID,
+			(const char*) STA_PASS);
 
 	wifi->config((const char*) STA_SSID, (const char*) STA_PASS);
 	tcp->config("iot.eclipse.org", 1883);

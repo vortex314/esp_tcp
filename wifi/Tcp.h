@@ -48,6 +48,7 @@ private:
 //	ConnState _connState;
 	CircBuf _rxd;
 	CircBuf _txd;
+	Bytes _buffer;
 	uint32_t _connections;
 	uint32_t _bytesRxd;
 	uint32_t _bytesTxd;
