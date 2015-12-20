@@ -59,6 +59,7 @@ private:
 	Stm32Cmd _request;
 	Stm32Cmd _response;
 	Bytes _uartIn;
+	Bytes _dataIn;
 	CborQueue _queue;
 
 	Stm32Cmd::Cmd _cmd;
@@ -67,6 +68,7 @@ private:
 
 public:
 	IROM Stm32(Mqtt* mqtt,UartEsp8266* uart, Gpio* reset, Gpio* boot0);
+	IROM void init();
 	IROM virtual ~Stm32();
 	IROM virtual bool dispatch(Msg& msg);
 	IROM bool CmdReset(Msg& msg);
@@ -74,10 +76,12 @@ public:
 	IROM void addUartData();
 	IROM void uartClear();
 	IROM bool uartDataComplete();
+	IROM bool waitUartData(uint8_t* pb,uint32_t length);
 	IROM static Erc stm32CmdIn(void* instance, Cbor& cbor);
 	IROM void status(Str& str);
 	IROM void status(const char* str);
-	IROM void log(const char* str);
+	IROM void log(const char* fmt,...);
+	IROM void progress(uint32_t percent);
 //	static Erc stm32CmdOut(void* instance, Cbor& cbor);
 };
 

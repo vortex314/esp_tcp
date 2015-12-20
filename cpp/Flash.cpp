@@ -72,11 +72,11 @@ int idx=findOrCreateKey(key);
 	}
 
 	IROM void Flash::init() {
-		INFO("");
+//		INFO("");
 		findOrCreateActivePage();
 
 //		writeItem(13,(uint8_t*)"iot.eclipse.org",os_strlen("iot.eclipse.org"));
-		INFO(" findKey ( 'mqtt/host') : %d ",findKey("mqtt/host"));
+//		INFO(" findKey ( 'mqtt/host') : %d ",findKey("mqtt/host"));
 	}
 
 	IROM bool Flash::isValidPage(uint32_t pageIdx,uint32_t& sequence) {
@@ -146,7 +146,7 @@ int idx=findOrCreateKey(key);
 	}
 
 	IROM void Flash::findOrCreateActivePage() {
-		INFO("");
+//		INFO("");
 		_sequence=0;
 		uint32_t sequence;
 
@@ -162,14 +162,14 @@ int idx=findOrCreateKey(key);
 			_sequence=1;
 		}
 		findFreeBegin();
-		INFO(" pageIdx : %d freePos : %u ",_pageIdx,_freePos);
+//		INFO(" pageIdx : %d freePos : %u ",_pageIdx,_freePos);
 		/*		writeItem(2,(uint8_t*)"mqtt/host",10);
 		 writeItem(4,(uint8_t*)"mqtt/port",10);*/
 	}
 #define FIRST "FIRST"
 
 	IROM bool Flash::initializePage(uint32_t pageIdx,uint32_t sequence) {
-		INFO(" pageIdx : %d sequence : %d ",pageIdx,sequence);
+//		INFO(" pageIdx : %d sequence : %d ",pageIdx,sequence);
 		uint32_t sector = PAGE_START/PAGE_SIZE + pageIdx;
 		if ( spi_flash_erase_sector(sector) != SPI_FLASH_RESULT_OK ) return false;
 		uint32_t magic=PAGE_SIGNATURE;
@@ -187,12 +187,12 @@ int idx=findOrCreateKey(key);
 	}
 
 	IROM bool Flash::writeItem( uint16_t index,uint8_t* start,uint32_t length) {
-		INFO(" index : %u , length : %u ",index,length);
+//		INFO(" index : %u , length : %u ",index,length);
 		uint32_t address = pageAddress(_pageIdx)+_freePos;
 		Quad W;
 		W.index = index;
 		W.length=length;
-		INFO(" address 0x%x length %d",address,length);
+//		INFO(" address 0x%x length %d",address,length);
 		if (spi_flash_write(address,&W.w,4)!= SPI_FLASH_RESULT_OK ) return false;
 		for(uint32_t i=0;i<length+3;i+=4) {
 			W.w=0xFFFFFFFF;
@@ -214,7 +214,7 @@ int idx=findOrCreateKey(key);
 			start[i]=flashReadByte(offset+4+i);
 //					INFO(" readByte : 0x%x",start[i]);
 		}
-		INFO("offset 0x%X length %u",offset,length);
+//		INFO("offset 0x%X length %u",offset,length);
 		return true;
 	}
 

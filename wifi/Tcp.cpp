@@ -14,7 +14,7 @@ uint8_t StrToIP(const char* str, void *ip);
 IROM Tcp::Tcp(Wifi* wifi) :
 		Handler("Tcp"), _rxd(256), _txd(256), _buffer(100) {
 	_wifi = wifi;
-	INFO("TCP : ctor");
+//	INFO("TCP : ctor");
 	os_strcpy(_host, "www.google.com");
 	_dstPort = 80;
 	_ip.addr = 0;

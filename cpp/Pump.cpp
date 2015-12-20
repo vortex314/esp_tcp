@@ -99,76 +99,27 @@ extern IROM void TopicsCreator();
 #include "CborQueue.h"
 
 extern "C" IROM void MsgInit() {
-	INFO(" Start Message Pump ");
+//	INFO(" Start Message Pump ");
 	do_global_ctors();
 	Msg::init();
 
 //	initPins();
 
-	CborQueue queue(1000);
-	int i;
-	Cbor cbor(30);
-	Cbor ret(0);
-	Str string(40);
-	for (i = 0; i < 1000; i++) {
-		uint32_t erc;
-		bool b;
-		double f;
-		char str[20];
-		uint32_t l;
-
-		cbor.clear();
-		cbor.addf("bsi", true, " Hi di hi", 12);
-		((Bytes) cbor).toHex(string.clear());
-//		INFO("hex- : %s", string.c_str());
-
-		erc = queue.putf("bsi", true, " Hi di hi", 12);
-		if (erc) {
-			INFO(" couldn't putf  %d : %d ", i, erc);
-			break;
-		}
-		erc = queue.putf("bsi", true, " Hi di hi", 12);
-		if (erc) {
-			INFO(" couldn't putf  %d : %d ", i, erc);
-			break;
-		}
-		/*		erc = queue.get(cbor);
-		 if (erc)
-		 INFO(" couldn't get  %d : %d ", i, erc);
-		 ((Bytes) cbor).toHex(string.clear());
-		 INFO("hex : %s", string.c_str()); */
-		erc = queue.getf("bsi", &b, str, 20, &l);
-		erc = queue.getf("bsi", &b, str, 20, &l);
-		if (erc) {
-			INFO(" couldn't getf  %d : %d ", i, erc);
-			break;
-		}
-		if (l != 12) {
-			INFO(" couldn't get cbor uint32_t %d", i);
-			break;
-		}
-
-	}
-	INFO(" PUMPING ");
 	ets_delay_us(100000);
 	ets_sprintf(deviceName, "limero314/ESP_%08X/", system_get_chip_id());
 
 	CreateMutex(&mutex);
 	msg = new Msg(256);
-	INFO(" PUMPING ");
 	ets_delay_us(100000);
 
 //	flash = new Flash();
 //	flash->init();
-	INFO(" PUMPING ");
-	ets_delay_us(100000);
-
 	wifi = new Wifi();
 	tcp = new Tcp(wifi);
 	mqttFramer = new MqttFramer(tcp);
 	mqtt = new Mqtt(mqttFramer);
 	led = new LedBlink(tcp);
-	gpioReset = new Gpio(2);
+	gpioReset = new Gpio(4);
 	gpioFlash = new Gpio(0);
 	stm32 = new Stm32(mqtt, UartEsp8266::getUart0(), gpioReset, gpioFlash);
 

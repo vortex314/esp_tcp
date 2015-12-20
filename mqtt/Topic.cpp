@@ -11,7 +11,7 @@ Topic* Topic::_first = 0;
 
 IROM Topic::Topic(const char* name, void* instance, Xdr putter, Xdr getter,
 		int flags) {
-	INFO(" add topic : %s _getter %x _putter %x", name, getter, putter);
+	INFO(" add topic : %s ", name);
 	_name = name;
 	_instance = instance;
 	_putter = putter;
@@ -47,8 +47,8 @@ IROM Erc Topic::putter(Cbor& cbor) {
 }
 IROM Erc Topic::getter(Cbor& cbor) {
 	if (_getter == 0) {
-		INFO(" ######### %s _getter : %x ", _name,_getter);
-		INFO(" #########_instance : %x ", _instance);
+//		INFO(" ######### %s _getter : %x ", _name, _getter);
+//		INFO(" #########_instance : %x ", _instance);
 		return EADDRNOTAVAIL;
 	}
 
@@ -91,7 +91,7 @@ IROM Erc Topic::getConstantChar(void *instance, Cbor& cbor) {
 
 IROM Topic* Topic::find(Str& str) {
 	Topic *pt = 0;
-	INFO(" find %s", str.c_str());
+//	INFO(" find %s", str.c_str());
 	for (pt = first(); pt != 0; pt = pt->next()) {
 		if (strncmp(pt->_name, str.c_str(), str.length()) == 0)
 			break;
@@ -131,38 +131,38 @@ IROM bool TopicSubscriber::dispatch(Msg& msg) {
 	}
 	{
 //-------------------------------------------------- subscribe to PUT/.../#
-		INFO("subscribe");
+//		INFO("subscribe");
 		_tempStr.clear() << "PUT/";
 		_mqtt->getPrefix(_tempStr);
 		_tempStr << "#";
 		_src = _mqtt->subscribe(_tempStr);	// TODO could be zero
-		INFO("subscribing : %X", _src);
-		PT_YIELD_UNTIL(_mqtt->_mqttPublisher->isReady());
+//		INFO("subscribing : %X", _src);
+		PT_YIELD_UNTIL(_mqtt->_mqttSubscription->isReady());
 	}
 //-------------------------------------------------- wait PUT cmd
 	while (true) {
 		_topic.clear();
 		_value.clear();
 		PT_YIELD_UNTIL(msg.is(_mqtt->_mqttSubscriber, SIG_RXD));
-		INFO(" PUBLISH received  ");
+//		INFO(" PUBLISH received ");
 		if (msg.scanf("SB", &_topic, &_value)) {
-			INFO(" PUBLISH scanned %s  ", _topic.c_str());
+//			INFO(" PUBLISH scanned %s  ", _topic.c_str());
 			if ((pt = Topic::find(_topic))) {
-				INFO(" found topic :%s to update ", pt->getName());
+//				INFO(" found topic :%s to update ", pt->getName());
 				if (pt->getPutter() != 0) {
 					_value.offset(0);
 					erc = pt->putter(_value);
 					if (erc) {
-						_mqttErrorString.clear() << "PUT failed on " << _topic
-								<< ":" << (int) erc;
-						error(_mqttErrorString);
+						ERROR(" put failed on topic ");
 					}
 				} else {
-					Str str(100);
-					_mqttErrorString.clear() << " topic not found " << _topic;
-					error(str);
+					ERROR("  topic has no put ");
 				}
+			} else {
+				ERROR(" topic not found ");
 			}
+		} else {
+			ERROR(" scanf failed ");
 		}
 	}
 PT_END()
@@ -191,8 +191,9 @@ while (true) {
 	if (_currentTopic->hasGetter()
 			&& ((_currentTopic->flags() & Topic::F_NO_POLL) == 0))
 		break;
-	if (count++ > 100)
-		INFO(" no next Topic ! %s", _currentTopic->getName());
+	if (count++ > 100) {
+		ERROR(" no next Topic ! %s", _currentTopic->getName());
+	}
 }
 }
 
@@ -205,27 +206,33 @@ DISCONNECTED: {
 //------------------------------------------------------------------ list all topics
 	for (topic = Topic::first(); topic != 0; topic = topic->next())
 		INFO(" topic : %s  ", topic->getName());
+	nextTopic();
 	goto CONNECTED;
 }
 CONNECTED: {
 
 	while (_mqtt->isConnected()) {
-		timeout(100);
+		timeout(5000);
 		PT_YIELD_UNTIL(msg.is(0, SIG_CHANGE) || timeout());
 		if (timeout()) {
-			nextTopic();
 			topic = _currentTopic;
 		} else {
 			topic = _changedTopic = (Topic*) msg.src();
 		}
 		_value.clear();
-		erc = topic->getter(_value);
-		if (erc == E_OK) {
-			_mqtt->publish(topic->getName(), _value,
-					(uint32_t) (topic->flags() & 0x7));
-			if (topic == _changedTopic) {
-				_changedTopic = 0;
+		if ((erc = topic->getter(_value)) == E_OK) {
+			if (_mqtt->publish(topic->getName(), _value,
+					(uint32_t) (topic->flags() & 0x7)) == E_OK) {
+				if (topic == _changedTopic) {
+					_changedTopic = 0;
+				}
+				nextTopic();
+			} else {
+				ERROR(" publish failed ");
 			}
+		} else {
+			ERROR(" topic getter failed ");
+			nextTopic();
 		}
 	}
 	goto DISCONNECTED;

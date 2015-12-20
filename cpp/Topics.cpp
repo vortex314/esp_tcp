@@ -51,7 +51,7 @@ public:
 		char mode[4];
 		UartEsp8266* uart = (UartEsp8266*) pv;
 		if (cbor.get(mode,3)) {
-			INFO(" set Mode : %s ", mode);
+//			INFO(" set Mode : %s ", mode);
 			return uart->setMode(mode);
 		}
 		return EINVAL;
@@ -71,7 +71,7 @@ public:
 		new Topic("uart0/bytesTxd", &UartEsp8266::_uart0->_bytesTxd, 0,
 				Topic::getUI32, 0);
 		new Topic("uart0/data", UartEsp8266::_uart0, UartTopic::sendData,
-				UartTopic::recvData, 2);
+				0, 2);
 		new Topic("uart0/baudrate", UartEsp8266::_uart0, UartTopic::setBaudrate,
 				UartTopic::getBaudrate, 0);
 		new Topic("uart0/mode", UartEsp8266::_uart0, UartTopic::setMode,
@@ -92,7 +92,7 @@ public:
 		Str mode(5);
 		Gpio* gpio = (Gpio*) pv;
 		if (cbor.get(mode)) {
-			INFO(" set Mode : %s ", mode.c_str());
+//			INFO(" set Mode : %s ", mode.c_str());
 			return gpio->setMode((char*) mode.c_str());
 		}
 		return EINVAL;

@@ -18,7 +18,7 @@ public:
 		CMD = 1, MSG_ID, ADDRESS, BYTES,ERC
 	} Field;
 	typedef enum {
-		 INVALID,RESET, GO, READ_PAGE,GET
+		 INVALID,RESET, REQUEST, GO, READ_PAGE,GET
 	} Cmd;
 	IROM Stm32Cmd& cmd(Cmd cmd);
 	IROM bool getCmd(Cmd& cmd);
@@ -26,6 +26,7 @@ public:
 	IROM bool getMsgId(uint16_t& id);
 	IROM Stm32Cmd& erc(uint32_t err);
 	IROM bool getErc(uint32_t& err);
+
 };
 
 #endif /* STM32CMD_H_ */

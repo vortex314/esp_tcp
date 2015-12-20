@@ -72,7 +72,7 @@ public:
 	IROM void setPrefix(const char * prefix);
 	IROM bool isConnected();
 	IROM Handler* subscribe(Str& topic);
-	IROM Handler* publish(const char* topic, Bytes& message, uint32_t flags);
+	IROM Erc publish(const char* topic, Bytes& message, uint32_t flags);
 	IROM void error(Str& s);
 private:
 	IROM void sendSubscribe(uint8_t flags);
@@ -92,6 +92,7 @@ public:
 	IROM bool dispatch(Msg& msg);
 	IROM void sendPubRec();
 	IROM void sendPubComp();
+	IROM void sendPubAck();
 	IROM void callBack();
 	// will invoke
 private:
@@ -117,7 +118,7 @@ class MqttPublisher: public Handler {
 public:
 	IROM MqttPublisher(Mqtt& mqtt);
 	IROM bool dispatch(Msg& msg);
-	IROM Handler* publish(const char* , Bytes& msg, uint32_t flags);
+	IROM Erc publish(const char* , Bytes& msg, uint32_t flags);
 	// will send PUB_OK,PUB_FAIL
 private:
 	IROM void sendPublish();

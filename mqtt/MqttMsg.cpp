@@ -354,10 +354,10 @@ bool IROM MqttMsg::parse() {
 		mapUtfStr(protocol);
 		read(); // version
 		uint8_t connectFlags = read();
-		INFO(" connectFlags :  0x%x", connectFlags);
+//		INFO(" connectFlags :  0x%x", connectFlags);
 		uint16_t keepAliveTimer;
 		readUint16(&keepAliveTimer);
-		INFO(" keepALiveTimer :  %d", keepAliveTimer);
+//		INFO(" keepALiveTimer :  %d", keepAliveTimer);
 		mapUtfStr(_clientId);
 		if (connectFlags & MQTT_WILL_FLAG) {
 			mapUtfStr(_topic);

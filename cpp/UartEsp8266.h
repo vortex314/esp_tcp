@@ -46,6 +46,7 @@ public:
 	IROM virtual uint32_t getBaudrate();
 	IROM virtual Erc setMode(const char* str);
 	IROM virtual void getMode(char* str);
+	IROM Erc pins(uint32_t idx);
 
 };
 

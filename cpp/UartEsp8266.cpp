@@ -110,7 +110,7 @@ UartEsp8266* UartEsp8266::getUart0() {
 	if (UartEsp8266::_uart0 == 0) {
 		UartEsp8266::_uart0 = new UartEsp8266(0);
 		UartEsp8266::_uart0->setBaudrate(115200);
-		char mode[4]=UART_DEFAULT_MODE;
+		char mode[4] = UART_DEFAULT_MODE;
 		UartEsp8266::_uart0->setMode(mode);
 	}
 	return UartEsp8266::_uart0;
@@ -183,8 +183,21 @@ void UartEsp8266::getMode(char* str) {
 Erc UartEsp8266::setMode(const char* str) {
 	//TODO check legal values
 	strncpy(_mode, str, 3);
-	INFO("uart settings %d %d %s", _uartNo, _baudrate, _mode);
+//	INFO("uart settings %d %d %s", _uartNo, _baudrate, _mode);
 	uart_config(_uartNo, _baudrate, _mode);
 	return E_OK;
 }
-
+extern "C" {
+#include <user_interface.h>
+}
+Erc UartEsp8266::pins(uint32_t idx) {
+	if (idx == 0) {
+		system_uart_de_swap();
+		return E_OK;
+	} else if (idx == 1) {
+		system_uart_swap();
+		return E_OK;
+	} else {
+		return EINVAL;
+	}
+}

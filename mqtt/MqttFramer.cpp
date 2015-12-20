@@ -21,7 +21,7 @@ extern Str logLine;
 IROM void MqttFramer::send(MqttMsg& msg) {
 //	INFO(" MQTT send : %s ",msg.toHex(logLine.clear()));
 //	INFO(" MQTT send : %s ",((Bytes)msg).toString(logLine.clear()));
-	INFO(" MQTT send : %s ", msg.toString(logLine.clear()));
+///	INFO("MQTT OUT : %s ", msg.toString(logLine.clear()));
 	if (_stream->hasSpace())
 		_stream->write(msg);
 }
@@ -43,13 +43,13 @@ IROM bool MqttFramer::dispatch(Msg& msg) {
 				i++;
 				if (_msg->feed(_stream->read())) {
 					_msg->parse();
-					INFO("MQTT IN : %s", _msg->toString(logLine.clear()));
+//					INFO("MQTT IN  : %s", _msg->toString(logLine.clear()));
 					Msg msg2(200);
 					msg2.create(this, SIG_RXD).add(_msg->type()).add(
 							_msg->messageId()); // <type><msgId>
 					if (_msg->type() == MQTT_MSG_PUBLISH) {
-						msg2.addf("iSS", _msg->qos(), _msg->topic(),
-								_msg->message()); // <type><msgId><qos><topic><value>
+						msg2.addf("iSB", _msg->qos(), _msg->topic(),
+								_msg->message()); // <type><msgId><qos><topic><value>=iiiSB
 					}
 					msg2.send();
 //					Msg::publish(this, SIG_RXD, _msg->type());
