@@ -104,13 +104,22 @@ extern "C" IROM void MsgInit() {
 	Msg::init();
 
 //	initPins();
+	gpioReset = new Gpio(2); // D2, GPIO4 see http://esp8266.co.uk/tutorials/introduction-to-the-gpio-api/
+	gpioReset->setMode("OOD");
+
+	for (int i=1;i<10;i++) {
+		ets_delay_us(100000);
+		gpioReset->digitalWrite(1);
+		ets_delay_us(100000);
+		gpioReset->digitalWrite(0);
+	}
 
 	ets_delay_us(100000);
 	ets_sprintf(deviceName, "limero314/ESP_%08X/", system_get_chip_id());
 
 	CreateMutex(&mutex);
 	msg = new Msg(256);
-	ets_delay_us(100000);
+
 
 //	flash = new Flash();
 //	flash->init();
@@ -119,7 +128,7 @@ extern "C" IROM void MsgInit() {
 	mqttFramer = new MqttFramer(tcp);
 	mqtt = new Mqtt(mqttFramer);
 	led = new LedBlink(tcp);
-	gpioReset = new Gpio(4);
+
 	gpioFlash = new Gpio(0);
 	stm32 = new Stm32(mqtt, UartEsp8266::getUart0(), gpioReset, gpioFlash);
 

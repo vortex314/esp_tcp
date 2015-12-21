@@ -85,7 +85,7 @@ bool Stm32::waitUartData(uint8_t* pb, uint32_t length) {
 	while (_uart->hasData()) {
 		uint8_t b = _uart->read();
 		_uartIn.write(b);
-		int i;
+		uint32_t i;
 		for (i = 0; i < length; i++) {
 			if (pb[i] == b)
 				return true;
@@ -114,9 +114,9 @@ bool Stm32::dispatch(Msg& msg) {
 		_queue.get(_request);
 		_request.scanf("iiiB", &_cmd, &_messageId, &_errno, &_dataIn);
 //		INFO(" received command");
-		if (_cmd == Stm32Cmd::RESET)
+		if (_cmd == Stm32Cmd::STM32_RESET)
 			goto STATE_RESET;
-		if (_cmd == Stm32Cmd::REQUEST)
+		if (_cmd == Stm32Cmd::STM32_GET_VERSION_AND_COMMANDS)
 			goto STATE_REQUEST;
 		goto START;
 	}
@@ -137,18 +137,20 @@ bool Stm32::dispatch(Msg& msg) {
 		uartClear();
 		progress(10);
 		_retries = 0;
+		ackReceived=false;
 		while (_retries++ < 100) {
 			_uart->write(STM32_SYNC);
 			timeout(100);
 			PT_YIELD_UNTIL(waitUartData((uint8_t* )"\x79", 1) || timeout());
-			ackReceived=false;
-			if (!timeout())
-				break;
-			else
+			if ( timeout() ) {
+
+			} else {
 				ackReceived=true;
+				break;
+			}
 		}
 		progress(100);
-		if (_retries == 100) {
+		if (_retries >= 100) {
 			_errno = EHOSTUNREACH;
 			log("no device found : %s", strerror(errno));
 		} else if (ackReceived) {
@@ -158,6 +160,23 @@ bool Stm32::dispatch(Msg& msg) {
 		status(strerror(_errno));
 		_response.addf("iii", _cmd, _messageId, _errno);
 		_response.addNull();
+		_mqtt->publish("stm32/cmd", _response, MQTT_QOS2_FLAG);
+//		_uart->pins(0);
+		goto START;
+	}
+	STATE_GET: {
+		status("Executing Request");
+		_retries = 0;
+		_errno = 0;
+		_uartIn.clear();
+		progress(1);
+//		_uart->pins(1);
+		_uart->write(_dataIn);
+		timeout(10);
+		PT_YIELD_UNTIL(waitUartData((uint8_t* )"\x79\x1F", 2) || timeout());
+		progress(100);
+		status(strerror(_errno));
+		_response.addf("iiiB", _cmd, _messageId, _errno, &_uartIn);
 		_mqtt->publish("stm32/cmd", _response, MQTT_QOS2_FLAG);
 //		_uart->pins(0);
 		goto START;
