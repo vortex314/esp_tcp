@@ -3,6 +3,14 @@
  *
  *  Created on: Oct 1, 2015
  *      Author: lieven
+ *      xtensa-lx106-elf-g++ -nostartfiles -nodefaultlibs -nostdlib -L"/home/lieven/workspace/Common/Debug" -L/home/lieven/esp_iot_sdk_v1.4.0/lib -Lgcc -u call_user_start -Wl,-static -T../ld/link.ld  -Wl,--gc-sections -mlongcalls -Xlinker -L/home/lieven/esp-open-sdk/sdk/lib -Xlinker -lssl -lmain -lhal -lphy -lpp -lnet80211 -llwip -lwpa -lssl -lmain -lcirom -Xlinker --gc-sections -Xlinker --no-undefined -o "esp_cbor"  ./wifi/Tcp.o ./wifi/Wifi.o  ./mqtt/Mqtt.o ./mqtt/MqttFramer.o ./mqtt/MqttMsg.o ./mqtt/Topic.o  ./cpp/Flash.o ./cpp/Gpio.o ./cpp/LedBlink.o ./cpp/Pump.o ./cpp/Stm32.o ./cpp/Sys.o ./cpp/Topics.o ./cpp/UartEsp8266.o ./cpp/stubs.o  ./config.o ./gpio.o ./gpio16.o ./mutex.o ./uart.o ./user_main.o ./util.o ./utils.o ./watchdog.o   -lCommon -lm -lssl -llwip -lwpa -lnet80211 -lphy -lpp -lmain -lcirom -lhal -lgcc
+ *
+ *-nostartfiles -nodefaultlibs -nostdlib -L"/home/lieven/workspace/Common/Debug"
+ *-nostartfiles -L/home/lieven/esp_iot_sdk_v1.4.0/lib -Lgcc -u call_user_start
+ *-nostartfiles -Wl,-static -T../ld/link.ld  -Wl,--gc-sections -mlongcalls -Xlinker
+ *-nostartfiles -L/home/lieven/esp-open-sdk/sdk/lib -Xlinker -lssl -lmain -lhal -lphy -lpp -lnet80211 -llwip -lwpa -lssl -lmain
+ *-nostartfiles -lcirom -Xlinker --gc-sections -Xlinker --no-undefined
+ *
  */
 
 extern "C" {

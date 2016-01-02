@@ -9,6 +9,7 @@
 #include "ets_sys.h"
 #include "os_type.h"
 #include "osapi.h"
+#include "espmissingincludes.h"
 
 #define US_TO_RTC_TIMER_TICKS(t)          \
     ((t) ?                                   \
@@ -115,12 +116,12 @@ void dump_stack(uint32_t* lv) {
 	uint32_t* start = lv;
 	uint32_t* end = 0x40000000;
 	uint32_t* ptr = start;
-	os_printf_plus("@(#):STACK_START 0x%X\n", start);
+	os_printf_plus("@(#):STACK_START 0x%X\n", (uint32_t)start);
 	while (ptr < end) {
 		if ((*ptr > 0x40000000 && *ptr < 0x60000000) // only print CODE locations
 //		|| (*ptr > 0x3ff00000 && *ptr < 0x40000000) // data
 		)
-			os_printf_plus("@(#):%8X:%8X\n", ptr, *ptr);
+			os_printf_plus("@(#):%8X:%8X\n", (uint32_t)ptr, *ptr);
 		ptr += sizeof(uint32_t);
 	}
 	os_printf_plus("@(#):STACK_END\n");
@@ -132,21 +133,23 @@ void hw_test_timer_cb(void) {
 	SysUpTime++;
 	if (SysUpTime > SysWatchDog) {
 		ets_wdt_disable();
+		system_uart_de_swap();
 		os_printf_plus("\nWATCHDOG\n");
 		dump_stack(&lv);
-		SysWatchDog = SysUpTime + 10000;
+		SysWatchDog = SysUpTime + 500;
 		ets_wdt_enable();
 	}
 
 }
 
 void IROM feedWatchDog() {
-	SysWatchDog = SysUpTime+500;
+	SysWatchDog = SysUpTime+1000;
 }
 
 void IROM initWatchDog(void) {
 	hw_timer_init(FRC1_SOURCE, 1);
 	hw_timer_set_func(hw_test_timer_cb);
 	hw_timer_arm(1000);
+	SysWatchDog = SysUpTime+500;
 }
 

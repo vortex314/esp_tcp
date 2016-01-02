@@ -1,4 +1,4 @@
- /*
+/*
  * Tcp.h
  *
  *  Created on: Oct 24, 2015
@@ -36,15 +36,22 @@ typedef enum {
 
 } ConnState;
 
-class Tcp:  public Handler,public Stream {
+typedef union {
+	uint8_t b[4];
+	uint32_t addr;
+	ip_addr ipAddr;
+} IpAddress;
+
+class Tcp: public Handler, public Stream {
 private:
 	Wifi* _wifi;
-	uint16_t _srcPort;
-	uint16_t _dstPort;
-	uint8_t _dstIp[4];
-	struct espconn _conn;
+
+	struct espconn* _conn;
 	char _host[64];
-	ip_addr_t _ip;
+
+	IpAddress _remote_ip;
+	uint16_t _remote_port;
+	uint16_t _local_port;
 //	ConnState _connState;
 	CircBuf _rxd;
 	CircBuf _txd;
@@ -55,26 +62,34 @@ private:
 	uint32_t _overflowTxd;
 	bool _connected;
 public:
-	IROM Tcp(Wifi* wifi);
-	IROM ~Tcp();
+	IROM Tcp(Wifi* wifi);IROM Tcp(Wifi* wifi, struct espconn* conn);IROM ~Tcp();
+
 	void IROM config(const char* host, uint16_t port);
 	void IROM connect();
-	static void IROM connectCb(void *arg);
-	IROM static void reconnectCb(void *arg, int8 err); // mqtt_tcpclient_recon_cb(void *arg, sint8 errType)
-	IROM static void dnsFoundCb(const char *name, ip_addr_t *ipaddr, void *arg);
-	IROM static void disconnectCb(void *arg);
-	IROM static void recvCb(void *arg, char *pdata, unsigned short len);
-	IROM static void sentCb(void *arg);
-	IROM void send();
-	IROM Erc write(Bytes& bytes);
-	IROM Erc write(uint8_t b);
-	IROM Erc write(uint8_t* pb, uint32_t length);
-	IROM bool hasData();
-	IROM bool hasSpace();
-	IROM uint8_t read();
-	IROM bool dispatch(Msg& msg);
-	IROM bool isConnected();
-	IROM void disconnect();
+	void IROM connect(const char* host, uint16_t port);
+	void IROM listen(uint16_t port);
+	void IROM disconnect();
+
+	IROM void registerCb(struct espconn* pconn);	//
+	IROM static bool match(struct espconn* pconn,Tcp* pTcp); //
+	IROM static void connectCb(void* arg);	//
+	IROM static void reconnectCb(void* arg, int8 err); // mqtt_tcpclient_recon_cb(void *arg, sint8 errType)
+	IROM static void disconnectCb(void* arg); //
+	IROM static void dnsFoundCb(const char *name, ip_addr_t *ipaddr, void *arg); //
+	IROM static void recvCb(void* arg, char *pdata, unsigned short len); //
+	IROM static void sendCb(void* arg); //
+	IROM static void writeFinishCb(void* arg); //
+
+	IROM void send();	//
+	IROM Erc write(Bytes& bytes); //
+	IROM Erc write(uint8_t b); //
+	IROM Erc write(uint8_t* pb, uint32_t length); //
+	IROM bool hasData(); //
+	IROM bool hasSpace(); //
+	IROM uint8_t read(); //
+	IROM bool dispatch(Msg& msg); //
+	IROM bool isConnected(); //
+
 };
 
 #endif /* TCP_H_ */

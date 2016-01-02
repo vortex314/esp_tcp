@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>esp_cbor</name>
+	<name>esp_tcp</name>
 	<comment></comment>
 	<projects>
 		<project>Common</project>

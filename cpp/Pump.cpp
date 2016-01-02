@@ -26,11 +26,8 @@ extern "C" {
 #include "Wifi.h"
 #include "Sys.h"
 #include "Tcp.h"
-#include "MqttMsg.h"
-#include "Mqtt.h"
-#include "Topic.h"
 #include "Gpio.h"
-#include "Stm32.h"
+
 
 mutex_t mutex;
 
@@ -39,14 +36,10 @@ LedBlink *led;
 Msg* msg;
 Wifi* wifi;
 Tcp* tcp;
-MqttMsg* mqttMsg;
-Mqtt* mqtt;
-MqttFramer* mqttFramer;
-TopicSubscriber* topicSubscriber;
-TopicPublisher* topicPublisher;
+
 Gpio* gpioReset;
 Gpio* gpioFlash;
-Stm32* stm32;
+
 
 #define MSG_TASK_PRIO        		1
 #define MSG_TASK_QUEUE_SIZE    	100
@@ -71,7 +64,9 @@ void IROM MSG_TASK(os_event_t *e) {
 //		used=Msg::_queue->getUsed();
 //		INFO(" used : %d",used);
 //	}
+//	INFO("os_event");
 	while (msg->receive()) {
+//		INFO(">>> %x:%d",msg->src(),msg->signal());
 		Handler::dispatchToChilds(*msg);
 	}
 	feedWatchDog(); // if not called within 1 second calls dump_stack;
@@ -95,24 +90,23 @@ static void do_global_ctors(void) {
 
 char deviceName[40];
 
-extern IROM void TopicsCreator();
 #include "CborQueue.h"
 
 extern "C" IROM void MsgInit() {
 //	INFO(" Start Message Pump ");
 	do_global_ctors();
-	Msg::init();
+
 
 //	initPins();
 	gpioReset = new Gpio(2); // D2, GPIO4 see http://esp8266.co.uk/tutorials/introduction-to-the-gpio-api/
 	gpioReset->setMode("OOD");
 
-	for (int i=1;i<10;i++) {
+/*	for (int i=1;i<10;i++) {
 		ets_delay_us(100000);
 		gpioReset->digitalWrite(1);
 		ets_delay_us(100000);
 		gpioReset->digitalWrite(0);
-	}
+	}*/
 
 	ets_delay_us(100000);
 	ets_sprintf(deviceName, "limero314/ESP_%08X/", system_get_chip_id());
@@ -125,34 +119,35 @@ extern "C" IROM void MsgInit() {
 //	flash->init();
 	wifi = new Wifi();
 	tcp = new Tcp(wifi);
-	mqttFramer = new MqttFramer(tcp);
-	mqtt = new Mqtt(mqttFramer);
-	led = new LedBlink(tcp);
+//	tcpServer =  new Tcp(wifi);
+	tcp->listen(2323);
+
+	led = new LedBlink(wifi);
 
 	gpioFlash = new Gpio(0);
-	stm32 = new Stm32(mqtt, UartEsp8266::getUart0(), gpioReset, gpioFlash);
+
 
 //	topicMgr = new TopicMgr(mqtt);
 
-	new Topic("system/online", (void*) true, 0, Topic::getConstantBoolean,
-			Topic::F_QOS1); // ---------------- at least one topic
-	topicPublisher = new TopicPublisher(mqtt);
-	topicSubscriber = new TopicSubscriber(mqtt);
-
-	TopicsCreator();
 
 	INFO(" SSID : %s, PSWD : %s", (const char*) STA_SSID,
 			(const char*) STA_PASS);
 
 	wifi->config((const char*) STA_SSID, (const char*) STA_PASS);
-	tcp->config("iot.eclipse.org", 1883);
-	mqtt->setPrefix(deviceName);
+	INFO("line : %d",__LINE__);
+//	tcp->config("iot.eclipse.org", 1883);
+//	tcpServer->config(2323);
+//	tcp->config("test.mosquitto.org", 1883);
+
+	INFO("line : %d",__LINE__);
 
 	system_os_task(MSG_TASK, MSG_TASK_PRIO, MsgQueue, MSG_TASK_QUEUE_SIZE);
+	INFO("line : %d",__LINE__);
 	Msg::publish(__FUNCTION__, SIG_INIT);
 	os_timer_disarm(&pumpTimer);
 	os_timer_setfn(&pumpTimer, (os_timer_func_t *) tick_cb, (void *) 0);
 	os_timer_arm(&pumpTimer, 10, 1);
+	INFO("line : %d",__LINE__);
 
 }
 

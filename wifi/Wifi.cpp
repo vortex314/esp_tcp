@@ -36,7 +36,7 @@ _connected=false;
 }
 
 Wifi::~Wifi() {
-// TODO Auto-generated destructor stub
+
 }
 
 void  Wifi::config(const char* ssid,const char* pswd) {
@@ -60,23 +60,30 @@ INIT : {
 	struct station_config stationConf;
 
 	INFO("WIFI_INIT");
-	wifi_set_opmode(STATION_MODE);
-	wifi_set_phy_mode(PHY_MODE_11B);
+	if ( wifi_set_opmode(STATION_MODE) ){
+		; // STATIONAP_MODE was STATION_MODE
+		INFO("line : %d",__LINE__);
+		if ( wifi_set_phy_mode(PHY_MODE_11B)) {
+			os_memset(&stationConf, 0, sizeof(struct station_config));
+			ets_strncpy((char*)stationConf.ssid,_ssid,sizeof(stationConf.ssid));
+			ets_strncpy((char*)stationConf.password,_pswd,sizeof(stationConf.password));
+			stationConf.bssid_set=0;
+			INFO("line : %d",__LINE__);
+			if ( wifi_station_set_config(&stationConf) ){
+				if ( wifi_station_connect() ){
+					INFO("line : %d",__LINE__);
+					goto DISCONNECTED;//	wifi_station_set_auto_connect(TRUE);
+				}
+			}
+		}
+	}
 	//	wifi_station_set_auto_connect(FALSE);
-	os_memset(&stationConf, 0, sizeof(struct station_config));
-
-	ets_strncpy((char*)stationConf.ssid,_ssid,sizeof(stationConf.ssid));
-	ets_strncpy((char*)stationConf.password,_pswd,sizeof(stationConf.password));
-	stationConf.bssid_set=0;
-
-	wifi_station_set_config(&stationConf);
-	//	wifi_station_set_auto_connect(TRUE);
-	wifi_station_connect();
-	timeout(2000);
-	goto DISCONNECTED;
+	INFO(" WIFI INIT failed , retrying... ");
+	goto INIT;
 };
 DISCONNECTED: {
 	while(true) {
+		timeout(1000);
 		PT_YIELD_UNTIL(timeout());
 		struct ip_info ipConfig;
 		wifi_get_ip_info(STATION_IF, &ipConfig);

@@ -6,6 +6,7 @@
 //////////////////////////////////////////////////
 
 #include "mutex.h"
+#include "espmissingincludes.h"
 
 // setup a new mutex
 void ICACHE_FLASH_ATTR CreateMutex(mutex_t *mutex) {
