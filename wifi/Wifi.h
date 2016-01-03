@@ -15,6 +15,7 @@
 	 uint32_t _connections;
 	 bool _connected;
 	static void callback();
+	static uint8_t _wifiStatus ;
 public:
 	IROM Wifi();
 	IROM virtual ~Wifi();

@@ -11,36 +11,113 @@
 //#include <LinkedList.h>
 //#include <QueueTemplate.h>
 
+template<class T>
+class List {
+public:
+	List();
+	Erc add(T&) {
+		if (_first == 0) {
+			_first = new List<T>();
+		} else {
+
+		}
+		return E_OK;
+	}
+	uint32_t size();
+private:
+	static List* _first;
+	List* _next;
+	T& t;
+};
+
 typedef struct {
 	IpAddress _host;
 	uint16_t _port;
 	Tcp* _instance;
 } Callback;
 
-// LinkedList<Tcp*> ll();
-/*
- static Callback* findInstance(struct espconn* pconn) {
- Callback* cursor=callbackList.first()->_content;
- for (cursor = callback.first()->_content; cursor != 0; cursor=cursor->next()) {
- if (cursor->_port == pconn->proto.tcp->remote_port)
- if ( memcmp(cursor->_host.b, pconn->proto.tcp->remote_ip,4) == 0)
- return cursor;
- }
- return 0;
- }*/
+//List<Callback> tcps();
 
-bool IROM Tcp::match(struct espconn* pconn, Tcp* pTcp) {
+uint32_t Tcp::_maxConnections = 5;
+Tcp** Tcp::_tcps = 0;
+
+void Tcp::globalInit(Wifi* wifi, uint32_t maxConnections) {
+	_tcps = new (Tcp*[5]);
+	uint32_t i;
+	for (i = 0; i < _maxConnections; i++)
+		_tcps[i] = new Tcp(wifi);
+}
+
+void Tcp::logConn(const char* s, void* arg) {
+	struct espconn* pconn = (struct espconn*) arg;
+	if (pconn)
+		INFO(
+				" %s -- this : %x/%x  esp : %x , tcp :  %x  , ip : %d.%d.%d.%d:%d ",
+				s, this, this->_conn, pconn, pconn->reverse,
+				pconn->proto.tcp->remote_ip[0], pconn->proto.tcp->remote_ip[1],
+				pconn->proto.tcp->remote_ip[2], pconn->proto.tcp->remote_ip[3],
+				pconn->proto.tcp->remote_port);
+}
+
+void Tcp::loadEspconn(struct espconn* pconn) {
+	_conn = pconn;
+	ets_sprintf(_host, "%d.%d.%d.%d", pconn->proto.tcp->remote_ip[0],
+			pconn->proto.tcp->remote_ip[1], pconn->proto.tcp->remote_ip[2],
+			pconn->proto.tcp->remote_ip[3]);
+	_remote_port = pconn->proto.tcp->remote_port;
+	os_memcpy(&_remote_ip, pconn->proto.tcp->remote_ip, 4);
+}
+
+bool Tcp::match(struct espconn* pconn, Tcp* pTcp) {
+/*	INFO(" compare %X:%d : %X:%d ", *((uint32_t* )pTcp->_remote_ip.b),
+			pTcp->_remote_port, *((uint32_t* )pconn->proto.tcp->remote_ip),
+			pconn->proto.tcp->remote_port);*/
+
 	if (pTcp->_remote_port == pconn->proto.tcp->remote_port)
 		if (memcmp(pTcp->_remote_ip.b, pconn->proto.tcp->remote_ip, 4) == 0)
 			return true;
 	return false;
 }
 
+Tcp* Tcp::findTcp(struct espconn* pconn) {
+	uint32_t i;
+	for (i = 0; i < _maxConnections; i++) {
+		if (Tcp::match(pconn, _tcps[i]))
+			return _tcps[i];
+	}
+	return 0;
+}
+
+Tcp* Tcp::findFreeTcp(struct espconn* pconn) {
+	uint32_t i;
+	for (i = 0; i < _maxConnections; i++) {
+		if (_tcps[i]->isConnected() == false)
+			return _tcps[i];
+	}
+	return 0;
+}
+
+void Tcp::registerCb(struct espconn* pconn) {
+
+	pconn->reverse = this;
+	espconn_regist_time(pconn, 1000, 1);		// disconnect after 1000 sec
+	espconn_regist_connectcb(pconn, connectCb);
+	espconn_regist_disconcb(pconn, disconnectCb);
+	espconn_regist_recvcb(pconn, recvCb);
+	espconn_regist_sentcb(pconn, sendCb);
+	espconn_regist_write_finish(pconn, writeFinishCb);
+	logConn(__FUNCTION__, pconn);
+}
+
 Tcp* getInstance(void *arg) {
-	struct espconn *pCon = (struct espconn *) arg;
-	Tcp* pTcp;
+	struct espconn *pconn = (struct espconn *) arg;
+	Tcp* pTcp = (Tcp*) pconn->reverse;
+	if (!Tcp::match(pconn, pTcp)) {
+		INFO(" !!!!!!!!!!!!!!!! espconn and pTcp don't match ");
+		pTcp = Tcp::findTcp(pconn);
+	}
 //	ll.first();
-	return (Tcp*) pCon->reverse;
+	return pTcp;
 }
 
 //const char* TCP_OS = "TCP_OS";
@@ -48,14 +125,6 @@ Tcp* getInstance(void *arg) {
 uint8_t StrToIP(const char* str, void *ip);
 
 extern Wifi* wifi;
-
-void logCb(const char* s, void* arg) {
-	struct espconn* pconn = (struct espconn*) arg;
-	INFO(" %s --  esp : %x , tcp :  %x  , ip : %d.%d.%d.%d:%d ", s, pconn,
-			pconn->reverse, pconn->proto.tcp->remote_ip[0],
-			pconn->proto.tcp->remote_ip[1], pconn->proto.tcp->remote_ip[2],
-			pconn->proto.tcp->remote_ip[3], pconn->proto.tcp->remote_port);
-}
 
 Tcp::Tcp(Wifi* wifi) :
 		Handler("Tcp"), _rxd(512), _txd(256), _buffer(100) {
@@ -82,14 +151,10 @@ Tcp::Tcp(Wifi* wifi) :
 Tcp::Tcp(Wifi* wifi, struct espconn* pconn) :
 		Handler("Tcp"), _rxd(512), _txd(256), _buffer(100) {
 	_wifi = wifi;
-	_conn = pconn;
 
-	ets_sprintf(_host, "%d.%d.%d.%d", pconn->proto.tcp->remote_ip[0],
-			pconn->proto.tcp->remote_ip[1], pconn->proto.tcp->remote_ip[2],
-			pconn->proto.tcp->remote_ip[3]);
-	_remote_port = pconn->proto.tcp->remote_port;
-	os_memcpy(&_remote_ip, pconn->proto.tcp->remote_ip, 4);
 	_connected = true;
+	loadEspconn(pconn);
+
 	_bytesTxd = 0;
 	_bytesRxd = 0;
 	_overflowTxd = 0;
@@ -109,6 +174,7 @@ Erc Tcp::write(Bytes& bytes) {
 }
 
 Erc Tcp::write(uint8_t* pb, uint32_t length) {
+	logConn(__FUNCTION__, _conn);
 	uint32_t i = 0;
 	while (_txd.hasSpace() && (i < length)) {
 		_txd.write(pb[i++]);
@@ -147,34 +213,42 @@ bool Tcp::hasSpace() {
 //_________________________________________________________
 //
 void Tcp::connectCb(void* arg) {
-	logCb(__FUNCTION__, arg);
+
 	struct espconn* pconn = (struct espconn*) arg;
-	Tcp *pTcp = new Tcp(wifi, pconn);
-	pTcp->registerCb(pconn);
+//	Tcp *pTcp = new Tcp(wifi, pconn);
+	Tcp* pTcp = findFreeTcp(pconn);
+
+	if (pTcp) {
+
+		pTcp->loadEspconn(pconn);
+		pTcp->logConn(__FUNCTION__, arg);
+		pTcp->registerCb(pconn);
+
+		espconn_set_opt(pconn, ESPCONN_NODELAY);
+		espconn_set_opt(pconn, ESPCONN_COPY);
+		espconn_set_keepalive(pconn, ESPCONN_KEEPALIVE, (void*) 1000);
+		espconn_regist_time(pconn, 1000, 0);
+
+		Msg::publish(pTcp, SIG_CONNECTED);
+		pTcp->_connected = true;
+	} else {
+		INFO(" no free TCP : disconnecting ");
+		espconn_disconnect(pconn);
+	}
 	return;
-
-	espconn_set_opt(pconn, ESPCONN_NODELAY);
-	espconn_set_opt(pconn, ESPCONN_COPY);
-
-	Msg::publish(pTcp, SIG_CONNECTED);
-	pTcp->_connected = true;
 }
 
 void Tcp::disconnectCb(void* arg) {
-	logCb(__FUNCTION__, arg);
 	struct espconn* pconn = (struct espconn*) arg;
-	Tcp *pTcp = getInstance(pconn);
-//	delete pTcp;
+//	Tcp *pTcp = getInstance(pconn);
+	Tcp *pTcp = findTcp(pconn);
+	if (pTcp) {
+		pTcp->logConn(__FUNCTION__, arg);
+		Msg::publish(pTcp, SIG_DISCONNECTED);
+		pTcp->_connected = false;
+	} else
+		INFO("connection not found");
 	return;
-
-	/*	INFO(" connected to  %d.%d.%d.%d:%d ", conn->proto.tcp->remote_remote_ip[0],
-	 conn->proto.tcp->remote_remote_ip[1], conn->proto.tcp->remote_remote_ip[2],
-	 conn->proto.tcp->remote_remote_ip[3], conn->proto.tcp->remote_port); */
-
-//	INFO("TCP: Disconnected %s:%d ", pTcp->_host, pTcp->_remote_port);
-//	pTcp->_remote_ip.addr = 0;
-	Msg::publish(pTcp, SIG_DISCONNECTED);
-	pTcp->_connected = false;
 }
 
 void Tcp::send() { // send buffered data, max 100 bytes
@@ -200,9 +274,10 @@ void Tcp::send() { // send buffered data, max 100 bytes
 }
 
 void Tcp::writeFinishCb(void* arg) {
-	logCb(__FUNCTION__, arg);
 	struct espconn* pconn = (struct espconn*) arg;
-	Tcp *pTcp = getInstance(pconn);
+	//	Tcp *pTcp = getInstance(pconn);
+	Tcp *pTcp = findTcp(pconn);
+	pTcp->logConn(__FUNCTION__, arg);
 	return;
 
 	pTcp->send();
@@ -210,9 +285,10 @@ void Tcp::writeFinishCb(void* arg) {
 }
 
 void Tcp::sendCb(void *arg) {
-	logCb(__FUNCTION__, arg);
 	struct espconn* pconn = (struct espconn*) arg;
-	Tcp *pTcp = getInstance(pconn);
+	//	Tcp *pTcp = getInstance(pconn);
+	Tcp *pTcp = findTcp(pconn);
+	pTcp->logConn(__FUNCTION__, arg);
 	return;
 
 //	INFO("TCP: Txd %s:%d ", pTcp->_host, pTcp->_remote_port);
@@ -224,38 +300,43 @@ void Tcp::sendCb(void *arg) {
 
 Message message(100);
 
-
 void Tcp::recvCb(void* arg, char *pdata, unsigned short len) {
-	logCb(__FUNCTION__, arg);
-	if ( message.length()==0) {
-		message.addField(Message::PROP_CMD,1);
-		message.addField(Message::TEXT,"Hello world\n");
+	if (message.length() == 0) {
+		message.addField(Message::DST_PROP, 1);
+		message.addField(Message::TEXT, "Hello world\n");
 	}
-	INFO(" bytes : %d ",len);
+	INFO(" bytes : %d ", len);
 	struct espconn* pconn = (struct espconn*) arg;
-	Tcp *pTcp = getInstance(pconn);
-	espconn_sent(pconn, message.data(), message.length());
-	return;
+	//	Tcp *pTcp = getInstance(pconn);
+	Tcp *pTcp = findTcp(pconn);
+	if (pTcp) {
+		pTcp->logConn(__FUNCTION__, arg);
+		espconn_sent(pconn, message.data(), message.length());
+		return;
 
 //	INFO("TCP: Rxd %s:%d length : %d", pTcp->_host, pTcp->_remote_port, len);
-	pTcp->_bytesRxd += len;
-	int i;
-	for (i = 0; i < len; i++) {
+		pTcp->_bytesRxd += len;
+		int i;
+		for (i = 0; i < len; i++) {
 //		INFO("0x%X",pdata[i]);
-		if (pTcp->_rxd.hasSpace())
-			pTcp->_rxd.write(pdata[i]);
-		else {
-			WARN("TCP overflow");
-			break;
+			if (pTcp->_rxd.hasSpace())
+				pTcp->_rxd.write(pdata[i]);
+			else {
+				WARN("TCP overflow");
+				break;
+			}
 		}
+		Msg::publish(pTcp, SIG_RXD);
+	} else {
+		INFO(" Tcp not found ");
 	}
-	Msg::publish(pTcp, SIG_RXD);
 }
 
 void Tcp::reconnectCb(void* arg, int8_t err) {
-	logCb(__FUNCTION__, arg);
 	struct espconn* pconn = (struct espconn*) arg;
-	Tcp *pTcp = getInstance(pconn);
+	//	Tcp *pTcp = getInstance(pconn);
+	Tcp *pTcp = findTcp(pconn);
+	pTcp->logConn(__FUNCTION__, arg);
 	return;
 
 	INFO("TCP: Reconnect %s:%d err : %d", pTcp->_host, pTcp->_remote_port, err);
@@ -264,8 +345,9 @@ void Tcp::reconnectCb(void* arg, int8_t err) {
 }
 
 void Tcp::dnsFoundCb(const char *name, ip_addr_t *ipaddr, void *arg) {
-	logCb(__FUNCTION__, arg);
-	Tcp *pTcp = getInstance(arg);
+	//	Tcp *pTcp = getInstance(pconn);
+	Tcp *pTcp = findTcp((struct espconn*) arg);
+	pTcp->logConn(__FUNCTION__, arg);
 
 	if (ipaddr == NULL) {
 		INFO("DNS: Found, but got no ip, try to reconnect");
@@ -282,10 +364,6 @@ void Tcp::dnsFoundCb(const char *name, ip_addr_t *ipaddr, void *arg) {
 	}
 }
 
-void Tcp::config(const char* host, uint16_t port) {
-	strncpy(_host, host, sizeof(_host));
-	_remote_port = port;
-}
 //____________________________________________________________
 //			Tcp::connect
 //____________________________________________________________
@@ -304,9 +382,7 @@ void Tcp::connect(const char* host, uint16_t dstPort) {
 	_conn->proto.tcp->remote_port = dstPort;
 	_conn->reverse = this;
 	registerCb(_conn);
-//	TcpCallback::mainRegisterConnection(_conn, this);
-//	espconn_regist_connectcb(_conn, TcpCallback::mainConnectCb);
-//	espconn_regist_reconcb(_conn, TcpCallback::mainReconnectCb);
+
 	if (StrToIP(_host, _conn->proto.tcp->remote_ip)) {
 		INFO("TCP: Connect to ip  %s:%d", _host, dstPort);
 		espconn_connect(_conn);
@@ -330,49 +406,122 @@ bool Tcp::isConnected() {
 bool Tcp::dispatch(Msg& msg) {
 	PT_BEGIN()
 	;
-	INIT: {
-		INFO(" TCP started : %x ", this);
-		PT_WAIT_UNTIL(msg.is(0, SIG_INIT));
-		INFO(" SIG_INIT");
-		goto WIFI_DISCONNECTED;
-	}
 	WIFI_DISCONNECTED: {
 		while (true) {
 			PT_YIELD_UNTIL(_wifi->isConnected());
-			listen(2323);
+			INFO("Tcp started. %x", this);
 			goto CONNECTING;
 		}
 	}
 	CONNECTING: {
 		while (true) {
-//			listen(2323);
-			timeout(3000);
+			timeout(100000);
 			PT_YIELD_UNTIL(isConnected() || timeout());
-			if (isConnected())
+			if (isConnected()) {
 				goto CONNECTED;
-			if (msg.is(this, SIG_DISCONNECTED)) {
-				timeout(1000);
-				PT_YIELD_UNTIL(timeout());
-				goto CONNECTING;
 			}
 		}
 	}
 	CONNECTED: {
 		while (true) {
-			timeout(2000);
-			PT_YIELD_UNTIL(
-					msg.is(this, SIG_DISCONNECTED)
-							|| msg.is(_wifi, SIG_DISCONNECTED));
-			if (msg.is(this, SIG_DISCONNECTED)) {
-				timeout(1000);
-				PT_YIELD_UNTIL(timeout());
-				goto CONNECTING;
-			}
-			if (msg.is(_wifi, SIG_DISCONNECTED))
+			PT_YIELD_UNTIL(!isConnected() || !_wifi->isConnected());
+			if (!_wifi->isConnected())
 				goto WIFI_DISCONNECTED;
+			if (!isConnected())
+				goto CONNECTING;
 		}
 	}
 	;
+PT_END()
+;
+return true;
+}
+
+TcpClient::TcpClient(Wifi* wifi) :
+	Tcp(wifi) {
+}
+
+void TcpClient::config(const char* host, uint16_t port) {
+strncpy(_host, host, sizeof(_host));
+_remote_port = port;
+logConn(__FUNCTION__, _conn);
+}
+
+bool TcpClient::dispatch(Msg& msg) {
+PT_BEGIN()
+;
+WIFI_DISCONNECTED: {
+	while (true) {
+		PT_YIELD_UNTIL(_wifi->isConnected());
+		INFO("TcpClient started. %x", this);
+		goto CONNECTING;
+	}
+}
+CONNECTING: {
+	while (true) {
+		connect();
+		PT_YIELD_UNTIL(isConnected());
+		if (isConnected()) {
+			goto CONNECTED;
+		}
+	}
+}
+CONNECTED: {
+	while (true) {
+		PT_YIELD_UNTIL(!isConnected() || !_wifi->isConnected());
+		if (!_wifi->isConnected())
+			goto WIFI_DISCONNECTED;
+		if (!isConnected())
+			goto CONNECTING;
+	}
+}
+;
+PT_END()
+;
+return true;
+}
+
+TcpServer::TcpServer(Wifi* wifi) :
+Tcp(wifi) {
+_local_port = 23;
+logConn(__FUNCTION__, _conn);
+_connected = true;	// to allocate TCP instance
+}
+
+Erc TcpServer::config(uint32_t maxConnections, uint16_t port) {
+_local_port = port;
+logConn(__FUNCTION__, _conn);
+return E_OK;
+}
+
+bool TcpServer::dispatch(Msg& msg) {
+PT_BEGIN()
+;
+WIFI_DISCONNECTED: {
+while (true) {
+	PT_YIELD_UNTIL(_wifi->isConnected());
+	INFO("TcpServer started. %x", this);
+	goto CONNECTING;
+}
+}
+CONNECTING: {
+while (true) {
+	listen();
+	timeout(999999999);
+	PT_YIELD_UNTIL(isConnected());
+	goto CONNECTED;
+}
+}
+CONNECTED: {
+while (true) {
+	PT_YIELD_UNTIL(!isConnected() || !_wifi->isConnected());
+	if (!_wifi->isConnected())
+		goto WIFI_DISCONNECTED;
+	if (!isConnected())
+		goto CONNECTING;
+}
+}
+;
 PT_END()
 ;
 return true;
@@ -385,53 +534,43 @@ const char * start; // A pointer to the next digit to process.
 start = str;
 
 for (i = 0; i < 4; i++) {
-	char c; /* The digit being processed. */
-	int n = 0; /* The value of this byte. */
-	while (1) {
-		c = *start;
-		start++;
-		if (c >= '0' && c <= '9') {
-			n *= 10;
-			n += c - '0';
-		}
-		/* We insist on stopping at "." if we are still parsing
-		 the first, second, or third numbers. If we have reached
-		 the end of the numbers, we will allow any character. */
-		else if ((i < 3 && c == '.') || i == 3) {
-			break;
-		} else {
-			return 0;
-		}
-	}
-	if (n >= 256) {
-		return 0;
-	}
-	((uint8_t*) ip)[i] = n;
+char c; /* The digit being processed. */
+int n = 0; /* The value of this byte. */
+while (1) {
+c = *start;
+start++;
+if (c >= '0' && c <= '9') {
+	n *= 10;
+	n += c - '0';
+}
+/* We insist on stopping at "." if we are still parsing
+ the first, second, or third numbers. If we have reached
+ the end of the numbers, we will allow any character. */
+else if ((i < 3 && c == '.') || i == 3) {
+	break;
+} else {
+	return 0;
+}
+}
+if (n >= 256) {
+return 0;
+}
+((uint8_t*) ip)[i] = n;
 }
 return 1;
 }
 
-void Tcp::listen(uint16_t port) {
-INFO(" listening. ");
+void TcpServer::listen() {
 _conn->type = ESPCONN_TCP;
 _conn->state = ESPCONN_NONE;
 ets_memset(_conn->proto.tcp, 0, sizeof(esp_tcp));
 //	_conn.proto.tcp->local_port = espconn_port();
-_conn->proto.tcp->local_port = port;
+_conn->proto.tcp->local_port = _local_port;
 _conn->reverse = 0;
 if (espconn_accept(_conn) != ESPCONN_OK) {
-	INFO("ERR : espconn_accept");
+INFO("ERR : espconn_accept");
 }
 registerCb(_conn);
-}
-
-void Tcp::registerCb(struct espconn* pconn) {
-pconn->reverse = this;
-espconn_regist_connectcb(pconn, connectCb);
-espconn_regist_disconcb(pconn, disconnectCb);
-espconn_regist_recvcb(pconn, recvCb);
-espconn_regist_sentcb(pconn, sendCb);
-espconn_regist_write_finish(pconn, writeFinishCb);
-logCb(__FUNCTION__, pconn);
+logConn(__FUNCTION__, _conn);
 }
 

@@ -35,7 +35,8 @@ Flash* flash;
 LedBlink *led;
 Msg* msg;
 Wifi* wifi;
-Tcp* tcp;
+TcpClient* tcpClient;
+TcpServer* tcpServer;
 
 Gpio* gpioReset;
 Gpio* gpioFlash;
@@ -117,29 +118,22 @@ extern "C" IROM void MsgInit() {
 
 //	flash = new Flash();
 //	flash->init();
+	INFO(" SSID : %s, PSWD : %s", (const char*) STA_SSID,
+			(const char*) STA_PASS);
+
 	wifi = new Wifi();
-	tcp = new Tcp(wifi);
-//	tcpServer =  new Tcp(wifi);
-	tcp->listen(2323);
+	wifi->config((const char*) STA_SSID, (const char*) STA_PASS);
+	Tcp::globalInit(wifi,5);
+
+	tcpServer=new TcpServer(wifi);
+	tcpServer->config(5,2323);
+
+//	tcpClient = new TcpClient(wifi);
+//	tcpClient->config("www.google.com", 80);
 
 	led = new LedBlink(wifi);
 
 	gpioFlash = new Gpio(0);
-
-
-//	topicMgr = new TopicMgr(mqtt);
-
-
-	INFO(" SSID : %s, PSWD : %s", (const char*) STA_SSID,
-			(const char*) STA_PASS);
-
-	wifi->config((const char*) STA_SSID, (const char*) STA_PASS);
-	INFO("line : %d",__LINE__);
-//	tcp->config("iot.eclipse.org", 1883);
-//	tcpServer->config(2323);
-//	tcp->config("test.mosquitto.org", 1883);
-
-	INFO("line : %d",__LINE__);
 
 	system_os_task(MSG_TASK, MSG_TASK_PRIO, MsgQueue, MSG_TASK_QUEUE_SIZE);
 	INFO("line : %d",__LINE__);

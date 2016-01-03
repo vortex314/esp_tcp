@@ -45,7 +45,7 @@ ets_strncpy(_pswd,pswd,sizeof(_pswd));
 _connected=false;
 }
 
-static uint8_t wifiStatus = STATION_IDLE;
+uint8_t Wifi::_wifiStatus = STATION_IDLE;
 
  bool Wifi::isConnected() const {
 	return _connected;
@@ -62,16 +62,13 @@ INIT : {
 	INFO("WIFI_INIT");
 	if ( wifi_set_opmode(STATION_MODE) ){
 		; // STATIONAP_MODE was STATION_MODE
-		INFO("line : %d",__LINE__);
 		if ( wifi_set_phy_mode(PHY_MODE_11B)) {
 			os_memset(&stationConf, 0, sizeof(struct station_config));
 			ets_strncpy((char*)stationConf.ssid,_ssid,sizeof(stationConf.ssid));
 			ets_strncpy((char*)stationConf.password,_pswd,sizeof(stationConf.password));
 			stationConf.bssid_set=0;
-			INFO("line : %d",__LINE__);
 			if ( wifi_station_set_config(&stationConf) ){
 				if ( wifi_station_connect() ){
-					INFO("line : %d",__LINE__);
 					goto DISCONNECTED;//	wifi_station_set_auto_connect(TRUE);
 				}
 			}
@@ -87,12 +84,12 @@ DISCONNECTED: {
 		PT_YIELD_UNTIL(timeout());
 		struct ip_info ipConfig;
 		wifi_get_ip_info(STATION_IF, &ipConfig);
-		wifiStatus = wifi_station_get_connect_status();
+		_wifiStatus = wifi_station_get_connect_status();
 		if ( wifi_station_get_connect_status()== STATION_NO_AP_FOUND || wifi_station_get_connect_status()==STATION_WRONG_PASSWORD || wifi_station_get_connect_status()==STATION_CONNECT_FAIL)
 		{
 			INFO(" NOT CONNECTED ");
 			wifi_station_connect();
-		} else if (wifiStatus == STATION_GOT_IP && ipConfig.ip.addr != 0) {
+		} else if (_wifiStatus == STATION_GOT_IP && ipConfig.ip.addr != 0) {
 			_connections++;
 			union {
 				uint32_t addr;
@@ -103,7 +100,7 @@ DISCONNECTED: {
 			INFO(" CONNECTED ");
 			Msg::publish(this,SIG_CONNECTED);
 			_connected=true;
-			timeout(2000);
+
 			goto CONNECTED;
 		} else {
 			INFO(" STATION_IDLE ");
@@ -113,17 +110,16 @@ DISCONNECTED: {
 };
 CONNECTED : {
 	while(true) {
+		timeout(2000);
 		PT_YIELD_UNTIL(timeout());
 		struct ip_info ipConfig;
 		wifi_get_ip_info(STATION_IF, &ipConfig);
-		wifiStatus = wifi_station_get_connect_status();
-		if (wifiStatus != STATION_GOT_IP ) {
+		_wifiStatus = wifi_station_get_connect_status();
+		if (_wifiStatus != STATION_GOT_IP ) {
 			Msg::publish(this,SIG_DISCONNECTED);
-			timeout(500);
 			_connected=false;
 			goto DISCONNECTED;
 		}
-		timeout(2000);
 	}
 
 };

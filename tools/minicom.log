@@ -1,0 +1,1385 @@
+lnnœâìbpŒŽlrlrlpònà‚lbnâ|llŽbŒònnîlŒŽl`nnŽlnrŽ’’nâb’`pònàrŒœœâàbnâ|ŒŽŽpŒònnîŽl`nnlŒl`nrŽ’’nâ’l`r’’nâ’l`rlŒbònnžŒžp|ŒŒbplbŒnp`b‚b’b‚ònnò’nàb‚nbp~’nl‚nàŽnì’n~bllpb‚’`‚nàŽnllnœâìŒ~’`‚nàŽnì’’‚bŽlll~rlrlònnžì|òŒònîŒblrlŽ‚rl~â         0 | ../uart.c         uart_config        | uart_no 0 baudrate 115200 mode 8N1
+         0 | ../uart.c         uart_c
+WATCHDOG
+@(#):STACK_START 0x3FFFF9A0
+@(#):3FFFF9C0:4000050C
+@(#):3FFFF9D0:40002EEE
+@(#):3FFFF9E0:40002EF1
+@(#):3FFFFA90:4022FACE
+@(#):3FFFFAA0:4022FACE
+@(#):3FFFFAB0:4022FEAC
+@(#):3FFFFAC0:4022FC5A
+@(#):3FFFFAD0:4022FC66
+@(#):3FFFFAF0:40100637
+@(#):3FFFFB00:40001100
+@(#):3FFFFF00:550E8675
+@(#):3FFFFFD0:40001878
+@(#):3FFFFFE0:4010000D
+@(#):3FFFFFF0:4000044C
+@(#):STACK_END
+       997 | ../user_main.c    user_init          | *****************************************
+
+WATCHDOG
+@(#):STACK_START 0x3FFFF910
+@(#):3FFFF940:4000DD38
+@(#):3FFFF950:40002EF1
+@(#):3FFFF990:40105D3D
+@(#):3FFFF9C0:40206202
+@(#):3FFFF9E0:40206336
+@(#):3FFFFA40:4022FE28
+@(#):3FFFFA90:4022FACE
+@(#):3FFFFAC0:4022FC5A
+@(#):3FFFFAF0:40100637
+@(#):3FFFFB00:40001100
+@(#):3FFFFF00:550E8675
+@(#):3FFFFFD0:40001878
+@(#):3FFFFFE0:4010000D
+@(#):3FFFFFF0:4000044C
+@(#):STACK_END
+      1003 | ../user_main.c    user_init          | Starting version : Jan  3 2016 21:28:52
+      1014 | ../user_main.c    user_init          | *****************************************
+mode : sta(5c:cf:7f:07:27:7f)
+add if0
+f r0,       1127 | ../cpp/Pump.cpp   MsgInit            |  SSID : Merckx, PSWD : LievenMarletteEwoutRonald
+      1139 | ../wifi/Tcp.cpp   logConn            |  TcpServer -- this : 3fff3540/3fff39a0  esp : 3fff39a0 , tcp :  3fff3080  , ip : 0.0.0.0:0 
+      1150 | ../wifi/Tcp.cpp   logConn            |  config -- this : 3fff3540/3fff39a0  esp : 3fff39a0 , tcp :  3fff3080  , ip : 0.0.0.0:0 
+      1161 | ../cpp/Pump.cpp   MsgInit            | line : 139
+      1172 | ../cpp/Pump.cpp   MsgInit            | line : 144
+scandone
+state: 0 -> 2 (b0)
+      1188 | ../wifi/Wifi.cpp  dispatch           | WIFI_INIT
+f 0, state: 2 -> 3 (0)
+state: 3 -> 5 (10)
+add 0
+aid 2
+cnt 
+scandone
+      2202 | ../wifi/Wifi.cpp  dispatch           |  STATION_IDLE 
+      3222 | ../wifi/Wifi.cpp  dispatch           |  STATION_IDLE 
+      4242 | ../wifi/Wifi.cpp  dispatch           |  STATION_IDLE 
+      5262 | ../wifi/Wifi.cpp  dispatch           |  STATION_IDLE 
+      6282 | ../wifi/Wifi.cpp  dispatch           |  STATION_IDLE 
+      7302 | ../wifi/Wifi.cpp  dispatch           |  STATION_IDLE 
+      8322 | ../wifi/Wifi.cpp  dispatch           |  STATION_IDLE 
+      9342 | ../wifi/Wifi.cpp  dispatch           |  STATION_IDLE 
+     10362 | ../wifi/Wifi.cpp  dispatch           |  STATION_IDLE 
+pm open phy_2,type:2 0 0
+state: 5 -> 0 (2)
+rm 0
+pm close 7 0 0/664
+reconnect
+f r0, scandone
+state: 0 -> 2 (b0)
+state: 2 -> 3 (0)
+state: 3 -> 5 (10)
+add 0
+aid 2
+cnt 
+     11382 | ../wifi/Wifi.cpp  dispatch           |  NOT CONNECTED 
+f r0, scandone
+     12402 | ../wifi/Wifi.cpp  dispatch           |  STATION_IDLE 
+     13422 | ../wifi/Wifi.cpp  dispatch           |  STATION_IDLE 
+     14442 | ../wifi/Wifi.cpp  dispatch           |  STATION_IDLE 
+     15462 | ../wifi/Wifi.cpp  dispatch           |  STATION_IDLE 
+
+connected with Merckx, channel 11
+dhcp client start...
+     16482 | ../wifi/Wifi.cpp  dispatch           |  STATION_IDLE 
+ip:192.168.0.123,mask:255.255.255.0,gw:192.168.0.1
+     17502 | ../wifi/Wifi.cpp  dispatch           |   IP Address : 192.168.0.123 
+     17513 | ../wifi/Wifi.cpp  dispatch           |  CONNECTED 
+     17524 | ../wifi/Tcp.cpp   dispatch           | Tcp started. 3fff1d80
+     17534 | ../wifi/Tcp.cpp   dispatch           | Tcp started. 3fff2240
+     17545 | ../wifi/Tcp.cpp   dispatch           | Tcp started. 3fff2700
+     17556 | ../wifi/Tcp.cpp   dispatch           | Tcp started. 3fff2bc0
+     17566 | ../wifi/Tcp.cpp   dispatch           | Tcp started. 3fff3080
+     17577 | ../wifi/Tcp.cpp   dispatch           | TcpServer started. 3fff3540
+     17588 | ../wifi/Tcp.cpp   logConn            |  registerCb -- this : 3fff3540/3fff39a0  esp : 3fff39a0 , tcp :  3fff3540  , ip : 0.0.0.0:0 
+     17599 | ../wifi/Tcp.cpp   logConn            |  listen -- this : 3fff3540/3fff39a0  esp : 3fff39a0 , tcp :  3fff3540  , ip : 0.0.0.0:0 
+     17940 | ../wifi/Tcp.cpp   logConn            |  connectCb -- this : 3fff1d80/3fff4400  esp : 3fff4400 , tcp :  3fff3540  , ip : 192.168.0.199:59729 
+     17951 | ../wifi/Tcp.cpp   logConn            |  registerCb -- this : 3fff1d80/3fff4400  esp : 3fff4400 , tcp :  3fff1d80  , ip : 192.168.0.199:59729 
+     17964 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     17974 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59729 : C700A8C0:59729 
+     17985 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff1d80/3fff4400  esp : 3fff4400 , tcp :  3fff1d80  , ip : 192.168.0.199:59729 
+     17998 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59729 : C700A8C0:59729 
+     18008 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff1d80/3fff4400  esp : 3fff4400 , tcp :  3fff1d80  , ip : 192.168.0.199:59729 
+     18214 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59729 : C700A8C0:59729 
+     18225 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff1d80/3fff4400  esp : 3fff4400 , tcp :  3fff1d80  , ip : 192.168.0.199:59729 
+     18435 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     18445 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59729 : C700A8C0:59729 
+     18456 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff1d80/3fff4400  esp : 3fff4400 , tcp :  3fff1d80  , ip : 192.168.0.199:59729 
+     18469 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59729 : C700A8C0:59729 
+     18480 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff1d80/3fff4400  esp : 3fff4400 , tcp :  3fff1d80  , ip : 192.168.0.199:59729 
+     18493 | ../wifi/Tcp.cpp   logConn            |  connectCb -- this : 3fff2240/3fff4c58  esp : 3fff4c58 , tcp :  3fff3540  , ip : 192.168.0.199:59733 
+     18504 | ../wifi/Tcp.cpp   logConn            |  registerCb -- this : 3fff2240/3fff4c58  esp : 3fff4c58 , tcp :  3fff2240  , ip : 192.168.0.199:59733 
+     18516 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     18526 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59729 : C700A8C0:59733 
+     18537 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59733 : C700A8C0:59733 
+     18548 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff2240/3fff4c58  esp : 3fff4c58 , tcp :  3fff2240  , ip : 192.168.0.199:59733 
+     18560 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59729 : C700A8C0:59733 
+     18571 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59733 : C700A8C0:59733 
+     18581 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff2240/3fff4c58  esp : 3fff4c58 , tcp :  3fff2240  , ip : 192.168.0.199:59733 
+     18684 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59729 : C700A8C0:59729 
+     18694 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff1d80/3fff4400  esp : 3fff4400 , tcp :  3fff1d80  , ip : 192.168.0.199:59729 
+     18785 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59729 : C700A8C0:59733 
+     18796 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59733 : C700A8C0:59733 
+     18807 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff2240/3fff4c58  esp : 3fff4c58 , tcp :  3fff2240  , ip : 192.168.0.199:59733 
+     18938 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59729 : C700A8C0:59729 
+     18949 | ../wifi/Tcp.cpp   logConn            |  disconnectCb -- this : 3fff1d80/3fff4400  esp : 3fff39a0 , tcp :  3fff1d80  , ip : 192.168.0.199:59729 
+     18976 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     18987 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59729 : C700A8C0:59733 
+     18998 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59733 : C700A8C0:59733 
+     19008 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff2240/3fff4c58  esp : 3fff4c58 , tcp :  3fff2240  , ip : 192.168.0.199:59733 
+     19021 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59729 : C700A8C0:59733 
+     19032 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59733 : C700A8C0:59733 
+     19043 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff2240/3fff4c58  esp : 3fff4c58 , tcp :  3fff2240  , ip : 192.168.0.199:59733 
+     19060 | ../wifi/Tcp.cpp   logConn            |  connectCb -- this : 3fff1d80/3fff4b58  esp : 3fff4b58 , tcp :  3fff1d80  , ip : 192.168.0.199:59734 
+     19072 | ../wifi/Tcp.cpp   logConn            |  registerCb -- this : 3fff1d80/3fff4b58  esp : 3fff4b58 , tcp :  3fff1d80  , ip : 192.168.0.199:59734 
+     19084 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     19095 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59734 : C700A8C0:59734 
+     19105 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff1d80/3fff4b58  esp : 3fff4b58 , tcp :  3fff1d80  , ip : 192.168.0.199:59734 
+     19118 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59734 : C700A8C0:59734 
+     19129 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff1d80/3fff4b58  esp : 3fff4b58 , tcp :  3fff1d80  , ip : 192.168.0.199:59734 
+     19232 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59734 : C700A8C0:59733 
+     19243 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59733 : C700A8C0:59733 
+     19253 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff2240/3fff4c58  esp : 3fff4c58 , tcp :  3fff2240  , ip : 192.168.0.199:59733 
+     19336 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59734 : C700A8C0:59734 
+     19347 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff1d80/3fff4b58  esp : 3fff4b58 , tcp :  3fff1d80  , ip : 192.168.0.199:59734 
+     19467 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59734 : C700A8C0:59733 
+     19478 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59733 : C700A8C0:59733 
+     19489 | ../wifi/Tcp.cpp   logConn            |  disconnectCb -- this : 3fff2240/3fff4c58  esp : 3fff39a0 , tcp :  3fff2240  , ip : 192.168.0.199:59733 
+     19560 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     19571 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59734 : C700A8C0:59734 
+     19582 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff1d80/3fff4b58  esp : 3fff4b58 , tcp :  3fff1d80  , ip : 192.168.0.199:59734 
+     19595 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59734 : C700A8C0:59734 
+     19606 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff1d80/3fff4b58  esp : 3fff4b58 , tcp :  3fff1d80  , ip : 192.168.0.199:59734 
+     19619 | ../wifi/Tcp.cpp   logConn            |  connectCb -- this : 3fff2240/3fff4c58  esp : 3fff4c58 , tcp :  3fff2240  , ip : 192.168.0.199:59735 
+     19630 | ../wifi/Tcp.cpp   logConn            |  registerCb -- this : 3fff2240/3fff4c58  esp : 3fff4c58 , tcp :  3fff2240  , ip : 192.168.0.199:59735 
+     19642 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     19652 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59734 : C700A8C0:59735 
+     19663 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59735 : C700A8C0:59735 
+     19674 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff2240/3fff4c58  esp : 3fff4c58 , tcp :  3fff2240  , ip : 192.168.0.199:59735 
+     19686 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59734 : C700A8C0:59735 
+     19696 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59735 : C700A8C0:59735 
+     19707 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff2240/3fff4c58  esp : 3fff4c58 , tcp :  3fff2240  , ip : 192.168.0.199:59735 
+     19799 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59734 : C700A8C0:59734 
+     19810 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff1d80/3fff4b58  esp : 3fff4b58 , tcp :  3fff1d80  , ip : 192.168.0.199:59734 
+     19907 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59734 : C700A8C0:59735 
+     19918 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59735 : C700A8C0:59735 
+     19929 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff2240/3fff4c58  esp : 3fff4c58 , tcp :  3fff2240  , ip : 192.168.0.199:59735 
+     20095 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     20106 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59734 : C700A8C0:59735 
+     20116 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59735 : C700A8C0:59735 
+     20127 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff2240/3fff4c58  esp : 3fff4c58 , tcp :  3fff2240  , ip : 192.168.0.199:59735 
+     20141 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59734 : C700A8C0:59735 
+     20152 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59735 : C700A8C0:59735 
+     20163 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff2240/3fff4c58  esp : 3fff4c58 , tcp :  3fff2240  , ip : 192.168.0.199:59735 
+     20176 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59734 : C700A8C0:59734 
+     20186 | ../wifi/Tcp.cpp   logConn            |  disconnectCb -- this : 3fff1d80/3fff4b58  esp : 3fff39a0 , tcp :  3fff1d80  , ip : 192.168.0.199:59734 
+     20208 | ../wifi/Tcp.cpp   logConn            |  connectCb -- this : 3fff1d80/3fff4b58  esp : 3fff4b58 , tcp :  3fff1d80  , ip : 192.168.0.199:59736 
+     20219 | ../wifi/Tcp.cpp   logConn            |  registerCb -- this : 3fff1d80/3fff4b58  esp : 3fff4b58 , tcp :  3fff1d80  , ip : 192.168.0.199:59736 
+     20232 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     20243 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59736 : C700A8C0:59736 
+     20253 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff1d80/3fff4b58  esp : 3fff4b58 , tcp :  3fff1d80  , ip : 192.168.0.199:59736 
+     20266 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59736 : C700A8C0:59736 
+     20276 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff1d80/3fff4b58  esp : 3fff4b58 , tcp :  3fff1d80  , ip : 192.168.0.199:59736 
+     20345 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59736 : C700A8C0:59735 
+     20356 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59735 : C700A8C0:59735 
+     20367 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff2240/3fff4c58  esp : 3fff4c58 , tcp :  3fff2240  , ip : 192.168.0.199:59735 
+     20501 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59736 : C700A8C0:59736 
+     20512 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff1d80/3fff4b58  esp : 3fff4b58 , tcp :  3fff1d80  , ip : 192.168.0.199:59736 
+     20539 | ../wifi/Tcp.cpp   logConn            |  connectCb -- this : 3fff2700/3fff43f8  esp : 3fff43f8 , tcp :  3fff1d80  , ip : 192.168.0.199:59730 
+     20551 | ../wifi/Tcp.cpp   logConn            |  registerCb -- this : 3fff2700/3fff43f8  esp : 3fff43f8 , tcp :  3fff2700  , ip : 192.168.0.199:59730 
+     20563 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     20574 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59736 : C700A8C0:59730 
+     20584 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59735 : C700A8C0:59730 
+     20595 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59730 : C700A8C0:59730 
+     20606 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff2700/3fff43f8  esp : 3fff43f8 , tcp :  3fff2700  , ip : 192.168.0.199:59730 
+     20619 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59736 : C700A8C0:59730 
+     20630 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59735 : C700A8C0:59730 
+     20641 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59730 : C700A8C0:59730 
+     20652 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff2700/3fff43f8  esp : 3fff43f8 , tcp :  3fff2700  , ip : 192.168.0.199:59730 
+     20664 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59736 : C700A8C0:59735 
+     20675 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59735 : C700A8C0:59735 
+     20686 | ../wifi/Tcp.cpp   logConn            |  disconnectCb -- this : 3fff2240/3fff4c58  esp : 3fff39a0 , tcp :  3fff2240  , ip : 192.168.0.199:59735 
+     20706 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     20717 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59736 : C700A8C0:59736 
+     20728 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff1d80/3fff4b58  esp : 3fff4b58 , tcp :  3fff1d80  , ip : 192.168.0.199:59736 
+     20742 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59736 : C700A8C0:59736 
+     20753 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff1d80/3fff4b58  esp : 3fff4b58 , tcp :  3fff1d80  , ip : 192.168.0.199:59736 
+     20765 | ../wifi/Tcp.cpp   logConn            |  connectCb -- this : 3fff2240/3fff4690  esp : 3fff4690 , tcp :  3fff2240  , ip : 192.168.0.199:59737 
+     20776 | ../wifi/Tcp.cpp   logConn            |  registerCb -- this : 3fff2240/3fff4690  esp : 3fff4690 , tcp :  3fff2240  , ip : 192.168.0.199:59737 
+     20788 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     20799 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59736 : C700A8C0:59737 
+     20809 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59737 : C700A8C0:59737 
+     20820 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff2240/3fff4690  esp : 3fff4690 , tcp :  3fff2240  , ip : 192.168.0.199:59737 
+     20832 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59736 : C700A8C0:59737 
+     20842 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59737 : C700A8C0:59737 
+     20853 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff2240/3fff4690  esp : 3fff4690 , tcp :  3fff2240  , ip : 192.168.0.199:59737 
+     20866 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59736 : C700A8C0:59730 
+     20876 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59737 : C700A8C0:59730 
+     20887 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59730 : C700A8C0:59730 
+     20898 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff2700/3fff43f8  esp : 3fff43f8 , tcp :  3fff2700  , ip : 192.168.0.199:59730 
+     20928 | ../wifi/Tcp.cpp   logConn            |  connectCb -- this : 3fff2bc0/3fff4828  esp : 3fff4828 , tcp :  3fff2240  , ip : 192.168.0.199:59731 
+     20939 | ../wifi/Tcp.cpp   logConn            |  registerCb -- this : 3fff2bc0/3fff4828  esp : 3fff4828 , tcp :  3fff2bc0  , ip : 192.168.0.199:59731 
+     20952 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     20962 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59736 : C700A8C0:59731 
+     20973 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59737 : C700A8C0:59731 
+     20984 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59730 : C700A8C0:59731 
+     20995 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59731 : C700A8C0:59731 
+     21005 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff2bc0/3fff4828  esp : 3fff4828 , tcp :  3fff2bc0  , ip : 192.168.0.199:59731 
+     21018 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59736 : C700A8C0:59736 
+     21029 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff1d80/3fff4b58  esp : 3fff4b58 , tcp :  3fff1d80  , ip : 192.168.0.199:59736 
+     21042 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59736 : C700A8C0:59737 
+     21053 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59737 : C700A8C0:59737 
+     21064 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff2240/3fff4690  esp : 3fff4690 , tcp :  3fff2240  , ip : 192.168.0.199:59737 
+     21076 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     21086 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59736 : C700A8C0:59730 
+     21097 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59737 : C700A8C0:59730 
+     21108 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59730 : C700A8C0:59730 
+     21119 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff2700/3fff43f8  esp : 3fff43f8 , tcp :  3fff2700  , ip : 192.168.0.199:59730 
+     21131 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59736 : C700A8C0:59731 
+     21142 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59737 : C700A8C0:59731 
+     21152 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59730 : C700A8C0:59731 
+     21163 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59731 : C700A8C0:59731 
+     21174 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff2bc0/3fff4828  esp : 3fff4828 , tcp :  3fff2bc0  , ip : 192.168.0.199:59731 
+     21186 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59736 : C700A8C0:59730 
+     21197 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59737 : C700A8C0:59730 
+     21208 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59730 : C700A8C0:59730 
+     21219 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff2700/3fff43f8  esp : 3fff43f8 , tcp :  3fff2700  , ip : 192.168.0.199:59730 
+     21232 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59736 : C700A8C0:59731 
+     21243 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59737 : C700A8C0:59731 
+     21254 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59730 : C700A8C0:59731 
+     21265 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59731 : C700A8C0:59731 
+     21276 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff2bc0/3fff4828  esp : 3fff4828 , tcp :  3fff2bc0  , ip : 192.168.0.199:59731 
+     21289 | ../wifi/Tcp.cpp   logConn            |  connectCb -- this : 3fff3080/3fff4348  esp : 3fff4348 , tcp :  3fff2240  , ip : 192.168.0.199:59732 
+     21300 | ../wifi/Tcp.cpp   logConn            |  registerCb -- this : 3fff3080/3fff4348  esp : 3fff4348 , tcp :  3fff3080  , ip : 192.168.0.199:59732 
+     21311 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     21322 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59736 : C700A8C0:59732 
+     21332 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59737 : C700A8C0:59732 
+     21343 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59730 : C700A8C0:59732 
+     21354 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59731 : C700A8C0:59732 
+     21364 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59732 : C700A8C0:59732 
+     21375 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff3080/3fff4348  esp : 3fff4348 , tcp :  3fff3080  , ip : 192.168.0.199:59732 
+pm open phy_2,type:2 0 0
+     21390 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     21400 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59736 : C700A8C0:59737 
+     21411 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59737 : C700A8C0:59737 
+     21422 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff2240/3fff4690  esp : 3fff4690 , tcp :  3fff2240  , ip : 192.168.0.199:59737 
+     21435 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59736 : C700A8C0:59730 
+     21446 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59737 : C700A8C0:59730 
+     21457 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59730 : C700A8C0:59730 
+     21468 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff2700/3fff43f8  esp : 3fff43f8 , tcp :  3fff2700  , ip : 192.168.0.199:59730 
+     21481 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     21491 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59736 : C700A8C0:59731 
+     21502 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59737 : C700A8C0:59731 
+     21513 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59730 : C700A8C0:59731 
+     21523 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59731 : C700A8C0:59731 
+     21534 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff2bc0/3fff4828  esp : 3fff4828 , tcp :  3fff2bc0  , ip : 192.168.0.199:59731 
+     21548 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59736 : C700A8C0:59736 
+     21559 | ../wifi/Tcp.cpp   logConn            |  disconnectCb -- this : 3fff1d80/3fff4b58  esp : 3fff39a0 , tcp :  3fff1d80  , ip : 192.168.0.199:59736 
+     21572 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59736 : C700A8C0:59732 
+     21583 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59737 : C700A8C0:59732 
+     21594 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59730 : C700A8C0:59732 
+     21605 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59731 : C700A8C0:59732 
+     21616 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59732 : C700A8C0:59732 
+     21626 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff3080/3fff4348  esp : 3fff4348 , tcp :  3fff3080  , ip : 192.168.0.199:59732 
+     21639 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59736 : C700A8C0:59732 
+     21649 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59737 : C700A8C0:59732 
+     21660 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59730 : C700A8C0:59732 
+     21671 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59731 : C700A8C0:59732 
+     21681 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59732 : C700A8C0:59732 
+     21692 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff3080/3fff4348  esp : 3fff4348 , tcp :  3fff3080  , ip : 192.168.0.199:59732 
+     21705 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59736 : C700A8C0:59737 
+     21716 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59737 : C700A8C0:59737 
+     21727 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff2240/3fff4690  esp : 3fff4690 , tcp :  3fff2240  , ip : 192.168.0.199:59737 
+     21740 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     21750 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59736 : C700A8C0:59732 
+     21761 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59737 : C700A8C0:59732 
+     21772 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59730 : C700A8C0:59732 
+     21782 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59731 : C700A8C0:59732 
+     21793 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59732 : C700A8C0:59732 
+     21804 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff3080/3fff4348  esp : 3fff4348 , tcp :  3fff3080  , ip : 192.168.0.199:59732 
+     21818 | ../wifi/Tcp.cpp   logConn            |  connectCb -- this : 3fff1d80/3fff4520  esp : 3fff4520 , tcp :  3fff1d80  , ip : 192.168.0.199:59739 
+     21830 | ../wifi/Tcp.cpp   logConn            |  registerCb -- this : 3fff1d80/3fff4520  esp : 3fff4520 , tcp :  3fff1d80  , ip : 192.168.0.199:59739 
+     21841 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     21852 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59739 : C700A8C0:59739 
+     21863 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff1d80/3fff4520  esp : 3fff4520 , tcp :  3fff1d80  , ip : 192.168.0.199:59739 
+     21876 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59739 : C700A8C0:59737 
+     21887 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59737 : C700A8C0:59737 
+     21898 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff2240/3fff4690  esp : 3fff4690 , tcp :  3fff2240  , ip : 192.168.0.199:59737 
+     21911 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59739 : C700A8C0:59731 
+     21921 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59737 : C700A8C0:59731 
+
+WATCHDOG
+@(#):STACK_START 0x3FFFFBF0
+@(#):3FFFFC00:4000050C
+@(#):3FFFFC10:40105E98
+@(#):3FFFFC20:40105F77
+@(#):3FFFFC30:401057DC
+@(#):3FFFFC70:40230545
+@(#):3FFFFCD0:40107BC8
+@(#):3FFFFCE0:40232076
+@(#):3FFFFD30:40105852
+@(#):3FFFFD70:4000DD3B
+@(#):3FFFFD80:40002EF1
+@(#):3FFFFDF0:40206202
+@(#):3FFFFE10:40206336
+@(#):3FFFFE70:4022FE28
+@(#):3FFFFEC0:40221F30
+@(#):3FFFFEF0:40213D7A
+@(#):3FFFFF30:40222E09
+@(#):3FFFFF90:40211756
+@(#):3FFFFFB0:40000E19
+@(#):3FFFFFC0:40001100
+@(#):3FFFFFD0:40100276
+@(#):3FFFFFE0:4010000D
+@(#):3FFFFFF0:4000044C
+@(#):STACK_END
+     21924 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59730 : C700A8C0:59731 
+     21935 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59731 : C700A8C0:59731 
+     21946 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff2bc0/3fff4828  esp : 3fff4828 , tcp :  3fff2bc0  , ip : 192.168.0.199:59731 
+     21959 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59739 : C700A8C0:59730 
+     21969 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59737 : C700A8C0:59730 
+     21980 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59730 : C700A8C0:59730 
+     21991 | ../wifi/Tcp.cpp   logConn            |  disconnectCb -- this : 3fff2700/3fff43f8  esp : 3fff39a0 , tcp :  3fff2700  , ip : 192.168.0.199:59730 
+     22003 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59739 : C700A8C0:59731 
+     22013 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59737 : C700A8C0:59731 
+     22024 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59730 : C700A8C0:59731 
+     22034 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59731 : C700A8C0:59731 
+     22045 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff2bc0/3fff4828  esp : 3fff4828 , tcp :  3fff2bc0  , ip : 192.168.0.199:59731 
+     22059 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59739 : C700A8C0:59732 
+     22069 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59737 : C700A8C0:59732 
+     22080 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59730 : C700A8C0:59732 
+     22090 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59731 : C700A8C0:59732 
+     22101 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59732 : C700A8C0:59732 
+     22112 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff3080/3fff4348  esp : 3fff4348 , tcp :  3fff3080  , ip : 192.168.0.199:59732 
+     22124 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59739 : C700A8C0:59739 
+     22135 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff1d80/3fff4520  esp : 3fff4520 , tcp :  3fff1d80  , ip : 192.168.0.199:59739 
+     22147 | ../wifi/Tcp.cpp   logConn            |  connectCb -- this : 3fff2700/3fff4768  esp : 3fff4768 , tcp :  3fff2700  , ip : 192.168.0.199:59741 
+     22158 | ../wifi/Tcp.cpp   logConn            |  registerCb -- this : 3fff2700/3fff4768  esp : 3fff4768 , tcp :  3fff2700  , ip : 192.168.0.199:59741 
+     22171 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     22181 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59739 : C700A8C0:59741 
+     22192 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59737 : C700A8C0:59741 
+     22202 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59741 : C700A8C0:59741 
+     22213 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff2700/3fff4768  esp : 3fff4768 , tcp :  3fff2700  , ip : 192.168.0.199:59741 
+     22226 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59739 : C700A8C0:59732 
+     22236 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59737 : C700A8C0:59732 
+     22247 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59741 : C700A8C0:59732 
+     22258 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59731 : C700A8C0:59732 
+     22268 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59732 : C700A8C0:59732 
+     22279 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff3080/3fff4348  esp : 3fff4348 , tcp :  3fff3080  , ip : 192.168.0.199:59732 
+     22291 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     22302 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59739 : C700A8C0:59739 
+     22313 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff1d80/3fff4520  esp : 3fff4520 , tcp :  3fff1d80  , ip : 192.168.0.199:59739 
+     22324 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59739 : C700A8C0:59737 
+     22335 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59737 : C700A8C0:59737 
+     22346 | ../wifi/Tcp.cpp   logConn            |  disconnectCb -- this : 3fff2240/3fff4690  esp : 3fff39a0 , tcp :  3fff2240  , ip : 192.168.0.199:59737 
+     22358 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59739 : C700A8C0:59739 
+     22368 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff1d80/3fff4520  esp : 3fff4520 , tcp :  3fff1d80  , ip : 192.168.0.199:59739 
+     22381 | ../wifi/Tcp.cpp   logConn            |  connectCb -- this : 3fff2240/3fff49e0  esp : 3fff49e0 , tcp :  3fff2240  , ip : 192.168.0.199:59742 
+     22392 | ../wifi/Tcp.cpp   logConn            |  registerCb -- this : 3fff2240/3fff49e0  esp : 3fff49e0 , tcp :  3fff2240  , ip : 192.168.0.199:59742 
+     22404 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     22414 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59739 : C700A8C0:59742 
+
+WATCHDOG
+@(#):STACK_START 0x3FFFFCC0
+@(#):3FFFFCD0:40002EF1
+@(#):3FFFFCF0:4000DD38
+@(#):3FFFFD00:40002EF1
+@(#):3FFFFD40:4000050C
+@(#):3FFFFD70:40206202
+@(#):3FFFFD90:40206336
+@(#):3FFFFDF0:4022FE28
+@(#):3FFFFF10:40220906
+@(#):3FFFFF90:4020649B
+@(#):3FFFFFA0:40000F49
+@(#):3FFFFFB0:40000E19
+@(#):3FFFFFC0:40001100
+@(#):3FFFFFD0:40100276
+@(#):3FFFFFE0:4010000D
+@(#):3FFFFFF0:4000044C
+@(#):STACK_END
+     22426 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59742 : C700A8C0:59742 
+     22436 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff2240/3fff49e0  esp : 3fff49e0 , tcp :  3fff2240  , ip : 192.168.0.199:59742 
+     22449 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59739 : C700A8C0:59741 
+     22459 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59742 : C700A8C0:59741 
+     22470 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59741 : C700A8C0:59741 
+     22480 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff2700/3fff4768  esp : 3fff4768 , tcp :  3fff2700  , ip : 192.168.0.199:59741 
+     22493 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59739 : C700A8C0:59731 
+     22503 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59742 : C700A8C0:59731 
+     22514 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59741 : C700A8C0:59731 
+     22525 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59731 : C700A8C0:59731 
+     22535 | ../wifi/Tcp.cpp   logConn            |  disconnectCb -- this : 3fff2bc0/3fff4828  esp : 3fff39a0 , tcp :  3fff2bc0  , ip : 192.168.0.199:59731 
+     22547 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59739 : C700A8C0:59739 
+     22557 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff1d80/3fff4520  esp : 3fff4520 , tcp :  3fff1d80  , ip : 192.168.0.199:59739 
+     22570 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59739 : C700A8C0:59741 
+     22581 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59742 : C700A8C0:59741 
+     22592 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59741 : C700A8C0:59741 
+     22602 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff2700/3fff4768  esp : 3fff4768 , tcp :  3fff2700  , ip : 192.168.0.199:59741 
+     22614 | ../wifi/Tcp.cpp   logConn            |  connectCb -- this : 3fff2bc0/3fff4b00  esp : 3fff4b00 , tcp :  3fff2bc0  , ip : 192.168.0.199:59743 
+     22625 | ../wifi/Tcp.cpp   logConn            |  registerCb -- this : 3fff2bc0/3fff4b00  esp : 3fff4b00 , tcp :  3fff2bc0  , ip : 192.168.0.199:59743 
+     22637 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     22647 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59739 : C700A8C0:59743 
+     22658 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59742 : C700A8C0:59743 
+     22669 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59741 : C700A8C0:59743 
+     22679 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59743 : C700A8C0:59743 
+     22690 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff2bc0/3fff4b00  esp : 3fff4b00 , tcp :  3fff2bc0  , ip : 192.168.0.199:59743 
+     22703 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     22713 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59739 : C700A8C0:59741 
+     22724 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59742 : C700A8C0:59741 
+     22734 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59741 : C700A8C0:59741 
+     22745 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff2700/3fff4768  esp : 3fff4768 , tcp :  3fff2700  , ip : 192.168.0.199:59741 
+     22757 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59739 : C700A8C0:59742 
+     22768 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59742 : C700A8C0:59742 
+     22779 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff2240/3fff49e0  esp : 3fff49e0 , tcp :  3fff2240  , ip : 192.168.0.199:59742 
+     22791 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59739 : C700A8C0:59732 
+     22802 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59742 : C700A8C0:59732 
+     22813 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59741 : C700A8C0:59732 
+     22823 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59743 : C700A8C0:59732 
+     22834 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59732 : C700A8C0:59732 
+     22845 | ../wifi/Tcp.cpp   logConn            |  disconnectCb -- this : 3fff3080/3fff4348  esp : 3fff39a0 , tcp :  3fff3080  , ip : 192.168.0.199:59732 
+     22857 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     22868 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59739 : C700A8C0:59742 
+     22878 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59742 : C700A8C0:59742 
+     22889 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff2240/3fff49e0  esp : 3fff49e0 , tcp :  3fff2240  , ip : 192.168.0.199:59742 
+     22902 | ../wifi/Tcp.cpp   logConn            |  connectCb -- this : 3fff3080/3fff57d0  esp : 3fff57d0 , tcp :  3fff3080  , ip : 192.168.0.199:59744 
+     22913 | ../wifi/Tcp.cpp   logConn            |  registerCb -- this : 3fff3080/3fff57d0  esp : 3fff57d0 , tcp :  3fff3080  , ip : 192.168.0.199:59744 
+     
+WATCHDOG
+@(#):STACK_START 0x3FFFFC80
+@(#):3FFFFCB0:4023208F
+@(#):3FFFFCC0:40232076
+@(#):3FFFFD50:40206202
+@(#):3FFFFD70:40206336
+@(#):3FFFFDD0:40206202
+@(#):3FFFFDF0:40206336
+@(#):3FFFFEF0:40202E75
+@(#):3FFFFF10:40220906
+@(#):3FFFFF40:555D14E5
+@(#):3FFFFF90:4020649B
+@(#):3FFFFFA0:40000F49
+@(#):3FFFFFB0:40000E19
+@(#):3FFFFFC0:40001100
+@(#):3FFFFFD0:40100276
+@(#):3FFFFFE0:4010000D
+@(#):3FFFFFF0:4000044C
+@(#):STACK_END
+22924 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     22937 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59739 : C700A8C0:59744 
+     22948 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59742 : C700A8C0:59744 
+     22958 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59741 : C700A8C0:59744 
+     22969 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59743 : C700A8C0:59744 
+     22979 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59744 : C700A8C0:59744 
+     22990 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff3080/3fff57d0  esp : 3fff57d0 , tcp :  3fff3080  , ip : 192.168.0.199:59744 
+     23003 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59739 : C700A8C0:59743 
+     23014 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59742 : C700A8C0:59743 
+     23025 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59741 : C700A8C0:59743 
+     23035 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59743 : C700A8C0:59743 
+     23046 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff2bc0/3fff4b00  esp : 3fff4b00 , tcp :  3fff2bc0  , ip : 192.168.0.199:59743 
+     23058 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59739 : C700A8C0:59741 
+     23069 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59742 : C700A8C0:59741 
+     23079 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59741 : C700A8C0:59741 
+     23090 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff2700/3fff4768  esp : 3fff4768 , tcp :  3fff2700  , ip : 192.168.0.199:59741 
+     23102 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     23113 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59739 : C700A8C0:59743 
+     23123 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59742 : C700A8C0:59743 
+     23134 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59741 : C700A8C0:59743 
+     23145 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59743 : C700A8C0:59743 
+     23155 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff2bc0/3fff4b00  esp : 3fff4b00 , tcp :  3fff2bc0  , ip : 192.168.0.199:59743 
+     23170 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59739 : C700A8C0:59742 
+     23181 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59742 : C700A8C0:59742 
+     23191 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff2240/3fff49e0  esp : 3fff49e0 , tcp :  3fff2240  , ip : 192.168.0.199:59742 
+     23202 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59739 : C700A8C0:59739 
+     23213 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff1d80/3fff4520  esp : 3fff4520 , tcp :  3fff1d80  , ip : 192.168.0.199:59739 
+     23225 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59739 : C700A8C0:59744 
+     23235 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59742 : C700A8C0:59744 
+     23246 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59741 : C700A8C0:59744 
+     23257 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59743 : C700A8C0:59744 
+     23267 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59744 : C700A8C0:59744 
+     23278 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff3080/3fff57d0  esp : 3fff57d0 , tcp :  3fff3080  , ip : 192.168.0.199:59744 
+     23290 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59739 : C700A8C0:59742 
+     23301 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59742 : C700A8C0:59742 
+     23312 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff2240/3fff49e0  esp : 3fff49e0 , tcp :  3fff2240  , ip : 192.168.0.199:59742 
+     23324 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59739 : C700A8C0:59743 
+     23335 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59742 : C700A8C0:59743 
+     23346 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59741 : C700A8C0:59743 
+     23356 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59743 : C700A8C0:59743 
+     23367 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff2bc0/3fff4b00  esp : 3fff4b00 , tcp :  3fff2bc0  , ip : 192.168.0.199:59743 
+     23380 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     23391 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59739 : C700A8C0:59744 
+     23401 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59742 : C700A8C0:59744 
+     23412 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59741 : C700A8C0:59744 
+     23422 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59743 : C700A8C0:59744 
+
+WATCHDOG
+@(#):STACK_START 0x3FFFFCC0
+@(#):3FFFFCD0:40105EE1
+@(#):3FFFFCF0:4000DD38
+@(#):3FFFFD00:40002EF1
+@(#):3FFFFD70:40206202
+@(#):3FFFFD90:40206336
+@(#):3FFFFDF0:4022FE28
+@(#):3FFFFF10:40220906
+@(#):3FFFFF40:555D14E6
+@(#):3FFFFF90:4020649B
+@(#):3FFFFFA0:40000F49
+@(#):3FFFFFB0:40000E19
+@(#):3FFFFFC0:40001100
+@(#):3FFFFFD0:40100276
+@(#):3FFFFFE0:4010000D
+@(#):3FFFFFF0:4000044C
+@(#):STACK_END
+     23428 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59744 : C700A8C0:59744 
+     23439 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff3080/3fff57d0  esp : 3fff57d0 , tcp :  3fff3080  , ip : 192.168.0.199:59744 
+     23451 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59739 : C700A8C0:59743 
+     23462 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59742 : C700A8C0:59743 
+     23472 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59741 : C700A8C0:59743 
+     23483 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59743 : C700A8C0:59743 
+     23494 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff2bc0/3fff4b00  esp : 3fff4b00 , tcp :  3fff2bc0  , ip : 192.168.0.199:59743 
+     23506 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59739 : C700A8C0:59741 
+     23517 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59742 : C700A8C0:59741 
+     23528 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59741 : C700A8C0:59741 
+     23538 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff2700/3fff4768  esp : 3fff4768 , tcp :  3fff2700  , ip : 192.168.0.199:59741 
+     23550 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59739 : C700A8C0:59739 
+     23561 | ../wifi/Tcp.cpp   logConn            |  disconnectCb -- this : 3fff1d80/3fff4520  esp : 3fff39a0 , tcp :  3fff1d80  , ip : 192.168.0.199:59739 
+     23574 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59739 : C700A8C0:59742 
+     23585 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59742 : C700A8C0:59742 
+     23596 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff2240/3fff49e0  esp : 3fff49e0 , tcp :  3fff2240  , ip : 192.168.0.199:59742 
+     23607 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59739 : C700A8C0:59744 
+     23618 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59742 : C700A8C0:59744 
+     23629 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59741 : C700A8C0:59744 
+     23639 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59743 : C700A8C0:59744 
+     23650 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59744 : C700A8C0:59744 
+     23660 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff3080/3fff57d0  esp : 3fff57d0 , tcp :  3fff3080  , ip : 192.168.0.199:59744 
+     23672 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59739 : C700A8C0:59744 
+     23683 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59742 : C700A8C0:59744 
+     23694 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59741 : C700A8C0:59744 
+     23704 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59743 : C700A8C0:59744 
+     23715 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59744 : C700A8C0:59744 
+     23726 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff3080/3fff57d0  esp : 3fff57d0 , tcp :  3fff3080  , ip : 192.168.0.199:59744 
+     23738 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59739 : C700A8C0:59743 
+     23748 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59742 : C700A8C0:59743 
+     23759 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59741 : C700A8C0:59743 
+     23770 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59743 : C700A8C0:59743 
+     23780 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff2bc0/3fff4b00  esp : 3fff4b00 , tcp :  3fff2bc0  , ip : 192.168.0.199:59743 
+     23793 | ../wifi/Tcp.cpp   logConn            |  connectCb -- this : 3fff1d80/3fff4238  esp : 3fff4238 , tcp :  3fff1d80  , ip : 192.168.0.199:59748 
+     23804 | ../wifi/Tcp.cpp   logConn            |  registerCb -- this : 3fff1d80/3fff4238  esp : 3fff4238 , tcp :  3fff1d80  , ip : 192.168.0.199:59748 
+     23816 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     23826 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59748 : C700A8C0:59748 
+     23837 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff1d80/3fff4238  esp : 3fff4238 , tcp :  3fff1d80  , ip : 192.168.0.199:59748 
+     23849 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59748 : C700A8C0:59741 
+     23860 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59742 : C700A8C0:59741 
+     23870 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59741 : C700A8C0:59741 
+     23881 | ../wifi/Tcp.cpp   logConn            |  disconnectCb -- this : 3fff2700/3fff4768  esp : 3fff39a0 , tcp :  3fff2700  , ip : 192.168.0.199:59741 
+     23894 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59748 : C700A8C0:59742 
+     23905 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59742 : C700A8C0:59742 
+     23915 | ../wifi/Tcp.cpp   logConn            |  disconnectCb -- this : 3fff2240/3fff49e0  esp : 3fff39a0 , tcp :  3fff2240  , ip : 192.168.0.199:59742 
+
+WATCHDOG
+@(#):STACK_START 0x3FFFFD00
+@(#):3FFFFD30:401057D4
+@(#):3FFFFD40:401057D2
+@(#):3FFFFDD0:40206202
+@(#):3FFFFDF0:40206336
+@(#):3FFFFE60:40225BB7
+@(#):3FFFFE70:40202B15
+@(#):3FFFFF10:4023267D
+@(#):3FFFFF80:40202B5A
+@(#):3FFFFFA0:40000F49
+@(#):3FFFFFB0:40000E19
+@(#):3FFFFFC0:40001100
+@(#):3FFFFFD0:40100276
+@(#):3FFFFFE0:4010000D
+@(#):3FFFFFF0:4000044C
+@(#):STACK_END
+     23928 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59748 : C700A8C0:59744 
+     23939 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59742 : C700A8C0:59744 
+     23949 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59741 : C700A8C0:59744 
+     23960 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59743 : C700A8C0:59744 
+     23971 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59744 : C700A8C0:59744 
+     23981 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff3080/3fff57d0  esp : 3fff57d0 , tcp :  3fff3080  , ip : 192.168.0.199:59744 
+     23994 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59748 : C700A8C0:59743 
+     24005 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59742 : C700A8C0:59743 
+     24015 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59741 : C700A8C0:59743 
+     24026 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59743 : C700A8C0:59743 
+     24037 | ../wifi/Tcp.cpp   logConn            |  disconnectCb -- this : 3fff2bc0/3fff4b00  esp : 3fff39a0 , tcp :  3fff2bc0  , ip : 192.168.0.199:59743 
+     24049 | ../wifi/Tcp.cpp   logConn            |  connectCb -- this : 3fff2240/3fff4458  esp : 3fff4458 , tcp :  3fff2bc0  , ip : 192.168.0.199:59749 
+     24060 | ../wifi/Tcp.cpp   logConn            |  registerCb -- this : 3fff2240/3fff4458  esp : 3fff4458 , tcp :  3fff2240  , ip : 192.168.0.199:59749 
+     24072 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     24082 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59748 : C700A8C0:59749 
+     24093 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59749 : C700A8C0:59749 
+     24104 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff2240/3fff4458  esp : 3fff4458 , tcp :  3fff2240  , ip : 192.168.0.199:59749 
+     24116 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59748 : C700A8C0:59748 
+     24127 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff1d80/3fff4238  esp : 3fff4238 , tcp :  3fff1d80  , ip : 192.168.0.199:59748 
+     24138 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59748 : C700A8C0:59748 
+     24149 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff1d80/3fff4238  esp : 3fff4238 , tcp :  3fff1d80  , ip : 192.168.0.199:59748 
+     24160 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59748 : C700A8C0:59744 
+     24171 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59749 : C700A8C0:59744 
+     24181 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59741 : C700A8C0:59744 
+     24192 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59743 : C700A8C0:59744 
+     24203 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59744 : C700A8C0:59744 
+     24213 | ../wifi/Tcp.cpp   logConn            |  disconnectCb -- this : 3fff3080/3fff57d0  esp : 3fff39a0 , tcp :  3fff3080  , ip : 192.168.0.199:59744 
+     24226 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59748 : C700A8C0:59749 
+     24237 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59749 : C700A8C0:59749 
+     24247 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff2240/3fff4458  esp : 3fff4458 , tcp :  3fff2240  , ip : 192.168.0.199:59749 
+     24259 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     24270 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59748 : C700A8C0:59748 
+     24280 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff1d80/3fff4238  esp : 3fff4238 , tcp :  3fff1d80  , ip : 192.168.0.199:59748 
+     24293 | ../wifi/Tcp.cpp   logConn            |  connectCb -- this : 3fff2700/3fff4408  esp : 3fff4408 , tcp :  3fff3080  , ip : 192.168.0.199:59750 
+     24304 | ../wifi/Tcp.cpp   logConn            |  registerCb -- this : 3fff2700/3fff4408  esp : 3fff4408 , tcp :  3fff2700  , ip : 192.168.0.199:59750 
+     24316 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     24326 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59748 : C700A8C0:59750 
+     24337 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59749 : C700A8C0:59750 
+     24348 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59750 : C700A8C0:59750 
+     24358 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff2700/3fff4408  esp : 3fff4408 , tcp :  3fff2700  , ip : 192.168.0.199:59750 
+     24370 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59748 : C700A8C0:59749 
+     24381 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59749 : C700A8C0:59749 
+     24392 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff2240/3fff4458  esp : 3fff4458 , tcp :  3fff2240  , ip : 192.168.0.199:59749 
+     24405 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59748 : C700A8C0:59748 
+     24415 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff1d80/3fff4238  esp : 3fff4238 , tcp :  3fff1d80  , ip : 192.168.0.199:59748 
+     24427 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59748 : C700A8C0:59750 
+
+WATCHDOG
+@(#):STACK_START 0x3FFFFD40
+@(#):3FFFFD60:402060AB
+@(#):3FFFFD70:40002EEE
+@(#):3FFFFD80:40002EF1
+@(#):3FFFFDF0:40206202
+@(#):3FFFFE10:40206336
+@(#):3FFFFE70:4022FE28
+@(#):3FFFFFB0:40000E19
+@(#):3FFFFFC0:40001100
+@(#):3FFFFFD0:40100276
+@(#):3FFFFFE0:4010000D
+@(#):3FFFFFF0:4000044C
+@(#):STACK_END
+     24429 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59749 : C700A8C0:59750 
+     24440 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59750 : C700A8C0:59750 
+     24451 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff2700/3fff4408  esp : 3fff4408 , tcp :  3fff2700  , ip : 192.168.0.199:59750 
+     24462 | ../wifi/Tcp.cpp   logConn            |  connectCb -- this : 3fff2bc0/3fff5028  esp : 3fff5028 , tcp :  3fff3080  , ip : 192.168.0.199:59751 
+     24473 | ../wifi/Tcp.cpp   logConn            |  registerCb -- this : 3fff2bc0/3fff5028  esp : 3fff5028 , tcp :  3fff2bc0  , ip : 192.168.0.199:59751 
+     24486 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     24497 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59748 : C700A8C0:59751 
+     24507 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59749 : C700A8C0:59751 
+     24518 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59750 : C700A8C0:59751 
+     24528 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59751 : C700A8C0:59751 
+     24539 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff2bc0/3fff5028  esp : 3fff5028 , tcp :  3fff2bc0  , ip : 192.168.0.199:59751 
+     24551 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59748 : C700A8C0:59748 
+     24562 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff1d80/3fff4238  esp : 3fff4238 , tcp :  3fff1d80  , ip : 192.168.0.199:59748 
+     24574 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     24584 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59748 : C700A8C0:59749 
+     24595 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59749 : C700A8C0:59749 
+     24605 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff2240/3fff4458  esp : 3fff4458 , tcp :  3fff2240  , ip : 192.168.0.199:59749 
+     24618 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59748 : C700A8C0:59750 
+     24629 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59749 : C700A8C0:59750 
+     24639 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59750 : C700A8C0:59750 
+     24650 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff2700/3fff4408  esp : 3fff4408 , tcp :  3fff2700  , ip : 192.168.0.199:59750 
+     24662 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59748 : C700A8C0:59751 
+     24673 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59749 : C700A8C0:59751 
+     24683 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59750 : C700A8C0:59751 
+     24694 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59751 : C700A8C0:59751 
+     24704 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff2bc0/3fff5028  esp : 3fff5028 , tcp :  3fff2bc0  , ip : 192.168.0.199:59751 
+     24717 | ../wifi/Tcp.cpp   logConn            |  connectCb -- this : 3fff3080/3fff4de8  esp : 3fff4de8 , tcp :  3fff3080  , ip : 192.168.0.199:59752 
+     24728 | ../wifi/Tcp.cpp   logConn            |  registerCb -- this : 3fff3080/3fff4de8  esp : 3fff4de8 , tcp :  3fff3080  , ip : 192.168.0.199:59752 
+     24740 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     24751 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59748 : C700A8C0:59752 
+     24761 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59749 : C700A8C0:59752 
+     24772 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59750 : C700A8C0:59752 
+     24782 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59751 : C700A8C0:59752 
+     24793 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59752 : C700A8C0:59752 
+     24804 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff3080/3fff4de8  esp : 3fff4de8 , tcp :  3fff3080  , ip : 192.168.0.199:59752 
+     24817 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     24828 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59748 : C700A8C0:59750 
+     24839 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59749 : C700A8C0:59750 
+     24849 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59750 : C700A8C0:59750 
+     24860 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff2700/3fff4408  esp : 3fff4408 , tcp :  3fff2700  , ip : 192.168.0.199:59750 
+     24872 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59748 : C700A8C0:59751 
+     24883 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59749 : C700A8C0:59751 
+     24893 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59750 : C700A8C0:59751 
+     24904 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59751 : C700A8C0:59751 
+     24915 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff2bc0/3fff5028  esp : 3fff5028 , tcp :  3fff2bc0  , ip : 192.168.0.199:59751 
+     24927 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59748 : C700A8C0:59749 
+
+WATCHDOG
+@(#):STACK_START 0x3FFFFCB0
+@(#):3FFFFCD0:4000050C
+@(#):3FFFFCE0:40002EF1
+@(#):3FFFFCF0:40002EF1
+@(#):3FFFFD60:40206202
+@(#):3FFFFD80:40206336
+@(#):3FFFFDE0:4022FE28
+@(#):3FFFFF10:40220973
+@(#):3FFFFF30:40222E5C
+@(#):3FFFFF90:4020649B
+@(#):3FFFFFA0:40000F49
+@(#):3FFFFFB0:40000E19
+@(#):3FFFFFC0:40001100
+@(#):3FFFFFD0:40100276
+@(#):3FFFFFE0:4010000D
+@(#):3FFFFFF0:4000044C
+@(#):STACK_END
+     24933 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59749 : C700A8C0:59749 
+     24943 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff2240/3fff4458  esp : 3fff4458 , tcp :  3fff2240  , ip : 192.168.0.199:59749 
+     24955 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     24966 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59748 : C700A8C0:59751 
+     24976 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59749 : C700A8C0:59751 
+     24987 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59750 : C700A8C0:59751 
+     24998 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59751 : C700A8C0:59751 
+     25008 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff2bc0/3fff5028  esp : 3fff5028 , tcp :  3fff2bc0  , ip : 192.168.0.199:59751 
+     25023 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59748 : C700A8C0:59752 
+     25034 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59749 : C700A8C0:59752 
+     25045 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59750 : C700A8C0:59752 
+     25055 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59751 : C700A8C0:59752 
+     25066 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59752 : C700A8C0:59752 
+     25076 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff3080/3fff4de8  esp : 3fff4de8 , tcp :  3fff3080  , ip : 192.168.0.199:59752 
+     25089 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59748 : C700A8C0:59750 
+     25099 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59749 : C700A8C0:59750 
+     25110 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59750 : C700A8C0:59750 
+     25121 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff2700/3fff4408  esp : 3fff4408 , tcp :  3fff2700  , ip : 192.168.0.199:59750 
+     25133 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59748 : C700A8C0:59749 
+     25144 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59749 : C700A8C0:59749 
+     25154 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff2240/3fff4458  esp : 3fff4458 , tcp :  3fff2240  , ip : 192.168.0.199:59749 
+     25166 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59748 : C700A8C0:59752 
+     25177 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59749 : C700A8C0:59752 
+     25188 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59750 : C700A8C0:59752 
+     25198 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59751 : C700A8C0:59752 
+     25209 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59752 : C700A8C0:59752 
+     25219 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff3080/3fff4de8  esp : 3fff4de8 , tcp :  3fff3080  , ip : 192.168.0.199:59752 
+     25232 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     25242 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59748 : C700A8C0:59752 
+     25253 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59749 : C700A8C0:59752 
+     25264 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59750 : C700A8C0:59752 
+     25274 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59751 : C700A8C0:59752 
+     25285 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59752 : C700A8C0:59752 
+     25296 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff3080/3fff4de8  esp : 3fff4de8 , tcp :  3fff3080  , ip : 192.168.0.199:59752 
+     25308 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59748 : C700A8C0:59751 
+     25319 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59749 : C700A8C0:59751 
+     25330 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59750 : C700A8C0:59751 
+     25340 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59751 : C700A8C0:59751 
+     25351 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff2bc0/3fff5028  esp : 3fff5028 , tcp :  3fff2bc0  , ip : 192.168.0.199:59751 
+     25364 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59748 : C700A8C0:59748 
+     25374 | ../wifi/Tcp.cpp   logConn            |  disconnectCb -- this : 3fff1d80/3fff4238  esp : 3fff39a0 , tcp :  3fff1d80  , ip : 192.168.0.199:59748 
+     25386 | ../wifi/Tcp.cpp   logConn            |  connectCb -- this : 3fff1d80/3fff4378  esp : 3fff4378 , tcp :  3fff1d80  , ip : 192.168.0.199:59755 
+     25397 | ../wifi/Tcp.cpp   logConn            |  registerCb -- this : 3fff1d80/3fff4378  esp : 3fff4378 , tcp :  3fff1d80  , ip : 192.168.0.199:59755 
+     25410 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     25420 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59755 : C700A8C0:59755 
+
+WATCHDOG
+@(#):STACK_START 0x3FFFFB70
+@(#):3FFFFB80:40107C73
+@(#):3FFFFB90:40105F91
+@(#):3FFFFBA0:40107C68
+@(#):3FFFFBB0:40105F91
+@(#):3FFFFBF0:40107C94
+@(#):3FFFFC10:40103CD9
+@(#):3FFFFC60:40105EF9
+@(#):3FFFFC70:4022EA73
+@(#):3FFFFCF0:40002EF1
+@(#):3FFFFD00:40002EF1
+@(#):3FFFFD70:40206202
+@(#):3FFFFD90:40206336
+@(#):3FFFFDF0:4022FE28
+@(#):3FFFFF10:40220906
+@(#):3FFFFF90:4020649B
+@(#):3FFFFFA0:40000F49
+@(#):3FFFFFB0:40000E19
+@(#):3FFFFFC0:40001100
+@(#):3FFFFFD0:40100276
+@(#):3FFFFFE0:4010000D
+@(#):3FFFFFF0:4000044C
+@(#):STACK_END
+     25431 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff1d80/3fff4378  esp : 3fff4378 , tcp :  3fff1d80  , ip : 192.168.0.199:59755 
+     25444 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59755 : C700A8C0:59750 
+     25455 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59749 : C700A8C0:59750 
+     25465 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59750 : C700A8C0:59750 
+     25476 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff2700/3fff4408  esp : 3fff4408 , tcp :  3fff2700  , ip : 192.168.0.199:59750 
+     25488 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59755 : C700A8C0:59751 
+     25499 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59749 : C700A8C0:59751 
+     25509 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59750 : C700A8C0:59751 
+     25520 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59751 : C700A8C0:59751 
+     25531 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff2bc0/3fff5028  esp : 3fff5028 , tcp :  3fff2bc0  , ip : 192.168.0.199:59751 
+     25542 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59755 : C700A8C0:59752 
+     25553 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59749 : C700A8C0:59752 
+     25563 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59750 : C700A8C0:59752 
+     25574 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59751 : C700A8C0:59752 
+     25585 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59752 : C700A8C0:59752 
+     25595 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff3080/3fff4de8  esp : 3fff4de8 , tcp :  3fff3080  , ip : 192.168.0.199:59752 
+     25608 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59755 : C700A8C0:59749 
+     25619 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59749 : C700A8C0:59749 
+     25629 | ../wifi/Tcp.cpp   logConn            |  disconnectCb -- this : 3fff2240/3fff4458  esp : 3fff39a0 , tcp :  3fff2240  , ip : 192.168.0.199:59749 
+     25641 | ../wifi/Tcp.cpp   logConn            |  connectCb -- this : 3fff2240/3fff42b0  esp : 3fff42b0 , tcp :  3fff2240  , ip : 192.168.0.199:59756 
+     25652 | ../wifi/Tcp.cpp   logConn            |  registerCb -- this : 3fff2240/3fff42b0  esp : 3fff42b0 , tcp :  3fff2240  , ip : 192.168.0.199:59756 
+     25664 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     25675 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59755 : C700A8C0:59756 
+     25685 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59756 : C700A8C0:59756 
+     25696 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff2240/3fff42b0  esp : 3fff42b0 , tcp :  3fff2240  , ip : 192.168.0.199:59756 
+     25709 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59755 : C700A8C0:59755 
+     25719 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff1d80/3fff4378  esp : 3fff4378 , tcp :  3fff1d80  , ip : 192.168.0.199:59755 
+     25731 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59755 : C700A8C0:59752 
+     25742 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59756 : C700A8C0:59752 
+     25752 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59750 : C700A8C0:59752 
+     25763 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59751 : C700A8C0:59752 
+     25774 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59752 : C700A8C0:59752 
+     25784 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff3080/3fff4de8  esp : 3fff4de8 , tcp :  3fff3080  , ip : 192.168.0.199:59752 
+     25797 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59755 : C700A8C0:59750 
+     25808 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59756 : C700A8C0:59750 
+     25819 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59750 : C700A8C0:59750 
+     25829 | ../wifi/Tcp.cpp   logConn            |  disconnectCb -- this : 3fff2700/3fff4408  esp : 3fff39a0 , tcp :  3fff2700  , ip : 192.168.0.199:59750 
+     25841 | ../wifi/Tcp.cpp   logConn            |  connectCb -- this : 3fff2700/3fff44c0  esp : 3fff44c0 , tcp :  3fff2700  , ip : 192.168.0.199:59757 
+     25852 | ../wifi/Tcp.cpp   logConn            |  registerCb -- this : 3fff2700/3fff44c0  esp : 3fff44c0 , tcp :  3fff2700  , ip : 192.168.0.199:59757 
+     25864 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     25875 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59755 : C700A8C0:59757 
+     25885 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59756 : C700A8C0:59757 
+     25896 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59757 : C700A8C0:59757 
+     25906 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff2700/3fff44c0  esp : 3fff44c0 , tcp :  3fff2700  , ip : 192.168.0.199:59757 
+     25919 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     25930 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59755 : C700
+WATCHDOG
+@(#):STACK_START 0x3FFFFC20
+@(#):3FFFFC50:4023209D
+@(#):3FFFFC60:4022EA80
+@(#):3FFFFCC0:40103CD9
+@(#):3FFFFD40:4000050C
+@(#):3FFFFD70:40206202
+@(#):3FFFFD90:40206336
+@(#):3FFFFF10:40220906
+@(#):3FFFFF90:4020649B
+@(#):3FFFFFA0:40000F49
+@(#):3FFFFFB0:40000E19
+@(#):3FFFFFC0:40001100
+@(#):3FFFFFD0:40100276
+@(#):3FFFFFE0:4010000D
+@(#):3FFFFFF0:4000044C
+@(#):STACK_END
+A8C0:59755 
+     25942 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff1d80/3fff4378  esp : 3fff4378 , tcp :  3fff1d80  , ip : 192.168.0.199:59755 
+     25954 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59755 : C700A8C0:59756 
+     25965 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59756 : C700A8C0:59756 
+     25976 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff2240/3fff42b0  esp : 3fff42b0 , tcp :  3fff2240  , ip : 192.168.0.199:59756 
+     25988 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59755 : C700A8C0:59755 
+     25999 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff1d80/3fff4378  esp : 3fff4378 , tcp :  3fff1d80  , ip : 192.168.0.199:59755 
+     26010 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59755 : C700A8C0:59751 
+     26020 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59756 : C700A8C0:59751 
+     26031 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59757 : C700A8C0:59751 
+     26041 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59751 : C700A8C0:59751 
+     26052 | ../wifi/Tcp.cpp   logConn            |  disconnectCb -- this : 3fff2bc0/3fff5028  esp : 3fff39a0 , tcp :  3fff2bc0  , ip : 192.168.0.199:59751 
+     26063 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59755 : C700A8C0:59756 
+     26074 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59756 : C700A8C0:59756 
+     26085 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff2240/3fff42b0  esp : 3fff42b0 , tcp :  3fff2240  , ip : 192.168.0.199:59756 
+     26097 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59755 : C700A8C0:59752 
+     26108 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59756 : C700A8C0:59752 
+     26118 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59757 : C700A8C0:59752 
+     26129 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59751 : C700A8C0:59752 
+     26140 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59752 : C700A8C0:59752 
+     26150 | ../wifi/Tcp.cpp   logConn            |  disconnectCb -- this : 3fff3080/3fff4de8  esp : 3fff39a0 , tcp :  3fff3080  , ip : 192.168.0.199:59752 
+     26162 | ../wifi/Tcp.cpp   logConn            |  connectCb -- this : 3fff2bc0/3fff4948  esp : 3fff4948 , tcp :  3fff3080  , ip : 192.168.0.199:59758 
+     26173 | ../wifi/Tcp.cpp   logConn            |  registerCb -- this : 3fff2bc0/3fff4948  esp : 3fff4948 , tcp :  3fff2bc0  , ip : 192.168.0.199:59758 
+     26185 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     26196 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59755 : C700A8C0:59758 
+     26206 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59756 : C700A8C0:59758 
+     26217 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59757 : C700A8C0:59758 
+     26228 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59758 : C700A8C0:59758 
+     26238 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff2bc0/3fff4948  esp : 3fff4948 , tcp :  3fff2bc0  , ip : 192.168.0.199:59758 
+     26251 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     26262 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59755 : C700A8C0:59756 
+     26272 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59756 : C700A8C0:59756 
+     26283 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff2240/3fff42b0  esp : 3fff42b0 , tcp :  3fff2240  , ip : 192.168.0.199:59756 
+     26296 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59755 : C700A8C0:59757 
+     26307 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59756 : C700A8C0:59757 
+     26317 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59757 : C700A8C0:59757 
+     26328 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff2700/3fff44c0  esp : 3fff44c0 , tcp :  3fff2700  , ip : 192.168.0.199:59757 
+     26340 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59755 : C700A8C0:59755 
+     26350 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff1d80/3fff4378  esp : 3fff4378 , tcp :  3fff1d80  , ip : 192.168.0.199:59755 
+     26362 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     26372 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59755 : C700A8C0:59757 
+     26383 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59756 : C700A8C0:59757 
+     26394 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59757 : C700A8C0:59757 
+     26404 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff2700/3fff44c0  esp : 3fff44c0 , tcp :  3fff2700  , ip : 192.168.0.199:59757 
+     26418 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59755 : C700A8C0:59757 
+     26428 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59756 : C700A8C0:59757 
+
+WATCHDOG
+@(#):STACK_START 0x3FFFFC10
+@(#):3FFFFC40:401057F8
+@(#):3FFFFC50:401057F0
+@(#):3FFFFC90:40105A67
+@(#):3FFFFCC0:4010431C
+@(#):3FFFFCD0:40107D0C
+@(#):3FFFFCE0:40205F4C
+@(#):3FFFFD70:4000DD38
+@(#):3FFFFD80:40002EF1
+@(#):3FFFFDC0:401017BA
+@(#):3FFFFDF0:40206202
+@(#):3FFFFE10:40206336
+@(#):3FFFFE70:4022FE28
+@(#):3FFFFEF0:40213D7A
+@(#):3FFFFF30:40222DDB
+@(#):3FFFFF90:4020649B
+@(#):3FFFFFB0:40000E19
+@(#):3FFFFFC0:40001100
+@(#):3FFFFFD0:40100276
+@(#):3FFFFFE0:4010000D
+@(#):3FFFFFF0:4000044C
+@(#):STACK_END
+     26434 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59757 : C700A8C0:59757 
+     26444 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff2700/3fff44c0  esp : 3fff44c0 , tcp :  3fff2700  , ip : 192.168.0.199:59757 
+     26456 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59755 : C700A8C0:59758 
+     26467 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59756 : C700A8C0:59758 
+     26478 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59757 : C700A8C0:59758 
+     26488 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59758 : C700A8C0:59758 
+     26499 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff2bc0/3fff4948  esp : 3fff4948 , tcp :  3fff2bc0  , ip : 192.168.0.199:59758 
+     26511 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59755 : C700A8C0:59756 
+     26522 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59756 : C700A8C0:59756 
+     26533 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff2240/3fff42b0  esp : 3fff42b0 , tcp :  3fff2240  , ip : 192.168.0.199:59756 
+     26545 | ../wifi/Tcp.cpp   logConn            |  connectCb -- this : 3fff3080/3fff4670  esp : 3fff4670 , tcp :  3fff3080  , ip : 192.168.0.199:59760 
+     26556 | ../wifi/Tcp.cpp   logConn            |  registerCb -- this : 3fff3080/3fff4670  esp : 3fff4670 , tcp :  3fff3080  , ip : 192.168.0.199:59760 
+     26567 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     26578 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59755 : C700A8C0:59760 
+     26588 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59756 : C700A8C0:59760 
+     26599 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59757 : C700A8C0:59760 
+     26610 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59758 : C700A8C0:59760 
+     26620 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59760 : C700A8C0:59760 
+     26631 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff3080/3fff4670  esp : 3fff4670 , tcp :  3fff3080  , ip : 192.168.0.199:59760 
+     26644 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     26655 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59755 : C700A8C0:59758 
+     26665 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59756 : C700A8C0:59758 
+     26676 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59757 : C700A8C0:59758 
+     26686 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59758 : C700A8C0:59758 
+     26697 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff2bc0/3fff4948  esp : 3fff4948 , tcp :  3fff2bc0  , ip : 192.168.0.199:59758 
+     26710 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59755 : C700A8C0:59757 
+     26721 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59756 : C700A8C0:59757 
+     26732 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59757 : C700A8C0:59757 
+     26742 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff2700/3fff44c0  esp : 3fff44c0 , tcp :  3fff2700  , ip : 192.168.0.199:59757 
+     26755 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59755 : C700A8C0:59755 
+     26766 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff1d80/3fff4378  esp : 3fff4378 , tcp :  3fff1d80  , ip : 192.168.0.199:59755 
+     26778 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59755 : C700A8C0:59758 
+     26788 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59756 : C700A8C0:59758 
+     26799 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59757 : C700A8C0:59758 
+     26809 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59758 : C700A8C0:59758 
+     26820 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff2bc0/3fff4948  esp : 3fff4948 , tcp :  3fff2bc0  , ip : 192.168.0.199:59758 
+     26833 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59755 : C700A8C0:59756 
+     26844 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59756 : C700A8C0:59756 
+     26855 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff2240/3fff42b0  esp : 3fff42b0 , tcp :  3fff2240  , ip : 192.168.0.199:59756 
+     26866 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59755 : C700A8C0:59760 
+     26877 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59756 : C700A8C0:59760 
+     26888 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59757 : C700A8C0:59760 
+     26899 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59758 : C700A8C0:59760 
+     26909 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59760 : C700A8C0:59760 
+     26920 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff3080/3fff4670  esp : 3fff4670 , tcp :  3fff3080  , ip : 192.168.0.199:59760 
+
+WATCHDOG
+@(#):STACK_START 0x3FFFFCC0
+@(#):3FFFFCD0:4000050C
+@(#):3FFFFCF0:4022FD35
+@(#):3FFFFD00:4022CCB1
+@(#):3FFFFD50:40233CCB
+@(#):3FFFFD60:40233989
+@(#):3FFFFD80:401017BA
+@(#):3FFFFDC0:4000050C
+@(#):3FFFFDE0:40000F83
+@(#):3FFFFDF0:40100AB0
+@(#):3FFFFE50:402212EC
+@(#):3FFFFF10:40220973
+@(#):3FFFFF30:40222E5C
+@(#):3FFFFF90:4020649B
+@(#):3FFFFFA0:40000F49
+@(#):3FFFFFB0:40000E19
+@(#):3FFFFFC0:40001100
+@(#):3FFFFFD0:40100276
+@(#):3FFFFFE0:4010000D
+@(#):3FFFFFF0:4000044C
+@(#):STACK_END
+     26934 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59755 : C700A8C0:59758 
+     26945 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59756 : C700A8C0:59758 
+     26956 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59757 : C700A8C0:59758 
+     26966 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59758 : C700A8C0:59758 
+     26977 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff2bc0/3fff4948  esp : 3fff4948 , tcp :  3fff2bc0  , ip : 192.168.0.199:59758 
+     26990 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59755 : C700A8C0:59757 
+     27001 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59756 : C700A8C0:59757 
+     27011 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59757 : C700A8C0:59757 
+     27022 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff2700/3fff44c0  esp : 3fff44c0 , tcp :  3fff2700  , ip : 192.168.0.199:59757 
+     27034 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     27044 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59755 : C700A8C0:59760 
+     27055 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59756 : C700A8C0:59760 
+     27065 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59757 : C700A8C0:59760 
+     27076 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59758 : C700A8C0:59760 
+     27087 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59760 : C700A8C0:59760 
+     27097 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff3080/3fff4670  esp : 3fff4670 , tcp :  3fff3080  , ip : 192.168.0.199:59760 
+     27111 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59755 : C700A8C0:59755 
+     27122 | ../wifi/Tcp.cpp   logConn            |  disconnectCb -- this : 3fff1d80/3fff4378  esp : 3fff39a0 , tcp :  3fff1d80  , ip : 192.168.0.199:59755 
+     27133 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59755 : C700A8C0:59760 
+     27144 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59756 : C700A8C0:59760 
+     27155 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59757 : C700A8C0:59760 
+     27165 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59758 : C700A8C0:59760 
+     27176 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59760 : C700A8C0:59760 
+     27187 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff3080/3fff4670  esp : 3fff4670 , tcp :  3fff3080  , ip : 192.168.0.199:59760 
+     27198 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59755 : C700A8C0:59758 
+     27209 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59756 : C700A8C0:59758 
+     27219 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59757 : C700A8C0:59758 
+     27230 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59758 : C700A8C0:59758 
+     27241 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff2bc0/3fff4948  esp : 3fff4948 , tcp :  3fff2bc0  , ip : 192.168.0.199:59758 
+     27253 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59755 : C700A8C0:59756 
+     27264 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59756 : C700A8C0:59756 
+     27275 | ../wifi/Tcp.cpp   logConn            |  disconnectCb -- this : 3fff2240/3fff42b0  esp : 3fff39a0 , tcp :  3fff2240  , ip : 192.168.0.199:59756 
+     27286 | ../wifi/Tcp.cpp   logConn            |  connectCb -- this : 3fff1d80/3fff42b0  esp : 3fff42b0 , tcp :  3fff2240  , ip : 192.168.0.199:59763 
+     27297 | ../wifi/Tcp.cpp   logConn            |  registerCb -- this : 3fff1d80/3fff42b0  esp : 3fff42b0 , tcp :  3fff1d80  , ip : 192.168.0.199:59763 
+     27310 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     27320 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59763 : C700A8C0:59763 
+     27331 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff1d80/3fff42b0  esp : 3fff42b0 , tcp :  3fff1d80  , ip : 192.168.0.199:59763 
+     27343 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59763 : C700A8C0:59760 
+     27353 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59756 : C700A8C0:59760 
+     27364 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59757 : C700A8C0:59760 
+     27375 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59758 : C700A8C0:59760 
+     27386 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59760 : C700A8C0:59760 
+     27396 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff3080/3fff4670  esp : 3fff4670 , tcp :  3fff3080  , ip : 192.168.0.199:59760 
+     27409 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59763 : C700A8C0:59757 
+     27419 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59756 : C700A8C0:59757 
+     27430 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59757 : C700A8C0:59757 
+
+WATCHDOG
+@(#):STACK_START 0x3FFFFC00
+@(#):3FFFFC30:40105BAC
+@(#):3FFFFC40:40105BC5
+@(#):3FFFFC90:4000050C
+@(#):3FFFFCA0:40232076
+@(#):3FFFFCB0:40105EED
+@(#):3FFFFCC0:40105EE1
+@(#):3FFFFD00:40002EF1
+@(#):3FFFFD40:40002EF1
+@(#):3FFFFD50:40002EF1
+@(#):3FFFFDC0:40206202
+@(#):3FFFFDE0:40206336
+@(#):3FFFFE40:4022FE28
+@(#):3FFFFF00:40211B28
+@(#):3FFFFF30:40225EB6
+@(#):3FFFFF70:40220278
+@(#):3FFFFFB0:40000E19
+@(#):3FFFFFC0:40001100
+@(#):3FFFFFD0:40100276
+@(#):3FFFFFE0:4010000D
+@(#):3FFFFFF0:4000044C
+@(#):STACK_END
+     27435 | ../wifi/Tcp.cpp   logConn            |  disconnectCb -- this : 3fff2700/3fff44c0  esp : 3fff39a0 , tcp :  3fff2700  , ip : 192.168.0.199:59757 
+     27446 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59763 : C700A8C0:59760 
+     27457 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59756 : C700A8C0:59760 
+     27468 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59757 : C700A8C0:59760 
+     27478 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59758 : C700A8C0:59760 
+     27489 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59760 : C700A8C0:59760 
+     27499 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff3080/3fff4670  esp : 3fff4670 , tcp :  3fff3080  , ip : 192.168.0.199:59760 
+     27513 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59763 : C700A8C0:59758 
+     27523 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59756 : C700A8C0:59758 
+     27534 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59757 : C700A8C0:59758 
+     27544 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59758 : C700A8C0:59758 
+     27555 | ../wifi/Tcp.cpp   logConn            |  disconnectCb -- this : 3fff2bc0/3fff4948  esp : 3fff39a0 , tcp :  3fff2bc0  , ip : 192.168.0.199:59758 
+     27567 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59763 : C700A8C0:59763 
+     27578 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff1d80/3fff42b0  esp : 3fff42b0 , tcp :  3fff1d80  , ip : 192.168.0.199:59763 
+     27589 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59763 : C700A8C0:59763 
+     27599 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff1d80/3fff42b0  esp : 3fff42b0 , tcp :  3fff1d80  , ip : 192.168.0.199:59763 
+     27612 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59763 : C700A8C0:59760 
+     27623 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59756 : C700A8C0:59760 
+     27633 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59757 : C700A8C0:59760 
+     27644 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59758 : C700A8C0:59760 
+     27655 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59760 : C700A8C0:59760 
+     27666 | ../wifi/Tcp.cpp   logConn            |  disconnectCb -- this : 3fff3080/3fff4670  esp : 3fff39a0 , tcp :  3fff3080  , ip : 192.168.0.199:59760 
+     27677 | ../wifi/Tcp.cpp   logConn            |  connectCb -- this : 3fff2240/3fff4550  esp : 3fff4550 , tcp :  3fff3080  , ip : 192.168.0.199:59764 
+     27688 | ../wifi/Tcp.cpp   logConn            |  registerCb -- this : 3fff2240/3fff4550  esp : 3fff4550 , tcp :  3fff2240  , ip : 192.168.0.199:59764 
+     27701 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     27711 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59763 : C700A8C0:59764 
+     27722 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59764 : C700A8C0:59764 
+     27733 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff2240/3fff4550  esp : 3fff4550 , tcp :  3fff2240  , ip : 192.168.0.199:59764 
+     27745 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     27755 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59763 : C700A8C0:59763 
+     27766 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff1d80/3fff42b0  esp : 3fff42b0 , tcp :  3fff1d80  , ip : 192.168.0.199:59763 
+     27778 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59763 : C700A8C0:59764 
+     27788 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59764 : C700A8C0:59764 
+     27799 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff2240/3fff4550  esp : 3fff4550 , tcp :  3fff2240  , ip : 192.168.0.199:59764 
+     27811 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59763 : C700A8C0:59763 
+     27822 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff1d80/3fff42b0  esp : 3fff42b0 , tcp :  3fff1d80  , ip : 192.168.0.199:59763 
+     27871 | ../wifi/Tcp.cpp   logConn            |  connectCb -- this : 3fff2700/3fff45b0  esp : 3fff45b0 , tcp :  3fff3080  , ip : 192.168.0.199:59765 
+     27882 | ../wifi/Tcp.cpp   logConn            |  registerCb -- this : 3fff2700/3fff45b0  esp : 3fff45b0 , tcp :  3fff2700  , ip : 192.168.0.199:59765 
+     27894 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     27905 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59763 : C700A8C0:59765 
+     27915 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59764 : C700A8C0:59765 
+     27926 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59765 : C700A8C0:59765 
+     27937 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff2700/3fff45b0  esp : 3fff45b0 , tcp :  3fff2700  , ip : 192.168.0.199:59765 
+     27949 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59763 : C700A8C0:59765 
+     27960 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59764 : C700A8C0:59765 
+     27971 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59765 : C700A8C0:59765 
+     27981 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff2700/3fff45b0  esp : 3fff45b0 , tcp :  3fff2700  , ip : 192.168.0.199:59765 
+     27997 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59763 : C700A8C0:59763 
+     28007 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff1d80/3fff42b0  esp : 3fff42b0 , tcp :  3fff1d80  , ip : 192.168.0.199:59763 
+     28019 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59763 : C700A8C0:59764 
+     28030 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59764 : C700A8C0:59764 
+     28041 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff2240/3fff4550  esp : 3fff4550 , tcp :  3fff2240  , ip : 192.168.0.199:59764 
+     28056 | ../wifi/Tcp.cpp   logConn            |  connectCb -- this : 3fff2bc0/3fff47a8  esp : 3fff47a8 , tcp :  3fff3080  , ip : 192.168.0.199:59766 
+     28067 | ../wifi/Tcp.cpp   logConn            |  registerCb -- this : 3fff2bc0/3fff47a8  esp : 3fff47a8 , tcp :  3fff2bc0  , ip : 192.168.0.199:59766 
+     28079 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     28090 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59763 : C700A8C0:59766 
+     28100 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59764 : C700A8C0:59766 
+     28111 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59765 : C700A8C0:59766 
+     28122 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59766 : C700A8C0:59766 
+     28132 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff2bc0/3fff47a8  esp : 3fff47a8 , tcp :  3fff2bc0  , ip : 192.168.0.199:59766 
+     28145 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     28156 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59763 : C700A8C0:59764 
+     28167 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59764 : C700A8C0:59764 
+     28177 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff2240/3fff4550  esp : 3fff4550 , tcp :  3fff2240  , ip : 192.168.0.199:59764 
+     28190 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59763 : C700A8C0:59765 
+     28200 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59764 : C700A8C0:59765 
+     28211 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59765 : C700A8C0:59765 
+     28222 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff2700/3fff45b0  esp : 3fff45b0 , tcp :  3fff2700  , ip : 192.168.0.199:59765 
+     28234 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59763 : C700A8C0:59766 
+     28245 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59764 : C700A8C0:59766 
+     28255 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59765 : C700A8C0:59766 
+     28266 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59766 : C700A8C0:59766 
+     28277 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff2bc0/3fff47a8  esp : 3fff47a8 , tcp :  3fff2bc0  , ip : 192.168.0.199:59766 
+     28289 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59763 : C700A8C0:59764 
+     28300 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59764 : C700A8C0:59764 
+     28310 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff2240/3fff4550  esp : 3fff4550 , tcp :  3fff2240  , ip : 192.168.0.199:59764 
+     28323 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59763 : C700A8C0:59763 
+     28333 | ../wifi/Tcp.cpp   logConn            |  disconnectCb -- this : 3fff1d80/3fff42b0  esp : 3fff39a0 , tcp :  3fff1d80  , ip : 192.168.0.199:59763 
+     28354 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59763 : C700A8C0:59766 
+     28364 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59764 : C700A8C0:59766 
+     28375 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59765 : C700A8C0:59766 
+     28385 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59766 : C700A8C0:59766 
+     28396 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff2bc0/3fff47a8  esp : 3fff47a8 , tcp :  3fff2bc0  , ip : 192.168.0.199:59766 
+     28409 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     28419 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59763 : C700A8C0:59765 
+     28430 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59764 : C700A8C0:59765 
+     28440 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59765 : C700A8C0:59765 
+     28451 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff2700/3fff45b0  esp : 3fff45b0 , tcp :  3fff2700  , ip : 192.168.0.199:59765 
+     28465 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59763 : C700A8C0:59764 
+     28475 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59764 : C700A8C0:59764 
+     28486 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff2240/3fff4550  esp : 3fff4550 , tcp :  3fff2240  , ip : 192.168.0.199:59764 
+     28497 | ../wifi/Tcp.cpp   logConn            |  connectCb -- this : 3fff1d80/3fff4508  esp : 3fff4508 , tcp :  3fff1d80  , ip : 192.168.0.199:59767 
+     28508 | ../wifi/Tcp.cpp   logConn            |  registerCb -- this : 3fff1d80/3fff4508  esp : 3fff4508 , tcp :  3fff1d80  , ip : 192.168.0.199:59767 
+     28521 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     28531 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59767 : C700A8C0:59767 
+     28542 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff1d80/3fff4508  esp : 3fff4508 , tcp :  3fff1d80  , ip : 192.168.0.199:59767 
+     28554 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59767 : C700A8C0:59765 
+     28564 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59764 : C700A8C0:59765 
+     28575 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59765 : C700A8C0:59765 
+     28586 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff2700/3fff45b0  esp : 3fff45b0 , tcp :  3fff2700  , ip : 192.168.0.199:59765 
+     28598 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     28608 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59767 : C700A8C0:59766 
+     28619 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59764 : C700A8C0:59766 
+     28629 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59765 : C700A8C0:59766 
+     28640 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59766 : C700A8C0:59766 
+     28651 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff2bc0/3fff47a8  esp : 3fff47a8 , tcp :  3fff2bc0  , ip : 192.168.0.199:59766 
+     28664 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59767 : C700A8C0:59767 
+     28675 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff1d80/3fff4508  esp : 3fff4508 , tcp :  3fff1d80  , ip : 192.168.0.199:59767 
+     28687 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59767 : C700A8C0:59765 
+     28698 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59764 : C700A8C0:59765 
+     28708 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59765 : C700A8C0:59765 
+     28719 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff2700/3fff45b0  esp : 3fff45b0 , tcp :  3fff2700  , ip : 192.168.0.199:59765 
+     28732 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59767 : C700A8C0:59766 
+     28743 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59764 : C700A8C0:59766 
+     28753 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59765 : C700A8C0:59766 
+     28764 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59766 : C700A8C0:59766 
+     28775 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff2bc0/3fff47a8  esp : 3fff47a8 , tcp :  3fff2bc0  , ip : 192.168.0.199:59766 
+     28787 | ../wifi/Tcp.cpp   logConn            |  connectCb -- this : 3fff3080/3fff4930  esp : 3fff4930 , tcp :  3fff1d80  , ip : 192.168.0.199:59768 
+     28798 | ../wifi/Tcp.cpp   logConn            |  registerCb -- this : 3fff3080/3fff4930  esp : 3fff4930 , tcp :  3fff3080  , ip : 192.168.0.199:59768 
+     28809 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     28820 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59767 : C700A8C0:59768 
+     28831 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59764 : C700A8C0:59768 
+     28841 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59765 : C700A8C0:59768 
+     28852 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59766 : C700A8C0:59768 
+     28862 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59768 : C700A8C0:59768 
+     28873 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff3080/3fff4930  esp : 3fff4930 , tcp :  3fff3080  , ip : 192.168.0.199:59768 
+     28886 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59767 : C700A8C0:59767 
+     28897 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff1d80/3fff4508  esp : 3fff4508 , tcp :  3fff1d80  , ip : 192.168.0.199:59767 
+     28909 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59767 : C700A8C0:59766 
+     28920 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59764 : C700A8C0:59766 
+     28930 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59765 : C700A8C0:59766 
+     28941 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59766 : C700A8C0:59766 
+     28951 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff2bc0/3fff47a8  esp : 3fff47a8 , tcp :  3fff2bc0  , ip : 192.168.0.199:59766 
+     28964 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     28975 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59767 : C700A8C0:59767 
+     28986 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff1d80/3fff4508  esp : 3fff4508 , tcp :  3fff1d80  , ip : 192.168.0.199:59767 
+     28998 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59767 : C700A8C0:59764 
+     29008 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59764 : C700A8C0:59764 
+     29019 | ../wifi/Tcp.cpp   logConn            |  disconnectCb -- this : 3fff2240/3fff4550  esp : 3fff39a0 , tcp :  3fff2240  , ip : 192.168.0.199:59764 
+     29032 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59767 : C700A8C0:59768 
+     29043 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59764 : C700A8C0:59768 
+     29053 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59765 : C700A8C0:59768 
+     29064 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59766 : C700A8C0:59768 
+     29075 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59768 : C700A8C0:59768 
+     29085 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff3080/3fff4930  esp : 3fff4930 , tcp :  3fff3080  , ip : 192.168.0.199:59768 
+     29098 | ../wifi/Tcp.cpp   logConn            |  connectCb -- this : 3fff2240/3fff4550  esp : 3fff4550 , tcp :  3fff2240  , ip : 192.168.0.199:59769 
+     29110 | ../wifi/Tcp.cpp   logConn            |  registerCb -- this : 3fff2240/3fff4550  esp : 3fff4550 , tcp :  3fff2240  , ip : 192.168.0.199:59769 
+     29121 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     29132 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59767 : C700A8C0:59769 
+     29142 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59769 : C700A8C0:59769 
+     29153 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff2240/3fff4550  esp : 3fff4550 , tcp :  3fff2240  , ip : 192.168.0.199:59769 
+     29166 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59767 : C700A8C0:59768 
+     29176 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59769 : C700A8C0:59768 
+     29187 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59765 : C700A8C0:59768 
+     29198 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59766 : C700A8C0:59768 
+     29209 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59768 : C700A8C0:59768 
+     29219 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff3080/3fff4930  esp : 3fff4930 , tcp :  3fff3080  , ip : 192.168.0.199:59768 
+     29233 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59767 : C700A8C0:59765 
+     29244 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59769 : C700A8C0:59765 
+     29255 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59765 : C700A8C0:59765 
+     29265 | ../wifi/Tcp.cpp   logConn            |  disconnectCb -- this : 3fff2700/3fff45b0  esp : 3fff39a0 , tcp :  3fff2700  , ip : 192.168.0.199:59765 
+     29277 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59767 : C700A8C0:59767 
+     29288 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff1d80/3fff4508  esp : 3fff4508 , tcp :  3fff1d80  , ip : 192.168.0.199:59767 
+     29300 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     29310 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59767 : C700A8C0:59768 
+     29321 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59769 : C700A8C0:59768 
+     29331 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59765 : C700A8C0:59768 
+     29342 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59766 : C700A8C0:59768 
+     
+WATCHDOG
+@(#):STACK_START 0x3FFFFC30
+@(#):3FFFFC60:40105FA5
+@(#):3FFFFC70:40105F91
+@(#):3FFFFCD0:4000050C
+@(#):3FFFFCF0:40002EF1
+@(#):3FFFFD00:40002EF1
+@(#):3FFFFD70:40206202
+@(#):3FFFFD90:40206336
+@(#):3FFFFF10:40220906
+@(#):3FFFFF90:4020649B
+@(#):3FFFFFA0:40000F49
+@(#):3FFFFFB0:40000E19
+@(#):3FFFFFC0:40001100
+@(#):3FFFFFD0:40100276
+@(#):3FFFFFE0:4010000D
+@(#):3FFFFFF0:4000044C
+@(#):STACK_END
+29352 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59768 : C700A8C0:59768 
+     29364 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff3080/3fff4930  esp : 3fff4930 , tcp :  3fff3080  , ip : 192.168.0.199:59768 
+     29378 | ../wifi/Tcp.cpp   logConn            |  connectCb -- this : 3fff2700/3fff3fd8  esp : 3fff3fd8 , tcp :  3fff2700  , ip : 192.168.0.199:59770 
+     29389 | ../wifi/Tcp.cpp   logConn            |  registerCb -- this : 3fff2700/3fff3fd8  esp : 3fff3fd8 , tcp :  3fff2700  , ip : 192.168.0.199:59770 
+     29402 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     29412 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59767 : C700A8C0:59770 
+     29423 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59769 : C700A8C0:59770 
+     29434 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59770 : C700A8C0:59770 
+     29444 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff2700/3fff3fd8  esp : 3fff3fd8 , tcp :  3fff2700  , ip : 192.168.0.199:59770 
+     29457 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59767 : C700A8C0:59769 
+     29468 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59769 : C700A8C0:59769 
+     29479 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff2240/3fff4550  esp : 3fff4550 , tcp :  3fff2240  , ip : 192.168.0.199:59769 
+     29491 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59767 : C700A8C0:59767 
+     29502 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff1d80/3fff4508  esp : 3fff4508 , tcp :  3fff1d80  , ip : 192.168.0.199:59767 
+     29514 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59767 : C700A8C0:59766 
+     29524 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59769 : C700A8C0:59766 
+     29535 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59770 : C700A8C0:59766 
+     29546 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59766 : C700A8C0:59766 
+     29557 | ../wifi/Tcp.cpp   logConn            |  disconnectCb -- this : 3fff2bc0/3fff47a8  esp : 3fff39a0 , tcp :  3fff2bc0  , ip : 192.168.0.199:59766 
+     29569 | ../wifi/Tcp.cpp   logConn            |  connectCb -- this : 3fff2bc0/3fff4760  esp : 3fff4760 , tcp :  3fff2bc0  , ip : 192.168.0.199:59771 
+     29580 | ../wifi/Tcp.cpp   logConn            |  registerCb -- this : 3fff2bc0/3fff4760  esp : 3fff4760 , tcp :  3fff2bc0  , ip : 192.168.0.199:59771 
+     29592 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     29602 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59767 : C700A8C0:59771 
+     29613 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59769 : C700A8C0:59771 
+     29624 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59770 : C700A8C0:59771 
+     29634 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59771 : C700A8C0:59771 
+     29645 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff2bc0/3fff4760  esp : 3fff4760 , tcp :  3fff2bc0  , ip : 192.168.0.199:59771 
+     29658 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     29669 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59767 : C700A8C0:59769 
+     29679 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59769 : C700A8C0:59769 
+     29690 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff2240/3fff4550  esp : 3fff4550 , tcp :  3fff2240  , ip : 192.168.0.199:59769 
+     29702 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59767 : C700A8C0:59768 
+     29713 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59769 : C700A8C0:59768 
+     29723 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59770 : C700A8C0:59768 
+     29734 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59771 : C700A8C0:59768 
+     29745 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59768 : C700A8C0:59768 
+     29755 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff3080/3fff4930  esp : 3fff4930 , tcp :  3fff3080  , ip : 192.168.0.199:59768 
+     29768 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59767 : C700A8C0:59770 
+     29778 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59769 : C700A8C0:59770 
+     29789 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59770 : C700A8C0:59770 
+     29800 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff2700/3fff3fd8  esp : 3fff3fd8 , tcp :  3fff2700  , ip : 192.168.0.199:59770 
+     29812 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     29822 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59767 : C700A8C0:59770 
+     29833 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59769 : C700A8C0:59770 
+     29843 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59770 : C700A8C0:59770 
+
+WATCHDOG
+@(#):STACK_START 0x3FFFFB90
+@(#):3FFFFBC0:401057F0
+@(#):3FFFFBD0:401057F0
+@(#):3FFFFC60:40107C9A
+@(#):3FFFFC70:40105F91
+@(#):3FFFFCD0:4000050C
+@(#):3FFFFCF0:40002EF1
+@(#):3FFFFD00:40002EF1
+@(#):3FFFFD40:4000050C
+@(#):3FFFFD70:40206202
+@(#):3FFFFD90:40206336
+@(#):3FFFFDF0:4022FE28
+@(#):3FFFFF10:40220906
+@(#):3FFFFF90:4020649B
+@(#):3FFFFFA0:40000F49
+@(#):3FFFFFB0:40000E19
+@(#):3FFFFFC0:40001100
+@(#):3FFFFFD0:40100276
+@(#):3FFFFFE0:4010000D
+@(#):3FFFFFF0:4000044C
+@(#):STACK_END
+     29855 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff2700/3fff3fd8  esp : 3fff3fd8 , tcp :  3fff2700  , ip : 192.168.0.199:59770 
+     29868 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59767 : C700A8C0:59771 
+     29879 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59769 : C700A8C0:59771 
+     29890 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59770 : C700A8C0:59771 
+     29900 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59771 : C700A8C0:59771 
+     29911 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff2bc0/3fff4760  esp : 3fff4760 , tcp :  3fff2bc0  , ip : 192.168.0.199:59771 
+     29925 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59767 : C700A8C0:59769 
+     29935 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59769 : C700A8C0:59769 
+     29946 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff2240/3fff4550  esp : 3fff4550 , tcp :  3fff2240  , ip : 192.168.0.199:59769 
+     29957 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59767 : C700A8C0:59769 
+     29968 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59769 : C700A8C0:59769 
+     29979 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff2240/3fff4550  esp : 3fff4550 , tcp :  3fff2240  , ip : 192.168.0.199:59769 
+     29990 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59767 : C700A8C0:59768 
+     30000 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59769 : C700A8C0:59768 
+     30011 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59770 : C700A8C0:59768 
+     30021 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59771 : C700A8C0:59768 
+     30032 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59768 : C700A8C0:59768 
+     30043 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff3080/3fff4930  esp : 3fff4930 , tcp :  3fff3080  , ip : 192.168.0.199:59768 
+     30055 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     30065 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59767 : C700A8C0:59771 
+     30076 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59769 : C700A8C0:59771 
+     30087 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59770 : C700A8C0:59771 
+     30098 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59771 : C700A8C0:59771 
+     30108 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff2bc0/3fff4760  esp : 3fff4760 , tcp :  3fff2bc0  , ip : 192.168.0.199:59771 
+     30120 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59767 : C700A8C0:59770 
+     30131 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59769 : C700A8C0:59770 
+     30142 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59770 : C700A8C0:59770 
+     30152 | ../wifi/Tcp.cpp   logConn            |  sendCb -- this : 3fff2700/3fff3fd8  esp : 3fff3fd8 , tcp :  3fff2700  , ip : 192.168.0.199:59770 
+     30165 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59767 : C700A8C0:59770 
+     30176 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59769 : C700A8C0:59770 
+     30187 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59770 : C700A8C0:59770 
+     30197 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff2700/3fff3fd8  esp : 3fff3fd8 , tcp :  3fff2700  , ip : 192.168.0.199:59770 
+     30210 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59767 : C700A8C0:59767 
+     30221 | ../wifi/Tcp.cpp   logConn            |  disconnectCb -- this : 3fff1d80/3fff4508  esp : 3fff39a0 , tcp :  3fff1d80  , ip : 192.168.0.199:59767 
+     30233 | ../wifi/Tcp.cpp   logConn            |  connectCb -- this : 3fff1d80/3fff4508  esp : 3fff4508 , tcp :  3fff1d80  , ip : 192.168.0.199:59773 
+     30244 | ../wifi/Tcp.cpp   logConn            |  registerCb -- this : 3fff1d80/3fff4508  esp : 3fff4508 , tcp :  3fff1d80  , ip : 192.168.0.199:59773 
+     30256 | ../wifi/Tcp.cpp   recvCb             |  bytes : 1 
+     30266 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59773 : C700A8C0:59773 
+     30277 | ../wifi/Tcp.cpp   logConn            |  recvCb -- this : 3fff1d80/3fff4508  esp : 3fff4508 , tcp :  3fff1d80  , ip : 192.168.0.199:59773 
+     30288 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59773 : C700A8C0:59771 
+     30299 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59769 : C700A8C0:59771 
+     30310 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59770 : C700A8C0:59771 
+     30320 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59771 : C700A8C0:59771 
+     30331 | ../wifi/Tcp.cpp   logConn            |  writeFinishCb -- this : 3fff2bc0/3fff4760  esp : 3fff4760 , tcp :  3fff2bc0  , ip : 192.168.0.199:59771 
+     30344 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59773 : C700A8C0:59771 
+
+WATCHDOG
+@(#):STACK_START 0x3FFFFCB0
+@(#):3FFFFCC0:4000050C
+@(#):3FFFFCE0:40002EEE
+@(#):3FFFFCF0:40002EF1
+@(#):3FFFFD60:40206202
+@(#):3FFFFD80:40206336
+@(#):3FFFFDE0:4022FE28
+@(#):3FFFFF10:40220973
+@(#):3FFFFF30:40222E5C
+@(#):3FFFFF90:4020649B
+@(#):3FFFFFA0:40000F49
+@(#):3FFFFFB0:40000E19
+@(#):3FFFFFC0:40001100
+@(#):3FFFFFD0:40100276
+@(#):3FFFFFE0:4010000D
+@(#):3FFFFFF0:4000044C
+@(#):STACK_END
+     30357 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59769 : C700A8C0:59771 
+     30367 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59770 : C700A8C0:59771 
+     30378 | ../wifi/Tcp.cpp   match              |  compare C700A8C0:59771 : C700A8C0:59771 
+     303

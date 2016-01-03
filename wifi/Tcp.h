@@ -43,15 +43,17 @@ typedef union {
 } IpAddress;
 
 class Tcp: public Handler, public Stream {
-private:
+protected:
 	Wifi* _wifi;
-
-	struct espconn* _conn;
-	char _host[64];
-
 	IpAddress _remote_ip;
 	uint16_t _remote_port;
 	uint16_t _local_port;
+	struct espconn* _conn;
+	char _host[64];
+	bool _connected;
+private:
+	static Tcp** _tcps;
+	static uint32_t _maxConnections;
 //	ConnState _connState;
 	CircBuf _rxd;
 	CircBuf _txd;
@@ -60,18 +62,24 @@ private:
 	uint32_t _bytesRxd;
 	uint32_t _bytesTxd;
 	uint32_t _overflowTxd;
-	bool _connected;
-public:
-	IROM Tcp(Wifi* wifi);IROM Tcp(Wifi* wifi, struct espconn* conn);IROM ~Tcp();
 
-	void IROM config(const char* host, uint16_t port);
+public:
+	IROM Tcp(Wifi* wifi); //
+	IROM Tcp(Wifi* wifi, struct espconn* conn); //
+	IROM ~Tcp();//
+	IROM void logConn(const char* s, void *arg);
+	void IROM loadEspconn(struct espconn* conn);
+
 	void IROM connect();
 	void IROM connect(const char* host, uint16_t port);
-	void IROM listen(uint16_t port);
+
 	void IROM disconnect();
 
 	IROM void registerCb(struct espconn* pconn);	//
-	IROM static bool match(struct espconn* pconn,Tcp* pTcp); //
+	static IROM void globalInit(Wifi* wifi, uint32_t maxConnections);
+	static IROM Tcp* findTcp(struct espconn* pconn);
+	static IROM Tcp* findFreeTcp(struct espconn* pconn);
+	static IROM bool match(struct espconn* pconn, Tcp* pTcp); //
 	IROM static void connectCb(void* arg);	//
 	IROM static void reconnectCb(void* arg, int8 err); // mqtt_tcpclient_recon_cb(void *arg, sint8 errType)
 	IROM static void disconnectCb(void* arg); //
@@ -87,8 +95,23 @@ public:
 	IROM bool hasData(); //
 	IROM bool hasSpace(); //
 	IROM uint8_t read(); //
-	IROM bool dispatch(Msg& msg); //
+	virtual IROM bool dispatch(Msg& msg); //
 	IROM bool isConnected(); //
+
+};
+
+class TcpServer: public Tcp {
+public:
+	IROM TcpServer(Wifi* wifi);
+	bool IROM dispatch(Msg& msg); //
+	Erc IROM config(uint32_t maxConnections, uint16_t port);
+	void listen();
+};
+
+class TcpClient: public Tcp {
+public:
+	IROM TcpClient(Wifi* wifi);IROM bool dispatch(Msg& msg); //
+	void IROM config(const char* host, uint16_t port);
 
 };
 
