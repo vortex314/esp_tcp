@@ -52,7 +52,8 @@ protected:
 	char _host[64];
 	bool _connected;
 private:
-	static Tcp** _tcps;
+	static Tcp* _first;
+	Tcp* _next;
 	static uint32_t _maxConnections;
 //	ConnState _connState;
 	CircBuf _rxd;
@@ -66,7 +67,7 @@ private:
 public:
 	IROM Tcp(Wifi* wifi); //
 	IROM Tcp(Wifi* wifi, struct espconn* conn); //
-	IROM ~Tcp();//
+	IROM ~Tcp(); //
 	IROM void logConn(const char* s, void *arg);
 	void IROM loadEspconn(struct espconn* conn);
 
@@ -80,7 +81,10 @@ public:
 	static IROM Tcp* findTcp(struct espconn* pconn);
 	static IROM Tcp* findFreeTcp(struct espconn* pconn);
 	static IROM bool match(struct espconn* pconn, Tcp* pTcp); //
-	IROM static void connectCb(void* arg);	//
+	void IROM reg();
+	uint32_t IROM count(); //
+	uint32_t IROM used(); //
+	static IROM void connectCb(void* arg);	//
 	IROM static void reconnectCb(void* arg, int8 err); // mqtt_tcpclient_recon_cb(void *arg, sint8 errType)
 	IROM static void disconnectCb(void* arg); //
 	IROM static void dnsFoundCb(const char *name, ip_addr_t *ipaddr, void *arg); //

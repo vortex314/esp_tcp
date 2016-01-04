@@ -123,13 +123,13 @@ extern "C" IROM void MsgInit() {
 
 	wifi = new Wifi();
 	wifi->config((const char*) STA_SSID, (const char*) STA_PASS);
-	Tcp::globalInit(wifi,5);
+//	Tcp::globalInit(wifi,5);
 
 	tcpServer=new TcpServer(wifi);
 	tcpServer->config(5,2323);
 
-//	tcpClient = new TcpClient(wifi);
-//	tcpClient->config("www.google.com", 80);
+	tcpClient = new TcpClient(wifi);
+	tcpClient->config("iot.eclipse.org", 1883);
 
 	led = new LedBlink(wifi);
 
