@@ -87,7 +87,7 @@ DISCONNECTED: {
 		_wifiStatus = wifi_station_get_connect_status();
 		if ( wifi_station_get_connect_status()== STATION_NO_AP_FOUND || wifi_station_get_connect_status()==STATION_WRONG_PASSWORD || wifi_station_get_connect_status()==STATION_CONNECT_FAIL)
 		{
-			INFO(" NOT CONNECTED ");
+			INFO("NOT CONNECTED");
 			wifi_station_connect();
 		} else if (_wifiStatus == STATION_GOT_IP && ipConfig.ip.addr != 0) {
 			_connections++;
@@ -96,14 +96,14 @@ DISCONNECTED: {
 				uint8_t ip[4];
 			} v;
 			v.addr = ipConfig.ip.addr;
-			INFO("  IP Address : %d.%d.%d.%d ",v.ip[0],v.ip[1],v.ip[2],v.ip[3]);
-			INFO(" CONNECTED ");
+			INFO("IP Address : %d.%d.%d.%d",v.ip[0],v.ip[1],v.ip[2],v.ip[3]);
+			INFO("CONNECTED");
 			Msg::publish(this,SIG_CONNECTED);
 			_connected=true;
 
 			goto CONNECTED;
 		} else {
-			INFO(" STATION_IDLE ");
+			INFO("STATION_IDLE");
 		}
 		timeout(500);
 	}
@@ -117,6 +117,7 @@ CONNECTED : {
 		_wifiStatus = wifi_station_get_connect_status();
 		if (_wifiStatus != STATION_GOT_IP ) {
 			Msg::publish(this,SIG_DISCONNECTED);
+			INFO("DISCONNECTED");
 			_connected=false;
 			goto DISCONNECTED;
 		}

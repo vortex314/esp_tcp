@@ -42,43 +42,53 @@ Gpio* gpioReset;
 Gpio* gpioFlash;
 
 
-#define MSG_TASK_PRIO        		1
-#define MSG_TASK_QUEUE_SIZE    	100
+
 #define MSG_SEND_TIMOUT			5
 
 extern "C" void MsgPump();
 extern "C" void MsgPublish(void* src, Signal signal);
 extern "C" void MsgInit();
-extern uint64_t SysWatchDog;
+//------------------------------------------------------------------------------------
+//		foreground task and message OS queue
+//------------------------------------------------------------------------------------
+#define MSG_TASK_PRIO        		1
+#define MSG_TASK_QUEUE_SIZE    	100
 os_event_t MsgQueue[MSG_TASK_QUEUE_SIZE];
-os_timer_t pumpTimer;
 extern "C" void feedWatchDog();
 
-inline void Post(const char* src, Signal signal) {
+inline void task_post(const char* src, Signal signal) {
 	system_os_post((uint8_t) MSG_TASK_PRIO, (os_signal_t) signal,
 			(os_param_t) src);
 }
-uint32_t used=0;
 
-void IROM MSG_TASK(os_event_t *e) {
-//	if (Msg::_queue->getUsed()>used) {
-//		used=Msg::_queue->getUsed();
-//		INFO(" used : %d",used);
-//	}
-//	INFO("os_event");
-	while (msg->receive()) {
-//		INFO(">>> %x:%d",msg->src(),msg->signal());
-		Handler::dispatchToChilds(*msg);
+void IROM task_handler(os_event_t *e) {		// foreground task to handle signals async
+	while (msg->receive()) {								// process all messages
+		Handler::dispatchToChilds(*msg);					// send message to all
 	}
-	feedWatchDog(); // if not called within 1 second calls dump_stack;
+	feedWatchDog(); 			// if not called within 1 second calls dump_stack
 }
-
+void IROM task_start(){
+	system_os_task(task_handler, MSG_TASK_PRIO, MsgQueue, MSG_TASK_QUEUE_SIZE);
+}
+// ----------------------------------------------------------------------
+//			SIG_TICK generator
+//-----------------------------------------------------------------------
+os_timer_t pumpTimer;
 const char* CLOCK_ID = "CLOCK";
 
 void IROM tick_cb(void *arg) {
 	Msg::publish(CLOCK_ID, SIG_TICK);
 }
-//-----------------------------------------------------------------------
+
+void IROM tick_timer_start(){
+	os_timer_disarm(&pumpTimer);										// start SIG_TICK clock
+	os_timer_setfn(&pumpTimer, (os_timer_func_t *) tick_cb, (void *) 0);
+	os_timer_arm(&pumpTimer, 10, 1);
+}
+
+//-----------------------------------------------------------------------------------
+//		initialize global variables
+//-----------------------------------------------------------------------------------
 extern void (*__init_array_start)(void);
 extern void (*__init_array_end)(void);
 
@@ -87,7 +97,7 @@ static void do_global_ctors(void) {
 	for (p = &__init_array_start; p != &__init_array_end; ++p)
 		(*p)();
 }
-//----------------------------------------------------------------------
+//----------------------------------------------------------------------------------
 
 char deviceName[40];
 
@@ -99,7 +109,7 @@ extern "C" IROM void MsgInit() {
 
 
 //	initPins();
-	gpioReset = new Gpio(2); // D2, GPIO4 see http://esp8266.co.uk/tutorials/introduction-to-the-gpio-api/
+	gpioReset = new Gpio(2); 			// D2, GPIO4 see http://esp8266.co.uk/tutorials/introduction-to-the-gpio-api/
 	gpioReset->setMode("OOD");
 
 /*	for (int i=1;i<10;i++) {
@@ -135,13 +145,9 @@ extern "C" IROM void MsgInit() {
 
 	gpioFlash = new Gpio(0);
 
-	system_os_task(MSG_TASK, MSG_TASK_PRIO, MsgQueue, MSG_TASK_QUEUE_SIZE);
-	INFO("line : %d",__LINE__);
-	Msg::publish(__FUNCTION__, SIG_INIT);
-	os_timer_disarm(&pumpTimer);
-	os_timer_setfn(&pumpTimer, (os_timer_func_t *) tick_cb, (void *) 0);
-	os_timer_arm(&pumpTimer, 10, 1);
-	INFO("line : %d",__LINE__);
-
+	task_start();
+//	system_os_task(MSG_TASK, MSG_TASK_PRIO, MsgQueue, MSG_TASK_QUEUE_SIZE);
+	Msg::publish(__FUNCTION__, SIG_INIT);								// send first SIG_INIT signal
+	tick_timer_start();
 }
 
