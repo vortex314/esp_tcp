@@ -102,10 +102,15 @@ static void do_global_ctors(void) {
 char deviceName[40];
 
 #include "CborQueue.h"
+#include "ListMap.h"
+#include <ListMap.cpp>
+
+ListMap<uint32_t> symbols;
 
 extern "C" IROM void MsgInit() {
 //	INFO(" Start Message Pump ");
 	do_global_ctors();
+	symbols.add("one",1);
 
 
 //	initPins();
