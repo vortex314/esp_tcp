@@ -56,7 +56,7 @@ extern "C" void MsgInit();
 os_event_t MsgQueue[MSG_TASK_QUEUE_SIZE];
 extern "C" void feedWatchDog();
 
-inline void task_post(const char* src, Signal signal) {
+void task_post(const char* src, Signal signal) {
 	system_os_post((uint8_t) MSG_TASK_PRIO, (os_signal_t) signal,
 			(os_param_t) src);
 }
@@ -67,6 +67,7 @@ void IROM task_handler(os_event_t *e) {		// foreground task to handle signals as
 	}
 	feedWatchDog(); 			// if not called within 1 second calls dump_stack
 }
+
 void IROM task_start(){
 	system_os_task(task_handler, MSG_TASK_PRIO, MsgQueue, MSG_TASK_QUEUE_SIZE);
 }
@@ -103,14 +104,17 @@ char deviceName[40];
 
 #include "CborQueue.h"
 #include "ListMap.h"
-#include <ListMap.cpp>
+//#include <ListMap.cpp>
 
 ListMap<uint32_t> symbols;
+
+
 
 extern "C" IROM void MsgInit() {
 //	INFO(" Start Message Pump ");
 	do_global_ctors();
-	symbols.add("one",1);
+
+//	symbols.add("one",1);
 
 
 //	initPins();
@@ -138,7 +142,6 @@ extern "C" IROM void MsgInit() {
 
 	wifi = new Wifi();
 	wifi->config((const char*) STA_SSID, (const char*) STA_PASS);
-//	Tcp::globalInit(wifi,5);
 
 	tcpServer=new TcpServer(wifi);
 	tcpServer->config(5,2323);
@@ -151,7 +154,7 @@ extern "C" IROM void MsgInit() {
 	gpioFlash = new Gpio(0);
 
 	task_start();
-//	system_os_task(MSG_TASK, MSG_TASK_PRIO, MsgQueue, MSG_TASK_QUEUE_SIZE);
+
 	Msg::publish(__FUNCTION__, SIG_INIT);								// send first SIG_INIT signal
 	tick_timer_start();
 }

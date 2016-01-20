@@ -6,7 +6,7 @@
  */
 
 #include <ListMap.h>
-
+#ifdef ANAKWABOE
 
 template<typename T> ListMap<T>::ListMap() {
 	_first = 0;
@@ -77,3 +77,4 @@ template<typename T> T* ListMap<T>::callOnMatch(const char* key,
 	}
 	return 0;
 }
+#endif
