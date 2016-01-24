@@ -45,7 +45,7 @@ class ListMap {
 	ListNode<Element*>* _first;
 	ListNode<Element*>* _cursor;
 public:
-	IROM ListMap();
+	 ListMap();
 	T* IROM findKey(const char* key);
 	T* IROM findMatch(const char* keyFilter);
 	T* IROM callOnMatch(const char* keyFilter, MatchFunction mf,

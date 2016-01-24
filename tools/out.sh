@@ -4,6 +4,7 @@ pwd
 USB=$2
 TTY=/dev/tty$USB
 LOG=$USB.log
+rm $LOG
 PROJECT=$1
 echo "---------------" $PROJECT "------------------------"
 ./reset $TTY

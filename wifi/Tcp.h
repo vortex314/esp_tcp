@@ -43,31 +43,58 @@ typedef union {
 } IpAddress;
 
 class Tcp: public Handler, public Stream {
+public:
+	typedef enum  {
+		SERVER,
+		CLIENT,
+		LIVE
+	} TcpType;
 protected:
 	Wifi* _wifi;
-	IpAddress _remote_ip;
+	Stream* _stream;
+
 	uint16_t _remote_port;
 	uint16_t _local_port;
 	struct espconn* _conn;
 	char _host[64];
 	bool _connected;
+
 private:
+
 	static Tcp* _first;
 	Tcp* _next;
 	static uint32_t _maxConnections;
 //	ConnState _connState;
-	CircBuf _rxd;
+//	CircBuf _rxd;
 	CircBuf _txd;
 	Bytes _buffer;
 	uint32_t _connections;
 	uint32_t _bytesRxd;
 	uint32_t _bytesTxd;
 	uint32_t _overflowTxd;
+	uint32_t _overflowRxd;
+	TcpType _type;
 
 public:
+
+	IpAddress _remote_ip;
 	IROM Tcp(Wifi* wifi); //
 	IROM Tcp(Wifi* wifi, struct espconn* conn); //
 	IROM ~Tcp(); //
+	inline void setType(TcpType t){
+		_type=t;
+	}
+	inline  TcpType getType(){
+		return _type;
+	}
+
+	inline void setStream(Stream* stream){
+		_stream=stream;
+	}
+	inline  Stream* getStream(){
+		return _stream;
+	}
+
 	IROM void logConn(const char* s, void *arg);
 	void IROM loadEspconn(struct espconn* conn);
 
@@ -79,9 +106,11 @@ public:
 	IROM void registerCb(struct espconn* pconn);	//
 	static IROM void globalInit(Wifi* wifi, uint32_t maxConnections);
 	static IROM Tcp* findTcp(struct espconn* pconn);
+	static IROM void listTcp();
 	static IROM Tcp* findFreeTcp(struct espconn* pconn);
 	static IROM bool match(struct espconn* pconn, Tcp* pTcp); //
 	void IROM reg();
+	void IROM unreg();
 	uint32_t IROM count(); //
 	uint32_t IROM used(); //
 	static IROM void connectCb(void* arg);	//
