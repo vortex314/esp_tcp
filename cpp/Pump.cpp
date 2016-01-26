@@ -27,6 +27,7 @@ extern "C" {
 #include "Sys.h"
 #include "Tcp.h"
 #include "Gpio.h"
+#include "Cmd.h"
 
 mutex_t mutex;
 
@@ -36,6 +37,7 @@ Msg* msg;
 Wifi* wifi;
 TcpClient* tcpClient;
 TcpServer* tcpServer;
+Cmd* cmd;
 
 Gpio* gpioReset;
 Gpio* gpioFlash;
@@ -140,10 +142,10 @@ extern "C" IROM void MsgInit() {
 
 	tcp = new Tcp(wifi);
 	receiver=new Receiver(tcp);
-	tcp->setStream(receiver);
+	cmd =  new Cmd(receiver);
 
-	tcpClient = new TcpClient(wifi);
-	tcpClient->config("iot.eclipse.org", 1883);
+//	tcpClient = new TcpClient(wifi);
+//	tcpClient->config("iot.eclipse.org", 1883);
 
 	led = new LedBlink(tcp);
 

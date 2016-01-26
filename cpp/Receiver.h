@@ -22,6 +22,7 @@ public:
 	IROM Receiver(Tcp* tcp);
 	IROM void init() ;
 	IROM bool dispatch(Msg& msg);
+	IROM Erc send(Bytes& bytes);
 	IROM virtual Erc write(uint8_t b);
 	IROM virtual Erc write(uint8_t* pb, uint32_t length);
 	IROM virtual Erc write(Bytes& bytes);

@@ -51,7 +51,6 @@ public:
 	} TcpType;
 protected:
 	Wifi* _wifi;
-	Stream* _stream;
 
 	uint16_t _remote_port;
 	uint16_t _local_port;
@@ -86,13 +85,6 @@ public:
 	}
 	inline  TcpType getType(){
 		return _type;
-	}
-
-	inline void setStream(Stream* stream){
-		_stream=stream;
-	}
-	inline  Stream* getStream(){
-		return _stream;
 	}
 
 	IROM void logConn(const char* s, void *arg);

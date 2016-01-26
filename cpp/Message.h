@@ -8,6 +8,7 @@
 #ifndef MESSAGE_H_
 #define MESSAGE_H_
 #include <Cbor.h>
+#include <Sys.h>
 /*
  *  domain/device/in
  *  domain/device/out
@@ -48,11 +49,11 @@ public:
 
 	Message(int size);
 	virtual ~Message();
-	template<class T> void addField(Field field, T x) {
+	template<class T> void IROM addField(Field field, T x) {
 		addKey((int) field);
 		add(x);
 	}
-	template<class T> bool getField(Field field, T x) {
+	template<class T> bool IROM  getField(Field field, T x) {
 		if (gotoKey(field) && get(x)) {
 			return true;
 		}

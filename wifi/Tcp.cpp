@@ -107,13 +107,13 @@ void Tcp::loadEspconn(struct espconn* pconn) {
 void Tcp::logConn(const char* s, void* arg) {
 	struct espconn* pconn = (struct espconn*) arg;
 	if (pconn) {
-		INFO(" %X:%X %X", this, pconn, pconn->reverse);
+//	INFO(" %X:%X %X", this, pconn, pconn->reverse);
 		INFO(
-				" %s -- this : %x/%x  esp : %x , tcp :  %x  , ip : %d.%d.%d.%d:%d ,  %d/%d ",
-				s, this, this->_conn, pconn, pconn->reverse,
+				" %s - tcp :  %x  , ip : %d.%d.%d.%d:%d  ",
+				s,  pconn->reverse,
 				pconn->proto.tcp->remote_ip[0], pconn->proto.tcp->remote_ip[1],
 				pconn->proto.tcp->remote_ip[2], pconn->proto.tcp->remote_ip[3],
-				pconn->proto.tcp->remote_port, used(), count());
+				pconn->proto.tcp->remote_port);
 	}
 }
 
@@ -158,7 +158,6 @@ Tcp::Tcp(Wifi* wifi) :
 	_overflowTxd = 0;
 	_connections = 0;
 	_local_port = 0;
-	_stream = 0;
 	reg();
 }
 
@@ -213,8 +212,7 @@ bool Tcp::hasSpace() {
 
 //	callkback when tcp connection is established
 //_________________________________________________________
-//$$$
-extern Wifi* wifi;
+
 void Tcp::connectCb(void* arg) {
 
 	struct espconn* pconn = (struct espconn*) arg;
@@ -325,13 +323,10 @@ void Tcp::recvCb(void* arg, char *pdata, unsigned short len) {
 		pTcp->_bytesRxd += len;
 		Bytes bytes;
 		bytes.map((uint8_t*) pdata, (uint32_t) len);
-		if (pTcp->_stream) {
-			pTcp->_stream->write((uint8_t*)pdata,len);
-		} else {
-			Erc erc;
-			if (erc = Msg::queue().putf("uuB", pTcp, SIG_RXD, &bytes)) {
-				pTcp->_overflowRxd++;
-			}
+
+		Erc erc;
+		if (erc = Msg::queue().putf("uuB", pTcp, SIG_RXD, &bytes)) {
+			pTcp->_overflowRxd++;
 		}
 		pTcp->logConn(__FUNCTION__, arg);
 		return;
