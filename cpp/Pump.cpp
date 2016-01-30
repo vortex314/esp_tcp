@@ -76,7 +76,7 @@ void IROM task_start() {
 os_timer_t pumpTimer;
 const char* CLOCK_ID = "CLOCK";
 
-void IROM tick_cb(void *arg) {
+void IRAM tick_cb(void *arg) {
 	Msg::publish(CLOCK_ID, SIG_TICK);
 }
 
@@ -142,12 +142,12 @@ extern "C" IROM void MsgInit() {
 
 	tcp = new Tcp(wifi);
 	receiver=new Receiver(tcp);
-	cmd =  new Cmd(receiver);
+//	cmd =  new Cmd(receiver);
 
 //	tcpClient = new TcpClient(wifi);
 //	tcpClient->config("iot.eclipse.org", 1883);
 
-	led = new LedBlink(tcp);
+	led = new LedBlink(wifi);
 
 	gpioFlash = new Gpio(0);
 

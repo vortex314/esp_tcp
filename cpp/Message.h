@@ -49,7 +49,7 @@ public:
 
 	Message(int size);
 	virtual ~Message();
-	template<class T> void IROM addField(Field field, T x) {
+/*	template<class T> void IROM addField(Field field, T x) {
 		addKey((int) field);
 		add(x);
 	}
@@ -58,7 +58,7 @@ public:
 			return true;
 		}
 		return false;
-	}
+	}*/
 
 };
 

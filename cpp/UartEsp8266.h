@@ -26,7 +26,7 @@ public:
 	uint32_t _uartNo;
 	static UartEsp8266* _uart0;
 	static UartEsp8266* _uart1;
-	static UartEsp8266* getUart0();
+	static UartEsp8266* IRAM getUart0();
 public:
 
 	IROM UartEsp8266(uint32_t uartNo);

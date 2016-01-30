@@ -19,20 +19,20 @@ private:
 	Slip* _slip;
 
 public:
-	IROM Receiver(Tcp* tcp);
-	IROM void init() ;
-	IROM bool dispatch(Msg& msg);
-	IROM Erc send(Bytes& bytes);
-	IROM virtual Erc write(uint8_t b);
-	IROM virtual Erc write(uint8_t* pb, uint32_t length);
-	IROM virtual Erc write(Bytes& bytes);
-//	IROM  ~Stream(){};
-	IROM virtual bool hasData();
-	IROM virtual bool hasSpace();
-	IROM virtual uint8_t read();
-	IROM virtual bool isConnected();
-	IROM virtual void connect();
-	IROM virtual void disconnect();
+	 Receiver(Tcp* tcp);
+	 void init() ;
+	 bool dispatch(Msg& msg);
+	 Erc send(Bytes& bytes);
+	 virtual Erc write(uint8_t b);
+//	 virtual Erc write(uint8_t* pb, uint32_t length);
+	 virtual Erc write(Bytes& bytes);
+//	  ~Stream(){};
+	 virtual bool hasData();
+	 virtual bool hasSpace();
+	 virtual uint8_t read();
+	 virtual bool isConnected();
+	 virtual void connect();
+	 virtual void disconnect();
 
 };
 

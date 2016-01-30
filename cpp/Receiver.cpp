@@ -7,53 +7,55 @@
 
 #include <Receiver.h>
 
-IROM Receiver::Receiver(Tcp* tcp) :
+ Receiver::Receiver(Tcp* tcp) :
 		Handler("Receiver") {
 	_tcp = tcp;
 	_slip = new Slip(256);
 }
-IROM void Receiver::init() {
+ void Receiver::init() {
 
 }
 
-IROM Erc Receiver::write(uint8_t b) {
+ Erc Receiver::write(uint8_t b) {
 	return E_OK;
 }
-IROM Erc Receiver::send(Bytes& bytes) {
+ Erc Receiver::send(Bytes& bytes) {
 	Slip* slip = (Slip*)&bytes;
 	slip->encode();
 	slip->frame();
 	_tcp->write(*slip);
 	return E_OK;
 }
-IROM Erc Receiver::write(Bytes& bytes) {
+ Erc Receiver::write(Bytes& bytes) {
 	return E_OK;
 }
-//	IROM  ~Stream(){};
-IROM bool Receiver::hasData() {
-	return E_OK;
+//	  ~Stream(){};
+ bool Receiver::hasData() {
+	return false;
 }
-IROM bool Receiver::hasSpace() {
-	return E_OK;
-}
-IROM uint8_t Receiver::read() {
-	return E_OK;
-}
-IROM bool Receiver::isConnected() {
+ bool Receiver::hasSpace() {
 	return true;
 }
-IROM void Receiver::connect() {
+ uint8_t Receiver::read() {
+	return 0;
+}
+ bool Receiver::isConnected() {
+	return true;
+}
+ void Receiver::connect() {
 	return;
 }
-IROM void Receiver::disconnect() {
+ void Receiver::disconnect() {
 	return;
 }
-IROM bool Receiver::dispatch(Msg& msg) {
+ bool Receiver::dispatch(Msg& msg) {
 	PT_BEGIN()
 	PT_WAIT_UNTIL(msg.is(0, SIG_INIT));
+	INFO("");
 	init();
 	while (true) {
 		timeout(20000);
+
 		PT_YIELD_UNTIL(msg.is(_tcp, SIG_RXD) || timeout());
 		if (msg.is(_tcp, SIG_RXD)) {
 			Bytes bytes(0);

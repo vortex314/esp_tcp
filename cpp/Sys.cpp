@@ -25,7 +25,7 @@ mutex_t mallocMutex=1;
 
 
 
-IROM void* malloc(size_t size) {
+IRAM void* malloc(size_t size) {
 	while(!GetMutex(&mallocMutex));
 	void* pv = pvPortMalloc(size);
 //	INFO("malloc(%d)=> 0x%X", size, pv);
@@ -33,7 +33,7 @@ IROM void* malloc(size_t size) {
 	return pv;
 }
 
-IROM void free(void* ptr) {
+IRAM void free(void* ptr) {
 //	INFO("free(0x%X)", ptr);
 	vPortFree(ptr);
 }
@@ -49,8 +49,8 @@ IRAM uint64_t Sys::millis() {
 
 #include "stdarg.h"
 
-IROM
-void Sys::log(SysLogLevel level, const char* file, const char * function,
+
+void IRAM Sys::log(SysLogLevel level, const char* file, const char * function,
 		const char * format, ...) {
 	va_list args;
 	va_start(args, format);

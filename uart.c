@@ -44,7 +44,7 @@ IRAM void uart0WriteWait(uint8 TxChar) {
 	WRITE_PERI_REG(UART_FIFO(0), TxChar);
 }
 
-LOCAL void uart0_rx_intr_handler(void *para);
+LOCAL void IRAM uart0_rx_intr_handler(void *para);
 
 /******************************************************************************
  * FunctionName : uart_config
@@ -164,24 +164,24 @@ uart1_config() {
 //	uart_tx_intr_enable(1);
 }
 
-static unsigned int uart_rx_fifo_length(void) {
+static IRAM unsigned int uart_rx_fifo_length(void) {
 	return ((READ_PERI_REG(UART_STATUS(0)) >> UART_RXFIFO_CNT_S)
 			& UART_RXFIFO_CNT);
 }
 
-static unsigned int uart_tx_fifo_length(void) {
+static IRAM unsigned int uart_tx_fifo_length(void) {
 	return ((READ_PERI_REG(UART_STATUS(0)) >> UART_TXFIFO_CNT_S)
 			& UART_TXFIFO_CNT);
 }
 
-void uart_tx_intr_enable(uint32_t uartno) {
+void IRAM uart_tx_intr_enable(uint32_t uartno) {
 	SET_PERI_REG_MASK(UART_INT_ENA(uartno), UART_TXFIFO_EMPTY_INT_ENA);
 }
-void uart_tx_intr_disable(uint32_t uartno) {
+void IRAM uart_tx_intr_disable(uint32_t uartno) {
 	CLEAR_PERI_REG_MASK(UART_INT_ENA(uartno), UART_TXFIFO_EMPTY_INT_ENA);
 }
 
-void uart_rx_intr_disable(uint8 uart_no) {
+void IRAM uart_rx_intr_disable(uint8 uart_no) {
 	CLEAR_PERI_REG_MASK(UART_INT_ENA(uart_no),
 			UART_RXFIFO_FULL_INT_ENA|UART_RXFIFO_TOUT_INT_ENA);
 }
@@ -203,7 +203,7 @@ uint32_t uartErrorCount = 0;
  * Returns      : NONE
  *******************************************************************************/
 
-LOCAL void uart0_rx_intr_handler(void *para) {
+LOCAL void IRAM uart0_rx_intr_handler(void *para) {
 	uint32_t loop = 0;
 //	ETS_UART_INTR_DISABLE();
 

@@ -54,7 +54,7 @@ extern void MsgInit();
 extern void  initWatchDog(void);
 extern void  feedWatchDog(void);
 
-IROM void user_init(void) {
+void user_init(void) {
 
 	ThreadLockInit();
 	SysLogInit();

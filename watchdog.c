@@ -64,7 +64,7 @@ void hw_timer_set_func(void (*user_hw_timer_cb_set)(void)) {
 	user_hw_timer_cb = user_hw_timer_cb_set;
 }
 
-static void hw_timer_isr_cb(void) {
+static IRAM void hw_timer_isr_cb(void) {
 	if (user_hw_timer_cb != NULL) {
 		(*(user_hw_timer_cb))();
 	}
@@ -82,7 +82,7 @@ static void hw_timer_isr_cb(void) {
  1,  autoload mode,
  * Returns      : NONE
  *******************************************************************************/
-void ICACHE_FLASH_ATTR hw_timer_init(FRC1_TIMER_SOURCE_TYPE source_type, u8 req) {
+void hw_timer_init(FRC1_TIMER_SOURCE_TYPE source_type, u8 req) {
 	if (req == 1) {
 		RTC_REG_WRITE(FRC1_CTRL_ADDRESS,
 				FRC1_AUTO_LOAD | DIVDED_BY_16 | FRC1_ENABLE_TIMER | TM_EDGE_INT);
@@ -112,7 +112,7 @@ void ICACHE_FLASH_ATTR hw_timer_init(FRC1_TIMER_SOURCE_TYPE source_type, u8 req)
 uint64_t SysUpTime = 0UL;
 uint64_t SysWatchDog = 1000UL;
 
-void dump_stack(uint32_t* lv) {
+void IRAM dump_stack(uint32_t* lv) {
 	uint32_t* start = lv;
 	uint32_t* end = 0x40000000;
 	uint32_t* ptr = start;
@@ -127,7 +127,7 @@ void dump_stack(uint32_t* lv) {
 	os_printf_plus("@(#):STACK_END\n");
 }
 
-void hw_test_timer_cb(void) {
+void IRAM hw_test_timer_cb(void) {
 
 	uint32_t lv = 0;
 	SysUpTime++;
