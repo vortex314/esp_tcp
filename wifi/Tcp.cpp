@@ -8,8 +8,35 @@
 #include "Tcp.h"
 #include <string.h>
 
-uint32_t Tcp::_maxConnections = 5;
+//uint32_t Tcp::_maxConnections = 5;
 Tcp* Tcp::_first = 0;
+
+Tcp::Tcp(Wifi* wifi) :
+		Handler("Tcp"), _txd(256), _buffer(100) {
+	_type = LIVE;
+	_next = 0;
+	_conn = 0;
+	_wifi = wifi;
+	strcpy(_host, "");
+	_remote_port = 80;
+	_remote_ip.addr = 0;
+	_connected = false;
+	_bytesTxd = 0;
+	_bytesRxd = 0;
+	_overflowTxd = 0;
+	_connections = 0;
+	_local_port = 0;
+	reg();
+}
+
+Tcp::~Tcp() {
+	if (_type == SERVER || _type == CLIENT) {
+		if (_conn->proto.tcp)
+			free(_conn->proto.tcp);
+		free(_conn);
+	}
+	unreg();
+}
 
 void Tcp::reg() {
 	Tcp* cursor;
@@ -32,7 +59,7 @@ void Tcp::unreg() {
 				cursor->_next = _next;
 	}
 }
-
+/*
 uint32_t Tcp::used() {
 	uint32_t count = 0;
 	Tcp* cursor;
@@ -49,7 +76,7 @@ uint32_t Tcp::count() {
 	for (cursor = _first; cursor != 0; cursor = cursor->_next)
 		count++;
 	return count;
-}
+}*/
 
 bool Tcp::match(struct espconn* pconn, Tcp* pTcp) {
 	/*	INFO(" compare %X:%d : %X:%d ", *((uint32_t* )pTcp->_remote_ip.b),
@@ -143,32 +170,7 @@ void Tcp::registerCb(struct espconn* pconn) {
 
 uint8_t StrToIP(const char* str, void *ip);
 
-Tcp::Tcp(Wifi* wifi) :
-		Handler("Tcp"), _txd(256), _buffer(100) {
-	_type = LIVE;
-	_next = 0;
-	_conn = 0;
-	_wifi = wifi;
-	strcpy(_host, "");
-	_remote_port = 80;
-	_remote_ip.addr = 0;
-	_connected = false;
-	_bytesTxd = 0;
-	_bytesRxd = 0;
-	_overflowTxd = 0;
-	_connections = 0;
-	_local_port = 0;
-	reg();
-}
 
-Tcp::~Tcp() {
-	if (_type == SERVER || _type == CLIENT) {
-		if (_conn->proto.tcp)
-			free(_conn->proto.tcp);
-		free(_conn);
-	}
-	unreg();
-}
 
 Erc Tcp::write(Bytes& bytes) {
 	return write(bytes.data(), bytes.length());
@@ -297,10 +299,9 @@ void Tcp::writeFinishCb(void* arg) {
 //	Tcp *pTcp = getInstance(pconn);
 	Tcp *pTcp = findTcp(pconn);
 	pTcp->logConn(__FUNCTION__, arg);
-	return;
-
 	pTcp->send();
 	Msg::publish(pTcp, SIG_TXD);
+	return;
 }
 
 void Tcp::sendCb(void *arg) {
@@ -308,11 +309,9 @@ void Tcp::sendCb(void *arg) {
 //	Tcp *pTcp = getInstance(pconn);
 	Tcp *pTcp = findTcp(pconn);
 	pTcp->logConn(__FUNCTION__, arg);
-	return;
-
-//	INFO("TCP: Txd %s:%d ", pTcp->_host, pTcp->_remote_port);
 	pTcp->send();
 	Msg::publish(pTcp, SIG_TXD);
+	return;
 }
 
 void Tcp::recvCb(void* arg, char *pdata, unsigned short len) {
@@ -328,6 +327,7 @@ void Tcp::recvCb(void* arg, char *pdata, unsigned short len) {
 		if (erc = Msg::queue().putf("uuB", pTcp, SIG_RXD, &bytes)) {
 			pTcp->_overflowRxd++;
 		}
+		INFO("erc %d bytes.length %d pTcp %X ",erc,bytes.length(),pTcp);
 		pTcp->logConn(__FUNCTION__, arg);
 		return;
 	} else {
@@ -407,10 +407,13 @@ bool Tcp::dispatch(Msg& msg) {
 	}
 	CONNECTING: {
 		while (true) {
-			timeout(100000);
+			timeout(10000);
 			PT_YIELD_UNTIL(isConnected() || timeout());
 			if (isConnected()) {
 				goto CONNECTED;
+			}
+			if ( timeout()){
+//				while(1);
 			}
 		}
 	}

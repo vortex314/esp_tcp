@@ -49,16 +49,16 @@ public:
 
 	Message(int size);
 	virtual ~Message();
-/*	template<class T> void IROM addField(Field field, T x) {
+	template<class T> void  addField(Field field, T x) {
 		addKey((int) field);
 		add(x);
 	}
-	template<class T> bool IROM  getField(Field field, T x) {
+	template<class T> bool   getField(Field field, T x) {
 		if (gotoKey(field) && get(x)) {
 			return true;
 		}
 		return false;
-	}*/
+	}
 
 };
 

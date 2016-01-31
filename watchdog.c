@@ -143,13 +143,13 @@ void IRAM hw_test_timer_cb(void) {
 }
 
 void IROM feedWatchDog() {
-	SysWatchDog = SysUpTime+1000;
+	SysWatchDog = SysUpTime+500;
 }
 
 void IROM initWatchDog(void) {
 	hw_timer_init(FRC1_SOURCE, 1);
 	hw_timer_set_func(hw_test_timer_cb);
 	hw_timer_arm(1000);
-	SysWatchDog = SysUpTime+500;
+	SysWatchDog = SysUpTime+1000;
 }
 

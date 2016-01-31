@@ -22,13 +22,13 @@ extern "C" {
 extern uint64_t SysUpTime;
 #include "mutex.h"
 mutex_t mallocMutex=1;
-
+#include "Sys.h"
 
 
 IRAM void* malloc(size_t size) {
 	while(!GetMutex(&mallocMutex));
 	void* pv = pvPortMalloc(size);
-//	INFO("malloc(%d)=> 0x%X", size, pv);
+	ASSERT(pv);
 	ReleaseMutex(&mallocMutex);
 	return pv;
 }
@@ -55,6 +55,7 @@ void IRAM Sys::log(SysLogLevel level, const char* file, const char * function,
 	va_list args;
 	va_start(args, format);
 	SysLog(level, file, function, format, args);
+
 	va_end(args);
 }
 

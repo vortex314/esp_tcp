@@ -102,9 +102,9 @@ static void do_global_ctors(void) {
 char deviceName[40];
 
 #include "CborQueue.h"
-#include "Receiver.h"
+#include <SlipFramer.h>
 
-Receiver* receiver;
+SlipFramer* slipFramer;
 Tcp* tcp;
 
 extern "C" IROM void MsgInit() {
@@ -140,9 +140,12 @@ extern "C" IROM void MsgInit() {
 	tcpServer = new TcpServer(wifi);
 	tcpServer->config(0, 2323);
 
+
 	tcp = new Tcp(wifi);
-	receiver=new Receiver(tcp);
-//	cmd =  new Cmd(receiver);
+	INFO("tcp %X ",tcp);
+
+	slipFramer=new SlipFramer(tcp);
+	cmd =  new Cmd(slipFramer);
 
 //	tcpClient = new TcpClient(wifi);
 //	tcpClient->config("iot.eclipse.org", 1883);
