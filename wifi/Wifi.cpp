@@ -68,6 +68,7 @@ bool Wifi::dispatch(Msg& msg) {
 		INFO("op mode %d", wifi_get_opmode());
 		INFO("op mode default %d", wifi_get_opmode_default());
 		INFO("phy mode %d", wifi_get_phy_mode());
+//		 wifi_set_opmode(STATION_MODE);
 		wifi_set_opmode_current(STATION_MODE);
 		ets_delay_us(30000);
 		; // STATIONAP_MODE was STATION_MODE

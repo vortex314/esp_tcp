@@ -152,4 +152,22 @@ void IROM initWatchDog(void) {
 	hw_timer_arm(1000);
 	SysWatchDog = SysUpTime+1000;
 }
+#include <xtensa/corebits.h>
+
+void dumper(){
+	uint32_t lv = 0;
+	dump_stack(&lv);
+	while(1);
+}
+
+ void 	initExceptionHandler() {
+  char causes[] = {EXCCAUSE_ILLEGAL, EXCCAUSE_INSTR_ERROR,
+    EXCCAUSE_LOAD_STORE_ERROR, EXCCAUSE_DIVIDE_BY_ZERO,
+    EXCCAUSE_UNALIGNED, EXCCAUSE_INSTR_PROHIBITED,
+    EXCCAUSE_LOAD_PROHIBITED, EXCCAUSE_STORE_PROHIBITED};
+  int i;
+  for (i = 0; i < (int) sizeof(causes); i++) {
+    _xtos_set_exception_handler(causes[i], dumper);
+  }
+}
 

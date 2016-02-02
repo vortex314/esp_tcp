@@ -10,14 +10,15 @@
 
 #include <Handler.h>
 #include <Stream.h>
+#include <SlipFramer.h>
 
 
 
 
 class Cmd : public Handler {
-	Stream* _stream;
+	SlipFramer* _stream;
 public:
-	 Cmd(Stream* stream);
+	 Cmd(SlipFramer* stream);
 	 virtual ~Cmd();
 	 void init() ;
 	 bool dispatch(Msg& msg);

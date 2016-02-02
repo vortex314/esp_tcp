@@ -25,6 +25,7 @@ import argparse
 import os
 import subprocess
 import tempfile
+import inspect
 
 
 class ESPROM:
@@ -69,6 +70,7 @@ class ESPROM:
         # sets), shouldn't matter for other platforms/drivers. See
         # https://github.com/themadinventor/esptool/issues/44#issuecomment-107094446
         self._port.baudrate = baud
+        self.in_bootloader = False  # actually unknown, but assume not
 
     """ Read bytes from the serial port while performing SLIP unescaping """
     def read(self, length=1):
@@ -144,6 +146,7 @@ class ESPROM:
         self.command(ESPROM.ESP_SYNC, '\x07\x07\x12\x20' + 32 * '\x55')
         for i in xrange(7):
             self.command()
+        self.in_bootloader = True
 
     """ Try connecting repeatedly until successful, or giving up """
     def connect(self):
@@ -205,6 +208,7 @@ class ESPROM:
         if self.command(ESPROM.ESP_MEM_END,
                         struct.pack('<II', int(entrypoint == 0), entrypoint))[1] != "\0\0":
             raise FatalError('Failed to leave RAM download mode')
+        self.in_bootloader = False
 
     """ Start downloading to Flash (performs an erase) """
     def flash_begin(self, size, offset):
@@ -246,6 +250,7 @@ class ESPROM:
         pkt = struct.pack('<I', int(not reboot))
         if self.command(ESPROM.ESP_FLASH_END, pkt)[1] != "\0\0":
             raise FatalError('Failed to leave Flash mode')
+        self.in_bootloader = False
 
     """ Run application code in flash """
     def run(self, reboot=False):
@@ -383,7 +388,7 @@ class ESPFirmwareImage:
 class ELFFile:
 
     def __init__(self, name):
-        self.name = name
+        self.name = binutils_safe_path(name)
         self.symbols = None
 
     def _fetch_symbols(self):
@@ -430,7 +435,7 @@ class ELFFile:
         tool_objcopy = "xtensa-lx106-elf-objcopy"
         if os.getenv('XTENSA_CORE') == 'lx106':
             tool_objcopy = "xt-objcopy"
-        tmpsection = tempfile.mktemp(suffix=".section")
+        tmpsection = binutils_safe_path(tempfile.mktemp(suffix=".section"))
         try:
             subprocess.check_call([tool_objcopy, "--only-section", section, "-Obinary", self.name, tmpsection])
             with open(tmpsection, "rb") as f:
@@ -452,6 +457,22 @@ def div_roundup(a, b):
     return (int(a) + int(b) - 1) / int(b)
 
 
+def binutils_safe_path(p):
+    """Returns a 'safe' version of path 'p' to pass to binutils
+
+    Only does anything under Cygwin Python, where cygwin paths need to
+    be translated to Windows paths if the binutils wasn't compiled
+    using Cygwin (should also work with binutils compiled using
+    Cygwin, see #73.)
+    """
+    if sys.platform == "cygwin":
+        try:
+            return subprocess.check_output(["cygpath", "-w", p]).rstrip('\n')
+        except subprocess.CalledProcessError:
+            print "WARNING: Failed to call cygpath to sanitise Cygwin path."
+    return p
+
+
 class FatalError(RuntimeError):
     """
     Wrapper class for runtime errors that aren't caused by internal bugs, but by
@@ -467,6 +488,198 @@ class FatalError(RuntimeError):
         'result' as a string formatted argument.
         """
         return FatalError(message % ", ".join(hex(ord(x)) for x in result))
+
+
+# "Operation" commands, executable at command line. One function each
+#
+# Each function takes either two args (<ESPROM instance>, <args>) or a single <args>
+# argument.
+
+def load_ram(esp, args):
+    image = ESPFirmwareImage(args.filename)
+
+    print 'RAM boot...'
+    for (offset, size, data) in image.segments:
+        print 'Downloading %d bytes at %08x...' % (size, offset),
+        sys.stdout.flush()
+        esp.mem_begin(size, div_roundup(size, esp.ESP_RAM_BLOCK), esp.ESP_RAM_BLOCK, offset)
+
+        seq = 0
+        while len(data) > 0:
+            esp.mem_block(data[0:esp.ESP_RAM_BLOCK], seq)
+            data = data[esp.ESP_RAM_BLOCK:]
+            seq += 1
+        print 'done!'
+
+    print 'All segments done, executing at %08x' % image.entrypoint
+    esp.mem_finish(image.entrypoint)
+
+
+def read_mem(esp, args):
+    print '0x%08x = 0x%08x' % (args.address, esp.read_reg(args.address))
+
+
+def write_mem(esp, args):
+    esp.write_reg(args.address, args.value, args.mask, 0)
+    print 'Wrote %08x, mask %08x to %08x' % (args.value, args.mask, args.address)
+
+
+def dump_mem(esp, args):
+    f = file(args.filename, 'wb')
+    for i in xrange(args.size / 4):
+        d = esp.read_reg(args.address + (i * 4))
+        f.write(struct.pack('<I', d))
+        if f.tell() % 1024 == 0:
+            print '\r%d bytes read... (%d %%)' % (f.tell(),
+                                                  f.tell() * 100 / args.size),
+        sys.stdout.flush()
+    print 'Done!'
+
+
+def write_flash(esp, args):
+    flash_mode = {'qio':0, 'qout':1, 'dio':2, 'dout': 3}[args.flash_mode]
+    flash_size_freq = {'4m':0x00, '2m':0x10, '8m':0x20, '16m':0x30, '32m':0x40, '16m-c1': 0x50, '32m-c1':0x60, '32m-c2':0x70}[args.flash_size]
+    flash_size_freq += {'40m':0, '26m':1, '20m':2, '80m': 0xf}[args.flash_freq]
+    flash_info = struct.pack('BB', flash_mode, flash_size_freq)
+
+    for address, argfile in args.addr_filename:
+        image = argfile.read()
+        argfile.seek(0)  # in case we need it again
+        print 'Erasing flash...'
+        blocks = div_roundup(len(image), esp.ESP_FLASH_BLOCK)
+        esp.flash_begin(blocks * esp.ESP_FLASH_BLOCK, address)
+        seq = 0
+        written = 0
+        t = time.time()
+        while len(image) > 0:
+            print '\rWriting at 0x%08x... (%d %%)' % (address + seq * esp.ESP_FLASH_BLOCK, 100 * (seq + 1) / blocks),
+            sys.stdout.flush()
+            block = image[0:esp.ESP_FLASH_BLOCK]
+            # Fix sflash config data
+            if address == 0 and seq == 0 and block[0] == '\xe9':
+                block = block[0:2] + flash_info + block[4:]
+            # Pad the last block
+            block = block + '\xff' * (esp.ESP_FLASH_BLOCK - len(block))
+            esp.flash_block(block, seq)
+            image = image[esp.ESP_FLASH_BLOCK:]
+            seq += 1
+            written += len(block)
+        t = time.time() - t
+        print '\rWrote %d bytes at 0x%08x in %.1f seconds (%.1f kbit/s)...' % (written, address, t, written / t * 8 / 1000)
+    print '\nLeaving...'
+    if args.flash_mode == 'dio':
+        esp.flash_unlock_dio()
+    else:
+        esp.flash_begin(0, 0)
+        esp.flash_finish(False)
+    if args.verify:
+        print 'Verifying just-written flash...'
+        verify_flash(esp, args)
+
+
+def image_info(args):
+    image = ESPFirmwareImage(args.filename)
+    print ('Entry point: %08x' % image.entrypoint) if image.entrypoint != 0 else 'Entry point not set'
+    print '%d segments' % len(image.segments)
+    print
+    checksum = ESPROM.ESP_CHECKSUM_MAGIC
+    for (idx, (offset, size, data)) in enumerate(image.segments):
+        print 'Segment %d: %5d bytes at %08x' % (idx + 1, size, offset)
+        checksum = ESPROM.checksum(data, checksum)
+    print
+    print 'Checksum: %02x (%s)' % (image.checksum, 'valid' if image.checksum == checksum else 'invalid!')
+
+
+def make_image(args):
+    image = ESPFirmwareImage()
+    if len(args.segfile) == 0:
+        raise FatalError('No segments specified')
+    if len(args.segfile) != len(args.segaddr):
+        raise FatalError('Number of specified files does not match number of specified addresses')
+    for (seg, addr) in zip(args.segfile, args.segaddr):
+        data = file(seg, 'rb').read()
+        image.add_segment(addr, data)
+    image.entrypoint = args.entrypoint
+    image.save(args.output)
+
+
+def elf2image(args):
+    if args.output is None:
+        args.output = args.input + '-'
+    e = ELFFile(args.input)
+    image = ESPFirmwareImage()
+    image.entrypoint = e.get_entry_point()
+    for section, start in ((".text", "_text_start"), (".data", "_data_start"), (".rodata", "_rodata_start")):
+        data = e.load_section(section)
+        image.add_segment(e.get_symbol_addr(start), data)
+
+    image.flash_mode = {'qio':0, 'qout':1, 'dio':2, 'dout': 3}[args.flash_mode]
+    image.flash_size_freq = {'4m':0x00, '2m':0x10, '8m':0x20, '16m':0x30, '32m':0x40, '16m-c1': 0x50, '32m-c1':0x60, '32m-c2':0x70}[args.flash_size]
+    image.flash_size_freq += {'40m':0, '26m':1, '20m':2, '80m': 0xf}[args.flash_freq]
+
+    image.save(args.output + "0x00000.bin")
+    data = e.load_section(".irom0.text")
+    off = e.get_symbol_addr("_irom0_text_start") - 0x40200000
+    if off < 0:
+        raise FatalError('Address of symbol _irom0_text_start in ELF is located before flash mapping address. Bad linker script?')
+    f = open(args.output + "0x%05x.bin" % off, "wb")
+    f.write(data)
+    f.close()
+
+
+def read_mac(esp, args):
+    mac = esp.read_mac()
+    print 'MAC: %s' % ':'.join(map(lambda x: '%02x' % x, mac))
+
+
+def erase_flash(esp, args):
+    print 'Erasing flash (this may take a while)...'
+    esp.flash_erase()
+
+
+def run(esp, args):
+    esp.run()
+
+
+def flash_id(esp, args):
+    flash_id = esp.flash_id()
+    print 'Manufacturer: %02x' % (flash_id & 0xff)
+    print 'Device: %02x%02x' % ((flash_id >> 8) & 0xff, (flash_id >> 16) & 0xff)
+
+
+def read_flash(esp, args):
+    print 'Please wait...'
+    file(args.filename, 'wb').write(esp.flash_read(args.address, 1024, div_roundup(args.size, 1024))[:args.size])
+
+
+def verify_flash(esp, args):
+    differences = False
+    for address, argfile in args.addr_filename:
+        if not esp.in_bootloader:
+            esp.connect()
+        image = argfile.read()
+        argfile.seek(0)  # rewind in case we need it again
+        image_size = len(image)
+        print 'Verifying 0x%x (%d) bytes @ 0x%08x in flash against %s...' % (image_size, image_size, address, argfile.name)
+        flash = esp.flash_read(address, 1024, div_roundup(image_size, 1024))[:image_size]
+        if flash == image:
+            print '-- verify OK'
+        else:
+            differences = True
+            diff = [i for i in xrange(image_size) if flash[i] != image[i]]
+            print '-- verify FAILED: %d differences, first @ 0x%08x' % (len(diff), address + diff[0])
+            try:
+                if args.diff == 'yes':
+                    for d in diff:
+                        print '   %08x %02x %02x' % (address + d, ord(flash[d]), ord(image[d]))
+            except AttributeError:
+                pass  # if performing write_flash --verify, there is no .diff attribute
+    if differences:
+        raise FatalError("Verify failed.")
+
+#
+# End of operations functions
+#
 
 
 def main():
@@ -514,13 +727,15 @@ def main():
     parser_write_flash = subparsers.add_parser(
         'write_flash',
         help='Write a binary blob to flash')
-    parser_write_flash.add_argument('addr_filename', nargs='+', help='Address and binary file to write there, separated by space')
+    parser_write_flash.add_argument('addr_filename', metavar='<address> <filename>', help='Address followed by binary filename, separated by space',
+                                    action=AddrFilenamePairAction)
     parser_write_flash.add_argument('--flash_freq', '-ff', help='SPI Flash frequency',
                                     choices=['40m', '26m', '20m', '80m'], default='40m')
     parser_write_flash.add_argument('--flash_mode', '-fm', help='SPI Flash mode',
                                     choices=['qio', 'qout', 'dio', 'dout'], default='qio')
-    parser_write_flash.add_argument('--flash_size', '-fs', help='SPI Flash size in Mbit',
+    parser_write_flash.add_argument('--flash_size', '-fs', help='SPI Flash size in Mbit', type=str.lower,
                                     choices=['4m', '2m', '8m', '16m', '32m', '16m-c1', '32m-c1', '32m-c2'], default='4m')
+    parser_write_flash.add_argument('--verify', help='Verify just-written data (only necessary if very cautious, data is already CRCed', action='store_true')
 
     subparsers.add_parser(
         'run',
@@ -566,161 +781,58 @@ def main():
     parser_read_flash.add_argument('size', help='Size of region to dump', type=arg_auto_int)
     parser_read_flash.add_argument('filename', help='Name of binary dump')
 
+    parser_verify_flash = subparsers.add_parser(
+        'verify_flash',
+        help='Verify a binary blob against flash')
+    parser_verify_flash.add_argument('addr_filename', help='Address and binary file to verify there, separated by space',
+                                     action=AddrFilenamePairAction)
+    parser_verify_flash.add_argument('--diff', '-d', help='Show differences',
+                                     choices=['no', 'yes'], default='no')
+
     subparsers.add_parser(
         'erase_flash',
         help='Perform Chip Erase on SPI flash')
 
+    # internal sanity check - every operation matches a module function of the same name
+    for operation in subparsers.choices.keys():
+        assert operation in globals(), "%s should be a module function" % operation
+
     args = parser.parse_args()
 
-    # Create the ESPROM connection object, if needed
-    esp = None
-    if args.operation not in ('image_info','make_image','elf2image'):
+    # operation function can take 1 arg (args), 2 args (esp, arg)
+    # or be a member function of the ESPROM class.
+
+    operation_func = globals()[args.operation]
+    operation_args,_,_,_ = inspect.getargspec(operation_func)
+    if len(operation_args) == 2:  # operation function takes an ESPROM connection object
         esp = ESPROM(args.port, args.baud)
         esp.connect()
+        operation_func(esp, args)
+    else:
+        operation_func(args)
 
-    # Do the actual work. Should probably be split into separate functions.
-    if args.operation == 'load_ram':
-        image = ESPFirmwareImage(args.filename)
 
-        print 'RAM boot...'
-        for (offset, size, data) in image.segments:
-            print 'Downloading %d bytes at %08x...' % (size, offset),
-            sys.stdout.flush()
-            esp.mem_begin(size, div_roundup(size, esp.ESP_RAM_BLOCK), esp.ESP_RAM_BLOCK, offset)
+class AddrFilenamePairAction(argparse.Action):
+    """ Custom parser class for the address/filename pairs passed as arguments """
+    def __init__(self, option_strings, dest, nargs='+', **kwargs):
+        super(AddrFilenamePairAction, self).__init__(option_strings, dest, nargs, **kwargs)
 
-            seq = 0
-            while len(data) > 0:
-                esp.mem_block(data[0:esp.ESP_RAM_BLOCK], seq)
-                data = data[esp.ESP_RAM_BLOCK:]
-                seq += 1
-            print 'done!'
-
-        print 'All segments done, executing at %08x' % image.entrypoint
-        esp.mem_finish(image.entrypoint)
-
-    elif args.operation == 'read_mem':
-        print '0x%08x = 0x%08x' % (args.address, esp.read_reg(args.address))
-
-    elif args.operation == 'write_mem':
-        esp.write_reg(args.address, args.value, args.mask, 0)
-        print 'Wrote %08x, mask %08x to %08x' % (args.value, args.mask, args.address)
-
-    elif args.operation == 'dump_mem':
-        f = file(args.filename, 'wb')
-        for i in xrange(args.size / 4):
-            d = esp.read_reg(args.address + (i * 4))
-            f.write(struct.pack('<I', d))
-            if f.tell() % 1024 == 0:
-                print '\r%d bytes read... (%d %%)' % (f.tell(),
-                                                      f.tell() * 100 / args.size),
-                sys.stdout.flush()
-        print 'Done!'
-
-    elif args.operation == 'write_flash':
-        assert len(args.addr_filename) % 2 == 0
-
-        flash_mode = {'qio':0, 'qout':1, 'dio':2, 'dout': 3}[args.flash_mode]
-        flash_size_freq = {'4m':0x00, '2m':0x10, '8m':0x20, '16m':0x30, '32m':0x40, '16m-c1': 0x50, '32m-c1':0x60, '32m-c2':0x70}[args.flash_size]
-        flash_size_freq += {'40m':0, '26m':1, '20m':2, '80m': 0xf}[args.flash_freq]
-        flash_info = struct.pack('BB', flash_mode, flash_size_freq)
-
-        while args.addr_filename:
-            address = int(args.addr_filename[0], 0)
-            filename = args.addr_filename[1]
-            args.addr_filename = args.addr_filename[2:]
-            image = file(filename, 'rb').read()
-            print 'Erasing flash...'
-            blocks = div_roundup(len(image), esp.ESP_FLASH_BLOCK)
-            esp.flash_begin(blocks * esp.ESP_FLASH_BLOCK, address)
-            seq = 0
-            written = 0
-            t = time.time()
-            while len(image) > 0:
-                print '\rWriting at 0x%08x... (%d %%)' % (address + seq * esp.ESP_FLASH_BLOCK, 100 * (seq + 1) / blocks),
-                sys.stdout.flush()
-                block = image[0:esp.ESP_FLASH_BLOCK]
-                # Fix sflash config data
-                if address == 0 and seq == 0 and block[0] == '\xe9':
-                    block = block[0:2] + flash_info + block[4:]
-                # Pad the last block
-                block = block + '\xff' * (esp.ESP_FLASH_BLOCK - len(block))
-                esp.flash_block(block, seq)
-                image = image[esp.ESP_FLASH_BLOCK:]
-                seq += 1
-                written += len(block)
-            t = time.time() - t
-            print '\rWrote %d bytes at 0x%08x in %.1f seconds (%.1f kbit/s)...' % (written, address, t, written / t * 8 / 1000)
-        print '\nLeaving...'
-        if args.flash_mode == 'dio':
-            esp.flash_unlock_dio()
-        else:
-            esp.flash_begin(0, 0)
-            esp.flash_finish(False)
-
-    elif args.operation == 'run':
-        esp.run()
-
-    elif args.operation == 'image_info':
-        image = ESPFirmwareImage(args.filename)
-        print ('Entry point: %08x' % image.entrypoint) if image.entrypoint != 0 else 'Entry point not set'
-        print '%d segments' % len(image.segments)
-        print
-        checksum = ESPROM.ESP_CHECKSUM_MAGIC
-        for (idx, (offset, size, data)) in enumerate(image.segments):
-            print 'Segment %d: %5d bytes at %08x' % (idx + 1, size, offset)
-            checksum = ESPROM.checksum(data, checksum)
-        print
-        print 'Checksum: %02x (%s)' % (image.checksum, 'valid' if image.checksum == checksum else 'invalid!')
-
-    elif args.operation == 'make_image':
-        image = ESPFirmwareImage()
-        if len(args.segfile) == 0:
-            raise FatalError('No segments specified')
-        if len(args.segfile) != len(args.segaddr):
-            raise FatalError('Number of specified files does not match number of specified addresses')
-        for (seg, addr) in zip(args.segfile, args.segaddr):
-            data = file(seg, 'rb').read()
-            image.add_segment(addr, data)
-        image.entrypoint = args.entrypoint
-        image.save(args.output)
-
-    elif args.operation == 'elf2image':
-        if args.output is None:
-            args.output = args.input + '-'
-        e = ELFFile(args.input)
-        image = ESPFirmwareImage()
-        image.entrypoint = e.get_entry_point()
-        for section, start in ((".text", "_text_start"), (".data", "_data_start"), (".rodata", "_rodata_start")):
-            data = e.load_section(section)
-            image.add_segment(e.get_symbol_addr(start), data)
-
-        image.flash_mode = {'qio':0, 'qout':1, 'dio':2, 'dout': 3}[args.flash_mode]
-        image.flash_size_freq = {'4m':0x00, '2m':0x10, '8m':0x20, '16m':0x30, '32m':0x40, '16m-c1': 0x50, '32m-c1':0x60, '32m-c2':0x70}[args.flash_size]
-        image.flash_size_freq += {'40m':0, '26m':1, '20m':2, '80m': 0xf}[args.flash_freq]
-
-        image.save(args.output + "0x00000.bin")
-        data = e.load_section(".irom0.text")
-        off = e.get_symbol_addr("_irom0_text_start") - 0x40200000
-        assert off >= 0
-        f = open(args.output + "0x%05x.bin" % off, "wb")
-        f.write(data)
-        f.close()
-
-    elif args.operation == 'read_mac':
-        mac = esp.read_mac()
-        print 'MAC: %s' % ':'.join(map(lambda x: '%02x' % x, mac))
-
-    elif args.operation == 'flash_id':
-        flash_id = esp.flash_id()
-        print 'Manufacturer: %02x' % (flash_id & 0xff)
-        print 'Device: %02x%02x' % ((flash_id >> 8) & 0xff, (flash_id >> 16) & 0xff)
-
-    elif args.operation == 'read_flash':
-        print 'Please wait...'
-        file(args.filename, 'wb').write(esp.flash_read(args.address, 1024, div_roundup(args.size, 1024))[:args.size])
-
-    elif args.operation == 'erase_flash':
-        esp.flash_erase()
+    def __call__(self, parser, namespace, values, option_string=None):
+        # validate pair arguments
+        pairs = []
+        for i in range(0,len(values),2):
+            try:
+                address = int(values[i],0)
+            except ValueError as e:
+                raise argparse.ArgumentError(self,'Address "%s" must be a number' % values[i])
+            try:
+                argfile = open(values[i + 1], 'rb')
+            except IOError as e:
+                raise argparse.ArgumentError(self, e)
+            except IndexError:
+                raise argparse.ArgumentError(self,'Must be pairs of an address and the binary filename to write there')
+            pairs.append((address, argfile))
+        setattr(namespace, self.dest, pairs)
 
 if __name__ == '__main__':
     try:

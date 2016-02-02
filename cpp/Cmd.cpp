@@ -7,7 +7,7 @@
 
 #include <Cmd.h>
 
-Cmd::Cmd(Stream* stream) : Handler("Cmd"){
+Cmd::Cmd(SlipFramer* stream) : Handler("Cmd"){
 	_stream = stream;
 }
 

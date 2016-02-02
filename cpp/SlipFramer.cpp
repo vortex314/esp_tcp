@@ -11,6 +11,7 @@ SlipFramer::SlipFramer(Tcp* tcp) :
 		Handler("Receiver") {
 	_tcp = tcp;
 	_slip = new Slip(256);
+	_slip->reset();
 }
 void SlipFramer::init() {
 
@@ -37,12 +38,10 @@ bool SlipFramer::dispatch(Msg& msg) {
 		if (msg.is(_tcp, SIG_RXD)) {
 			Bytes bytes(0);
 			msg.rewind().getMapped(bytes);
-			INFO("bytes received %d",bytes.length());
 			while (bytes.hasData()) {
 				if (_slip->fill(bytes.read())) {
-					INFO("SLIP message received");
-					Msg::queue().putf("uuB", this, SIG_RXD, _slip);
-					_slip->clear();
+					Msg::queue().putf("uuB", this, SIG_RXD,(Bytes*) _slip);
+					_slip->reset();
 				}
 			}
 		}

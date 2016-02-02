@@ -52,6 +52,7 @@
 extern void MsgInit();
 
 extern void  initWatchDog(void);
+extern void  initExceptionHandler();
 extern void  feedWatchDog(void);
 
 void user_init(void) {
@@ -64,6 +65,7 @@ void user_init(void) {
 
 	gpio_init();
 	initWatchDog();
+	initExceptionHandler();
 	os_delay_us(1000000);
 
 	INFO("*****************************************");
