@@ -33,7 +33,7 @@ IROM bool Cmd::dispatch(Msg& msg) {
 			Message request(0);
 			msg.rewind().getMapped(request);
 			request.getField(Message::MESSAGE_ID, messageId);
-
+			INFO("Processing ... ");
 			//TODO handle cmd
 			Message response(200);
 			response.addField(Message::MESSAGE_ID, messageId);

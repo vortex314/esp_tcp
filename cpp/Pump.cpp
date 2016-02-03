@@ -106,15 +106,31 @@ char deviceName[40];
 
 SlipFramer* slipFramer;
 Tcp* tcp;
+#include <Wildcard.h>
+#include <Router.h>
+class Stm32: public Subscriber {
+public:
+
+	Erc handle(Cbor& msg){
+		INFO("have been called");
+		return E_OK;
+	}
+};
+Stm32 stm32;
 
 extern "C" IROM void MsgInit() {
 
 	do_global_ctors();
 
-
 //	initPins();
 	gpioReset = new Gpio(2); // D2, GPIO4 see http://esp8266.co.uk/tutorials/introduction-to-the-gpio-api/
 	gpioReset->setMode("OOD");
+
+	if ( wildcardMatch("put/aa/bb/stm32/cmd","put/*/*/stm32/cmd",true,'\0')) INFO("matched");
+
+	new Router("put/*/*/stm32/cmd", &stm32);
+	Cbor cbor(10);
+	Router::publish("put/aa/bb/stm32/cmd",cbor);
 
 	/*	for (int i=1;i<10;i++) {
 	 ets_delay_us(100000);
@@ -140,12 +156,11 @@ extern "C" IROM void MsgInit() {
 	tcpServer = new TcpServer(wifi);
 	tcpServer->config(0, 2323);
 
-
 	tcp = new Tcp(wifi);
-	INFO("tcp %X ",tcp);
+	INFO("tcp %X ", tcp);
 
-	slipFramer=new SlipFramer(tcp);
-	cmd =  new Cmd(slipFramer);
+	slipFramer = new SlipFramer(tcp);
+	cmd = new Cmd(slipFramer);
 
 //	tcpClient = new TcpClient(wifi);
 //	tcpClient->config("iot.eclipse.org", 1883);
