@@ -51,9 +51,40 @@
 
 extern void MsgInit();
 
-extern void  initWatchDog(void);
-extern void  initExceptionHandler();
-extern void  feedWatchDog(void);
+extern void initWatchDog(void);
+extern void initExceptionHandler();
+extern void feedWatchDog(void);
+
+#include "spi.h"
+void spiTest() {
+	INFO("HSPI");
+	spi_init_gpio(HSPI, 1);
+	spi_mode(HSPI, 0, 0);
+	spi_clock(HSPI, SPI_CLK_PREDIV, SPI_CLK_CNTDIV);
+	spi_tx_byte_order(HSPI, SPI_BYTE_ORDER_HIGH_TO_LOW);
+	spi_rx_byte_order(HSPI, SPI_BYTE_ORDER_HIGH_TO_LOW);
+	/*	Command = 0b101 (3 bit write command)
+
+	 Address = 0b111110011 or 0x1F3 (9 bit data address)
+
+	 Data = 0b11001100 or 0xCC (8 bits of data)
+
+	 SPI Transaction Packet = 0b10111111001111001100 or 0xBF3CC*/
+
+	uint32_t rxd; //= spi_transaction(HSPI, 3, 0b101, 9, 0x1F3, 8, 0xCC, 32,0);
+	int i, pha, pcol;
+	for (i = 0; i < 5; i++) {
+		for (pha = 0; pha < 2; pha++) {
+			for (pcol = 0; pcol < 2; pcol++) {
+				spi_mode(HSPI,pha,pcol);
+				rxd  = spi_transaction(HSPI,8,0,0,0,0,0,32,0);
+//				spi_tx8(HSPI, 0);
+//				rxd = spi_rx32(HSPI);
+				INFO("RXD SPI : %X", rxd);
+			}
+		}
+	}
+}
 
 void user_init(void) {
 
@@ -61,7 +92,7 @@ void user_init(void) {
 	SysLogInit();
 
 	uart_init(BIT_RATE_115200, BIT_RATE_115200);
-	uart_config(0,115200,"8E1");
+	uart_config(0, 115200, "8E1");
 
 	gpio_init();
 	initWatchDog();
@@ -71,7 +102,7 @@ void user_init(void) {
 	INFO("*****************************************");
 	INFO("Starting version : " __DATE__ " " __TIME__);
 	INFO("*****************************************");
-
+	spiTest();
 	system_init_done_cb(MsgInit);
 }
 
