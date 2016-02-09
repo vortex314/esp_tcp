@@ -54,34 +54,60 @@ extern void MsgInit();
 extern void initWatchDog(void);
 extern void initExceptionHandler();
 extern void feedWatchDog(void);
+/*
+ *
+> © DecaWave the DW1000
+> -  The octets are physically presented on the SPI interface data lines with the high order bit sent first in time.
+> - The octets of a multi-octet value are transferred on the SPI interface in octet order beginning with the low-order octet.
+void spi_tx_byte_order(uint8 spi_no,
+SPI_BYTE_ORDER_LOW_TO_HIGH (0))
+spi_rx_byte_order(HSPI,SPI_BYTE_ORDER_HIGH_TO_LOW)
+
+> - PHA , POL : 0,0
+> - POL=0 : clock idle is high
+> - PHA=0 : data is available at rising clock edge ( when pol=0, otherwise at falling edge )
+// Function Name: spi_mode
+	// Description: Configures SPI mode parameters for clock edge and clock polarity.
+	// Parameters: spi_no - SPI (0) or HSPI (1)
+	// spi_cpha - (0) Data is valid on clock leading edge
+	// (1) Data is valid on clock trailing edge
+	// spi_cpol - (0) Clock is low when inactive
+	// (1) Clock is high when inactive
+	//
+	////////////////////////////////////////////////////////////////////////////////
+
+	void spi_mode(HSPI, 0,1){
+ */
 
 #include "spi.h"
+#include <gpio_c.h>
 void spiTest() {
 	INFO("HSPI");
-	spi_init_gpio(HSPI, 1);
-	spi_mode(HSPI, 0, 0);
-	spi_clock(HSPI, SPI_CLK_PREDIV, SPI_CLK_CNTDIV);
-	spi_tx_byte_order(HSPI, SPI_BYTE_ORDER_HIGH_TO_LOW);
-	spi_rx_byte_order(HSPI, SPI_BYTE_ORDER_HIGH_TO_LOW);
-	/*	Command = 0b101 (3 bit write command)
 
-	 Address = 0b111110011 or 0x1F3 (9 bit data address)
+	int pin = 5;	// RESET PIN
+	pinMode(pin, 1); // OUTPUT
+	digitalWrite(pin, 0); // PULL LOW
+	os_delay_us(10000);	// 10ms
+	digitalWrite(pin, 1); // PUT HIGH
 
-	 Data = 0b11001100 or 0xCC (8 bits of data)
+	spi_init(HSPI);
+	spi_mode(HSPI, 0, 1);
+//	spi_clock(HSPI, SPI_CLK_PREDIV, SPI_CLK_CNTDIV);
+	spi_clock(HSPI, 20, 40); //
+	spi_tx_byte_order(HSPI, SPI_BYTE_ORDER_LOW_TO_HIGH);
+	spi_rx_byte_order(HSPI, SPI_BYTE_ORDER_LOW_TO_HIGH);
 
-	 SPI Transaction Packet = 0b10111111001111001100 or 0xBF3CC*/
+	uint32_t rxd;
+	int i, order;
+	for (order = 0; order < 2; order++) {
+		for (i = 0; i < 2; i++) {
+			spi_set_bit_order(order);
+			rxd = spi_transaction(HSPI, 0, 0, 0, 0, 8, 0, 32, 0);
+			INFO("RXD SPI : %X", rxd);
+			rxd = spi_transaction(HSPI, 0, 0, 0, 0, 8, 0x1D, 32, 0);
+			INFO("RXD SPI : %X", rxd);
 
-	uint32_t rxd; //= spi_transaction(HSPI, 3, 0b101, 9, 0x1F3, 8, 0xCC, 32,0);
-	int i, pha, pcol;
-	for (i = 0; i < 5; i++) {
-		for (pha = 0; pha < 2; pha++) {
-			for (pcol = 0; pcol < 2; pcol++) {
-				spi_mode(HSPI,pha,pcol);
-				rxd  = spi_transaction(HSPI,8,0,0,0,0,0,32,0);
-//				spi_tx8(HSPI, 0);
-//				rxd = spi_rx32(HSPI);
-				INFO("RXD SPI : %X", rxd);
-			}
+			os_delay_us(1000);
 		}
 	}
 }
@@ -97,7 +123,7 @@ void user_init(void) {
 	gpio_init();
 	initWatchDog();
 	initExceptionHandler();
-	os_delay_us(1000000);
+	os_delay_us(100000);
 
 	INFO("*****************************************");
 	INFO("Starting version : " __DATE__ " " __TIME__);

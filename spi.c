@@ -325,6 +325,30 @@ uint32 spi_transaction(uint8 spi_no, uint8 cmd_bits, uint16 cmd_data, uint32 add
 	return 1; //success
 }
 
+/**
+ * Set bit order.
+ *
+ * @param order MSB (1) first or LSB (0) first
+ * @see spiOrder_t
+ * @return None
+ */
+void spi_set_bit_order(int order)
+{
+
+	if (!order)
+	{
+		WRITE_PERI_REG(SPI_CTRL(HSPI),
+				READ_PERI_REG(SPI_CTRL(HSPI)) & (~(SPI_WR_BIT_ORDER | SPI_RD_BIT_ORDER)));
+	}
+	else
+	{
+		WRITE_PERI_REG(SPI_CTRL(HSPI),
+				READ_PERI_REG(SPI_CTRL(HSPI)) | (SPI_WR_BIT_ORDER | SPI_RD_BIT_ORDER));
+	}
+
+
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
 /*///////////////////////////////////////////////////////////////////////////////
