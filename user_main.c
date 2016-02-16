@@ -80,37 +80,8 @@ spi_rx_byte_order(HSPI,SPI_BYTE_ORDER_HIGH_TO_LOW)
  */
 
 #include "spi.h"
-#include <gpio_c.h>
-void spiTest() {
-	INFO("HSPI");
 
-	int pin = 5;	// RESET PIN
-	pinMode(pin, 1); // OUTPUT
-	digitalWrite(pin, 0); // PULL LOW
-	os_delay_us(10000);	// 10ms
-	digitalWrite(pin, 1); // PUT HIGH
 
-	spi_init(HSPI);
-	spi_mode(HSPI, 0, 1);
-//	spi_clock(HSPI, SPI_CLK_PREDIV, SPI_CLK_CNTDIV);
-	spi_clock(HSPI, 20, 40); //
-	spi_tx_byte_order(HSPI, SPI_BYTE_ORDER_LOW_TO_HIGH);
-	spi_rx_byte_order(HSPI, SPI_BYTE_ORDER_LOW_TO_HIGH);
-
-	uint32_t rxd;
-	int i, order;
-	for (order = 0; order < 2; order++) {
-		for (i = 0; i < 2; i++) {
-			spi_set_bit_order(order);
-			rxd = spi_transaction(HSPI, 0, 0, 0, 0, 8, 0, 32, 0);
-			INFO("RXD SPI : %X", rxd);
-			rxd = spi_transaction(HSPI, 0, 0, 0, 0, 8, 0x1D, 32, 0);
-			INFO("RXD SPI : %X", rxd);
-
-			os_delay_us(1000);
-		}
-	}
-}
 
 void user_init(void) {
 
@@ -128,7 +99,7 @@ void user_init(void) {
 	INFO("*****************************************");
 	INFO("Starting version : " __DATE__ " " __TIME__);
 	INFO("*****************************************");
-	spiTest();
 	system_init_done_cb(MsgInit);
+	os_delay_us(10000);	// 10ms
 }
 

@@ -28,6 +28,7 @@ extern "C" {
 #include "Tcp.h"
 #include "Gpio.h"
 #include "Cmd.h"
+#include <DWM1000.h>
 
 mutex_t mutex;
 
@@ -38,6 +39,7 @@ Wifi* wifi;
 TcpClient* tcpClient;
 TcpServer* tcpServer;
 Cmd* cmd;
+DWM1000* dwm1000;
 
 Gpio* gpioReset;
 Gpio* gpioFlash;
@@ -168,6 +170,8 @@ extern "C" IROM void MsgInit() {
 	led = new LedBlink(wifi);
 
 	gpioFlash = new Gpio(0);
+
+	dwm1000=new DWM1000();
 
 	task_start();
 
