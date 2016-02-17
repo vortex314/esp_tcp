@@ -17,10 +17,11 @@ extern "C" {
 
 DWM1000::DWM1000() :
 		Handler("DWM1000") {
+	_count=0;
 }
 
 DWM1000::~DWM1000() {
-	// TODO Auto-generated destructor stub
+
 }
 
 void DWM1000::init() {
@@ -51,6 +52,7 @@ uint32_t readDW1000(uint32_t offset, uint32_t length, uint32_t dummy) {
 void DWM1000::mode(uint32_t m) {
 	WRITE_PERI_REG(SPI_CTRL2(HSPI),
 			(( m &SPI_CS_DELAY_MODE)<<SPI_CS_DELAY_MODE_S) | //
+			(1<<SPI_MOSI_DELAY_MODE_S) | //
 			((0xF & SPI_CS_DELAY_NUM) << SPI_CS_DELAY_NUM_S) |//
 			((0xF & SPI_MOSI_DELAY_NUM) << SPI_MOSI_DELAY_NUM_S) |//
 			((0xF & SPI_SETUP_TIME) << SPI_SETUP_TIME_S) |//
