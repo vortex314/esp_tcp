@@ -27,7 +27,7 @@ DWM1000::~DWM1000() {
 void DWM1000::init() {
 	INFO("HSPI");
 
-	int pin = 5;	// RESET PIN
+	int pin = 5;	// RESET PIN == D1 == GPIO5
 	pinMode(pin, 1); // OUTPUT
 	digitalWrite(pin, 0); // PULL LOW
 	os_delay_us(10000);	// 10ms
@@ -45,7 +45,7 @@ void DWM1000::init() {
 }
 
 uint32_t readDW1000(uint32_t offset, uint32_t length, uint32_t dummy) {
-	return spi_transaction(HSPI, 8, offset, 0, 0, 0, 0, 8 * length, dummy);
+	return spi_transaction(HSPI, 8,offset, 0,0,0,0, length, 32-length);
 
 }
 
@@ -67,15 +67,19 @@ bool DWM1000::dispatch(Msg& msg) {
 	while (true) {
 		timeout(100);
 		PT_YIELD_UNTIL(timeout());
+//		spi_set_hw_cs(false);
 		uint32_t i, j;
-		for (i = 0; i < 2; i++) {
-			for (j = 0; j < 3; j++) {
-				spi_mode(HSPI, j >> 1, j & 1);
-				mode(j);
-				rxd = readDW1000(i, 4, 0);
-				INFO(" 0x%X : %X", j, rxd);
+		for (i = 0; i < 32; i++) {
+//			mode(j);
+//			for (j = 0; j < 3; j++) {
+//				spi_mode(HSPI, j >> 1, j & 1);
+//				spi_cs_deselect();
+				rxd = readDW1000(0, i, 0);
+//				spi_cs_deselect();
+				INFO(" 0x%X : %X",i, rxd);
 				os_delay_us(100);
-			}
+				rxd=0;
+//			}
 		}
 
 	}

@@ -63,6 +63,9 @@ void spi_rx_byte_order(uint8 spi_no, uint8 byte_order);
 uint32 spi_transaction(uint8 spi_no, uint8 cmd_bits, uint16 cmd_data, uint32 addr_bits, uint32 addr_data, uint32 dout_bits, uint32 dout_data, uint32 din_bits, uint32 dummy_bits);
 void spi_set_bit_order(int order);
 
+void spi_set_hw_cs(bool use) ;
+void spi_cs_select();
+void spi_cs_deselect() ;
 //Expansion Macros
 #define spi_busy(spi_no) READ_PERI_REG(SPI_CMD(spi_no))&SPI_USR
 
