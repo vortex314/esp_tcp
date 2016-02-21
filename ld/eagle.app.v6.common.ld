@@ -152,6 +152,7 @@ SECTIONS
     _irom0_text_start = ABSOLUTE(.);
     *cpp/*.o(.literal*, .text*)
     *wifi/*.o(.literal*, .text*)
+    *deca/*.o(.literal*, .text*)
     *.cpp.o(.literal*, .text*)
     *.c.o(.literal*, .text*)
     *libCommon.a:(.literal .text .literal.* .text.*)  

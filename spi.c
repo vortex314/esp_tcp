@@ -71,11 +71,28 @@ void spi_mode(uint8 spi_no, uint8 spi_cpha, uint8 spi_cpol) {
 		SET_PERI_REG_MASK(SPI_USER(spi_no), SPI_CK_I_EDGE);
 	}
 
-	if (spi_cpol) {
-		SET_PERI_REG_MASK(SPI_PIN(spi_no), SPI_IDLE_EDGE);
+	/*	if (spi_cpol) {
+	 SET_PERI_REG_MASK(SPI_PIN(spi_no), SPI_IDLE_EDGE);
+	 } else {
+	 CLEAR_PERI_REG_MASK(SPI_PIN(spi_no), SPI_IDLE_EDGE);
+	 }*/
+
+	if (spi_cpol) { // CPOL
+		SET_PERI_REG_MASK(SPI_CTRL2(spi_no),
+				SPI_CK_OUT_HIGH_MODE << SPI_CK_OUT_HIGH_MODE_S);
+		CLEAR_PERI_REG_MASK(SPI_CTRL2(spi_no),
+				SPI_CK_OUT_LOW_MODE << SPI_CK_OUT_LOW_MODE_S);
 	} else {
-		CLEAR_PERI_REG_MASK(SPI_PIN(spi_no), SPI_IDLE_EDGE);
+		SET_PERI_REG_MASK(SPI_CTRL2(spi_no),
+				SPI_CK_OUT_LOW_MODE << SPI_CK_OUT_LOW_MODE_S);
+		CLEAR_PERI_REG_MASK(SPI_CTRL2(spi_no),
+				SPI_CK_OUT_HIGH_MODE << SPI_CK_OUT_LOW_MODE_S);
 	}
+}
+
+void spi_clear() {
+	WRITE_PERI_REG(SPI_W0(HSPI), 0);
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -268,6 +285,7 @@ uint32 spi_transaction(uint8 spi_no, uint8 cmd_bits, uint16 cmd_data,
 	//disable MOSI, MISO, ADDR, COMMAND, DUMMY in case previously set.
 	CLEAR_PERI_REG_MASK(SPI_USER(spi_no),
 			SPI_USR_MOSI|SPI_USR_MISO|SPI_USR_COMMAND|SPI_USR_ADDR|SPI_USR_DUMMY);
+	SET_PERI_REG_MASK(SPI_USER(spi_no), SPI_DOUTDIN); // LMR set full duplex
 
 	//enable functions based on number of bits. 0 bits = disabled.
 	//This is rather inefficient but allows for a very generic function.
@@ -387,11 +405,21 @@ void spi_set_bit_order(int order) {
  //   Description:
  //    Parameters:
  //
- ////////////////////////////////////////////////////////////////////////////////
-
- void func(params){
-
- }
-
  ///////////////////////////////////////////////////////////////////////////////*/
+
+int writetospi(uint16 hLen, const uint8 *hbuff, uint32 bLen,
+		const uint8 *buffer) {
+	return 0;
+}
+int readfromspi(uint16 hLen, const uint8 *hbuff, uint32 bLen, uint8 *buffer) {
+	return 0;
+}
+void spi_set_rate_low() {
+	spi_clock(HSPI, SPI_CLK_PREDIV, SPI_CLK_CNTDIV);
+}
+void spi_set_rate_high() {
+	spi_clock(HSPI, SPI_CLK_PREDIV, SPI_CLK_CNTDIV);
+}
+
+/*//////////////////////////////////////////////////////////////////////////////*/
 

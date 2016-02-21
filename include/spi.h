@@ -1,26 +1,26 @@
 /*
-* The MIT License (MIT)
-*
-* Copyright (c) 2015 David Ogilvy (MetalPhreak)
-*
-* Permission is hereby granted, free of charge, to any person obtaining a copy
-* of this software and associated documentation files (the "Software"), to deal
-* in the Software without restriction, including without limitation the rights
-* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-* copies of the Software, and to permit persons to whom the Software is
-* furnished to do so, subject to the following conditions:
-*
-* The above copyright notice and this permission notice shall be included in all
-* copies or substantial portions of the Software.
-*
-* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-* SOFTWARE.
-*/
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2015 David Ogilvy (MetalPhreak)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 
 #ifndef SPI_APP_H
 #define SPI_APP_H
@@ -50,22 +50,26 @@
 #define SPI_CLK_CNTDIV 2
 #define SPI_CLK_FREQ CPU_CLK_FREQ/(SPI_CLK_PREDIV*SPI_CLK_CNTDIV) // 80 / 20 = 4 MHz
 
-
-
-
-
 void spi_init(uint8 spi_no);
-void spi_mode(uint8 spi_no, uint8 spi_cpha,uint8 spi_cpol);
+void spi_mode(uint8 spi_no, uint8 spi_cpha, uint8 spi_cpol);
 void spi_init_gpio(uint8 spi_no, uint8 sysclk_as_spiclk);
 void spi_clock(uint8 spi_no, uint16 prediv, uint8 cntdiv);
 void spi_tx_byte_order(uint8 spi_no, uint8 byte_order);
 void spi_rx_byte_order(uint8 spi_no, uint8 byte_order);
-uint32 spi_transaction(uint8 spi_no, uint8 cmd_bits, uint16 cmd_data, uint32 addr_bits, uint32 addr_data, uint32 dout_bits, uint32 dout_data, uint32 din_bits, uint32 dummy_bits);
+uint32 spi_transaction(uint8 spi_no, uint8 cmd_bits, uint16 cmd_data,
+		uint32 addr_bits, uint32 addr_data, uint32 dout_bits, uint32 dout_data,
+		uint32 din_bits, uint32 dummy_bits);
 void spi_set_bit_order(int order);
 
-void spi_set_hw_cs(bool use) ;
+void spi_set_hw_cs(bool use);
 void spi_cs_select();
-void spi_cs_deselect() ;
+void spi_cs_deselect();
+void spi_clear();
+int writetospi(uint16 hLen, const uint8 *hbuff, uint32 bLen,
+		const uint8 *buffer);
+int readfromspi(uint16 hLen, const uint8 *hbuff, uint32 bLen, uint8 *buffer);
+void spi_set_rate_low();
+void spi_set_rate_high();
 //Expansion Macros
 #define spi_busy(spi_no) READ_PERI_REG(SPI_CMD(spi_no))&SPI_USR
 
@@ -80,5 +84,4 @@ void spi_cs_deselect() ;
 #define spi_rx32(spi_no)      spi_transaction(spi_no, 0, 0, 0, 0, 0, 0, 32,   0)
 
 #endif
-
 

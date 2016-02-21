@@ -120,9 +120,12 @@ public:
 };
 Stm32 stm32;
 
+extern "C" void deca_example();
+
 extern "C" IROM void MsgInit() {
 
 	do_global_ctors();
+//	deca_example();
 
 //	initPins();
 	gpioReset = new Gpio(2); // D2, GPIO4 see http://esp8266.co.uk/tutorials/introduction-to-the-gpio-api/

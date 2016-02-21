@@ -34,6 +34,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_tcp/cpp}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_tcp/mqtt}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_tcp/wifi}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_tcp/deca}&quot;"/>
 								</option>
 								<option id="gnu.c.compiler.option.preprocessor.def.symbols.1095501580" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="ICACHE_FLASH"/>
@@ -57,6 +58,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_tcp/wifi}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_tcp/mqtt}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_tcp/cpp}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_tcp/deca}&quot;"/>
 								</option>
 								<option id="gnu.cpp.compiler.option.preprocessor.def.1264793649" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="ICACHE_FLASH"/>
@@ -113,6 +115,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Common/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="/home/lieven/esp-open-sdk/lx106-hal/include/"/>
 									<listOptionValue builtIn="false" value="--text-section-literals"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_tcp/deca}&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.2122110553" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 							</tool>
@@ -132,8 +135,9 @@
 						</tool>
 					</fileInfo>
 					<sourceEntries>
-						<entry excluding="wifi|mqtt|core_dump|cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="deca|wifi|mqtt|core_dump|cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="cpp"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="deca"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="mqtt"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="wifi"/>
 					</sourceEntries>
@@ -191,6 +195,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_cbor/cpp}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_cbor/wifi}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_cbor/mqtt}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_tcp/deca}&quot;"/>
 								</option>
 								<option id="gnu.c.compiler.option.preprocessor.def.symbols.2060140780" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="ICACHE_FLASH"/>
@@ -223,6 +228,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_cbor/cpp}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_cbor/wifi}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_cbor/mqtt}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_tcp/deca}&quot;"/>
 								</option>
 								<option id="gnu.cpp.compiler.option.preprocessor.def.1868884921" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="ICACHE_FLASH"/>
@@ -261,14 +267,16 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_cbor/cpp}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_cbor/wifi}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_cbor/mqtt}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_tcp/deca}&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.492121209" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 							</tool>
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="wifi|mqtt|core_dump|cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="deca|wifi|mqtt|core_dump|cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="cpp"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="deca"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="mqtt"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="wifi"/>
 					</sourceEntries>

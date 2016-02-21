@@ -111,8 +111,8 @@
 #define SPI_USR_MISO (BIT(28))
 #define SPI_USR_MOSI (BIT(27))
 #define SPI_USR_DUMMY_IDLE (BIT(26)) //From previous SDK
-#define SPI_USR_MOSI_HIGHPART (BIT(25))
-#define SPI_USR_MISO_HIGHPART (BIT(24))
+#define SPI_USR_MOSI_HIGHPART (BIT(25)) //MOSI phase uses W8-W15, SPI_USR_DOUT_HIGHPART
+#define SPI_USR_MISO_HIGHPART (BIT(24)) //MISO pahse uses W8-W15, SPI_USR_DIN_HIGHPART
 #define SPI_USR_PREP_HOLD (BIT(23)) //From previous SDK
 #define SPI_USR_CMD_HOLD (BIT(22)) //From previous SDK
 #define SPI_USR_ADDR_HOLD (BIT(21)) //From previous SDK
@@ -129,8 +129,8 @@
 #define SPI_RD_BYTE_ORDER (BIT(10))
 #define SPI_AHB_ENDIAN_MODE 0x00000003 //From previous SDK
 #define SPI_AHB_ENDIAN_MODE_S 8 //From previous SDK
-#define SPI_CK_OUT_EDGE (BIT(7))
-#define SPI_CK_I_EDGE (BIT(6))
+#define SPI_CK_OUT_EDGE (BIT(7)) //SPI Master Edge (0:falling, 1:rising), SPI_CK_OUT_EDGE
+#define SPI_CK_I_EDGE (BIT(6)) //SPI Slave Edge (0:falling, 1:rising), SPI_CK_I_EDGE
 #define SPI_CS_SETUP (BIT(5))
 #define SPI_CS_HOLD (BIT(4))
 #define SPI_AHB_USR_COMMAND (BIT(3)) //From previous SDK
