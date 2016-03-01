@@ -1,0 +1,1038 @@
+lnœâìŒ~’`‚nàŽnì’’‚bŽlll~rlrlžbnžì|òœâ’‚nžŒònnžìònnœìâblònnžì|òŒònîŒbldon't use rtc mem data
+rlŽ‚rlÌ#ü         0 | ../uart.c         uart_config        | uart_no 0 baudrate 115200 mode 8N1
+         0 | ../uart.c         uart_c       100 | ../user_main.c    user_init          | *****************************************
+       110 | ../user_main.c    user_init          | Starting version : Feb 21 2016 01:46:57
+       121 | ../user_main.c    user_init          | *****************************************
+mode : sta(5c:cf:7f:07:27:7f)
+add if0
+       143 | ../cpp/Pump.cpp   MsgInit            | matched
+       154 | ../cpp/Router.cpp Router             |  new router put/*/*/stm32/cmd
+       164 | ../cpp/Router.cpp publish            |  compare put/aa/bb/stm32/cmd : put/*/*/stm32/cmd 
+       175 | ../cpp/Pump.cpp   handle             | have been called
+       186 | ../cpp/Router.cpp publish            |  match 
+       296 | ../cpp/Pump.cpp   MsgInit            |  SSID : Merckx, PSWD : LievenMarletteEwoutRonald
+       307 | ../wifi/Tcp.cpp   logConn            |  TcpServer - tcp :  3fff22e0  , ip : 0.0.0.0:0  
+       318 | ../wifi/Tcp.cpp   logConn            |  config - tcp :  3fff22e0  , ip : 0.0.0.0:0  
+       329 | ../cpp/Pump.cpp   MsgInit            | tcp 3FFF2590 
+       340 | ../wifi/Wifi.cpp  dispatch           | WIFI_INIT
+       351 | ../wifi/Wifi.cpp  dispatch           | op mode 1
+       362 | ../wifi/Wifi.cpp  dispatch           | op mode default 1
+       373 | ../wifi/Wifi.cpp  dispatch           | phy mode 1
+       414 | ../wifi/Wifi.cpp  dispatch           | 3
+f r0,        425 | ../wifi/Wifi.cpp  dispatch           | 4
+       436 | ../cpp/SlipFramer.dispatch           | 
+       446 | ../cpp/DWM1000.cppinit               | HSPI
+       467 | ../spi.c          writetospi         | head : 81 
+       478 | ../spi.c          writetospi         | data : F8 F7 F6 F5 F4 F3 F2 F1 
+       488 | ../spi.c          readfromspi        | head : 01 
+       499 | ../spi.c          readfromspi        | data : F8 F7 F6 F5 F4 F3 F2 F1 
+       510 | ../spi.c          writetospi         | head : 84 
+       520 | ../spi.c          writetospi         | data : 00 00 40 00 
+       531 | ../spi.c          writetospi         | head : EE 84 50 
+       542 | ../spi.c          writetospi         | data : 1E 05 
+       552 | ../spi.c          writetospi         | head : EE 86 10 
+       563 | ../spi.c          writetospi         | data : 6D 
+       573 | ../spi.c          writetospi         | head : EE 86 30 
+       584 | ../spi.c          writetospi         | data : 07 06 
+       595 | ../spi.c          writetospi         | head : EB 07 
+       605 | ../spi.c          writetospi         | data : 08 05 40 08 26 
+       616 | ../spi.c          writetospi         | head : E8 0B 
+       626 | ../spi.c          writetospi         | data : D8 
+       637 | ../spi.c          writetospi         | head : E8 0C 
+       648 | ../spi.c          writetospi         | data : A0 5C 04 00 
+       658 | ../spi.c          writetospi         | head : E7 02 
+       669 | ../spi.c          writetospi         | data : 16 00 
+       680 | ../spi.c          writetospi         | head : E7 04 
+       690 | ../spi.c          writetospi         | data : 8D 00 
+       701 | ../spi.c          writetospi         | head : E7 06 
+       711 | ../spi.c          writetospi         | data : 64 00 
+       722 | ../spi.c          writetospi         | head : E7 08 
+       732 | ../spi.c          writetospi         | data : 5E 01 3B 35 
+       743 | ../spi.c          writetospi         | head : E7 20 
+       754 | ../spi.c          writetospi         | data : 21 04 
+       764 | ../spi.c          writetospi         | head : E3 0C 
+       775 | ../spi.c          writetospi         | data : 07 A9 02 25 
+       786 | ../spi.c          writetospi         | head : E3 04 
+       796 | ../spi.c          writetospi         | data : 9B 88 
+       807 | ../spi.c          writetospi         | head : A1 
+       817 | ../spi.c          writetospi         | data : 40 
+       828 | ../spi.c          writetospi         | head : 9F 
+       838 | ../spi.c          writetospi         | data : 22 00 7A 4A 
+       849 | ../spi.c          writetospi         | head : 88 
+       860 | ../spi.c          writetospi         | data : 00 80 0A 00 
+       870 | ../cpp/DWM1000.cppinit               | dwt_configure succeeded.
+       881 | ../spi.c          readfromspi        | head : 00 
+       892 | ../spi.c          readfromspi        | data : 30 01 CA DE 
+       902 | ../cpp/DWM1000.cppinit               | device id : DECA0130 
+       913 | ../cpp/DWM1000.cppinit               | part   id : 0 
+       923 | ../spi.c          writetospi         | head : EE 84 30 
+       934 | ../spi.c          writetospi         | data : 34 40 
+       945 | ../spi.c          writetospi         | head : 98 
+       955 | ../spi.c          writetospi         | data : 34 40 
+       966 | ../spi.c          readfromspi        | head : 1A 
+       976 | ../spi.c          readfromspi        | data : 00 00 00 00 
+       987 | ../spi.c          writetospi         | head : 9A 
+       997 | ../spi.c          writetospi         | data : 96 00 00 00 
+
+WATCHDOG
+@(#):STACK_START 0x3FFFFC90
+@(#):3FFFFCA0:4020349F
+@(#):3FFFFCC0:40002EF1
+@(#):3FFFFCD0:40002EF1
+@(#):3FFFFD10:4020346A
+@(#):3FFFFD40:40208812
+@(#):3FFFFD60:40208946
+@(#):3FFFFDC0:402324F8
+@(#):3FFFFF80:40205172
+@(#):3FFFFFA0:40000F49
+@(#):3FFFFFB0:40000E19
+@(#):3FFFFFC0:40001100
+@(#):3FFFFFD0:40100276
+@(#):3FFFFFE0:4010000D
+@(#):3FFFFFF0:4000044C
+@(#):STACK_END
+      1003 | ../spi.c          readfromspi        | head : 44 03 
+      1013 | ../spi.c          readfromspi        | data : 00 
+      1024 | ../spi.c          writetospi         | head : 8C 
+      1034 | ../spi.c          writetospi         | data : 8C 0A 
+      1044 | ../spi.c          writetospi         | head : C4 03 
+      1055 | ../spi.c          writetospi         | data : 10 
+      1065 | ../spi.c          writetospi         | head : 81 
+      1075 | ../spi.c          writetospi         | data : F8 F7 F6 F5 F4 F3 F2 F1 
+      1086 | ../spi.c          readfromspi        | head : 01 
+      1097 | ../spi.c          readfromspi        | data : F8 F7 F6 F5 F4 F3 F2 F1 
+      1107 | ../cpp/DWM1000.cppinit               | EUID   id : F5F6F7F8 
+      1224 | ../spi.c          writetospi         | head : 8D 
+      1235 | ../spi.c          writetospi         | data : 02 
+      1245 | ../spi.c          writetospi         | head : 89 
+      1256 | ../spi.c          writetospi         | data : 41 88 00 CA DE 57 41 56 45 21 
+      1267 | ../spi.c          writetospi         | head : 88 
+      1277 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+      1288 | ../spi.c          writetospi         | head : 8D 
+      1298 | ../spi.c          writetospi         | data : 80 
+      1309 | ../spi.c          writetospi         | head : 8D 
+      1319 | ../spi.c          writetospi         | data : 82 
+      1330 | ../spi.c          readfromspi        | head : 0F 
+      1341 | ../spi.c          readfromspi        | data : F2 00 82 02 
+      1351 | ../cpp/DWM1000.cppdispatch           |  RX error 
+      1362 | ../spi.c          writetospi         | head : 8F 
+      1372 | ../spi.c          writetospi         | data : 00 90 27 24 
+      1444 | ../wifi/Wifi.cpp  dispatch           | STATION_IDLE
+      2384 | ../spi.c          writetospi         | head : 89 
+      2395 | ../spi.c          writetospi         | data : 41 88 01 CA DE 57 41 56 45 21 
+      2405 | ../spi.c          writetospi         | head : 88 
+      2416 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+      2427 | ../spi.c          writetospi         | head : 8D 
+      2437 | ../spi.c          writetospi         | data : 80 
+      2448 | ../spi.c          writetospi         | head : 8D 
+      2458 | ../spi.c          writetospi         | data : 82 
+      2469 | ../spi.c          readfromspi        | head : 0F 
+      2480 | ../spi.c          readfromspi        | data : F2 00 82 02 
+      2490 | ../cpp/DWM1000.cppdispatch           |  RX error 
+      2501 | ../spi.c          writetospi         | head : 8F 
+      2511 | ../spi.c          writetospi         | data : 00 90 27 24 
+      2524 | ../wifi/Wifi.cpp  dispatch           | STATION_IDLE
+scandone
+
+WATCHDOG
+@(#):STACK_START 0x3FFFFA20
+@(#):3FFFFA30:4000B570
+@(#):3FFFFA50:4000B5DA
+@(#):3FFFFAD0:4000B5F9
+@(#):3FFFFB50:4000B690
+@(#):3FFFFBB0:43F28CB3
+@(#):3FFFFBD0:5C5C5C5C
+@(#):3FFFFBE0:5C5C5C5C
+@(#):3FFFFBF0:4000BA18
+@(#):3FFFFC20:4000BA18
+@(#):3FFFFC50:5C5C5C5C
+@(#):3FFFFC60:5C5C5C5C
+@(#):3FFFFC80:5C5C5C5C
+@(#):3FFFFCF0:4000B7EB
+@(#):3FFFFD10:4000B7FA
+@(#):3FFFFDD0:4022D962
+@(#):3FFFFE20:4022E85D
+@(#):3FFFFE40:4021E3D0
+@(#):3FFFFE50:4010108B
+@(#):3FFFFE70:4021DB2D
+@(#):3FFFFE90:4021E378
+@(#):3FFFFEA0:4021E2B4
+@(#):3FFFFEB0:40000F68
+@(#):3FFFFEC0:40000F58
+@(#):3FFFFF30:4021C05F
+@(#):3FFFFF40:4021BE2B
+@(#):3FFFFF60:4021C2D8
+@(#):3FFFFF70:4020512D
+@(#):3FFFFF80:40205172
+@(#):3FFFFFA0:40000F49
+@(#):3FFFFFB0:40000E19
+@(#):3FFFFFC0:40001100
+@(#):3FFFFFD0:40100276
+@(#):3FFFFFE0:4010000D
+@(#):3FFFFFF0:4000044C
+@(#):STACK_END
+state: 0 -> 2 (b0)
+      4205 | ../wifi/Wifi.cpp  dispatch           | STATION_IDLE
+      4216 | ../spi.c          writetospi         | head : 89 
+      4227 | ../spi.c          writetospi         | data : 41 88 02 CA DE 57 41 56 45 21 
+      4238 | ../spi.c          writetospi         | head : 88 
+      4248 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+      4259 | ../spi.c          writetospi         | head : 8D 
+      4270 | ../spi.c          writetospi         | data : 80 
+      4280 | ../spi.c          writetospi         | head : 8D 
+      4291 | ../spi.c          writetospi         | data : 82 
+      4301 | ../spi.c          readfromspi        | head : 0F 
+      4312 | ../spi.c          readfromspi        | data : F2 00 82 02 
+
+WATCHDOG
+@(#):STACK_START 0x3FFFFCD0
+@(#):3FFFFCE0:4020349F
+@(#):3FFFFD00:4000DD38
+@(#):3FFFFD10:40002EF1
+@(#):3FFFFD80:40208812
+@(#):3FFFFDA0:40208946
+@(#):3FFFFE00:402324F8
+@(#):3FFFFF80:40102986
+@(#):3FFFFFB0:40000E19
+@(#):3FFFFFC0:40001100
+@(#):3FFFFFD0:40100276
+@(#):3FFFFFE0:4010000D
+@(#):3FFFFFF0:4000044C
+@(#):STACK_END
+      4318 | ../cpp/DWM1000.cppdispatch           |  RX error 
+      4328 | ../spi.c          writetospi         | head : 8F 
+      4338 | ../spi.c          writetospi         | data : 00 90 27 24 
+state: 2 -> 3 (0)
+state: 3 -> 5 (10)
+add 0
+aid 2
+cnt 
+      5220 | ../wifi/Wifi.cpp  dispatch           | STATION_IDLE
+      5350 | ../spi.c          writetospi         | head : 89 
+      5360 | ../spi.c          writetospi         | data : 41 88 03 CA DE 57 41 56 45 21 
+      5371 | ../spi.c          writetospi         | head : 88 
+      5382 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+      5393 | ../spi.c          writetospi         | head : 8D 
+      5403 | ../spi.c          writetospi         | data : 80 
+      5414 | ../spi.c          writetospi         | head : 8D 
+      5424 | ../spi.c          writetospi         | data : 82 
+      5435 | ../spi.c          readfromspi        | head : 0F 
+      5445 | ../spi.c          readfromspi        | data : F2 00 82 02 
+      5456 | ../cpp/DWM1000.cppdispatch           |  RX error 
+      5467 | ../spi.c          writetospi         | head : 8F 
+      5477 | ../spi.c          writetospi         | data : 00 90 27 24 
+      6240 | ../wifi/Wifi.cpp  dispatch           | STATION_IDLE
+      6490 | ../spi.c          writetospi         | head : 89 
+      6500 | ../spi.c          writetospi         | data : 41 88 04 CA DE 57 41 56 45 21 
+      6511 | ../spi.c          writetospi         | head : 88 
+      6522 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+      6533 | ../spi.c          writetospi         | head : 8D 
+      6543 | ../spi.c          writetospi         | data : 80 
+      6554 | ../spi.c          writetospi         | head : 8D 
+      6564 | ../spi.c          writetospi         | data : 82 
+      6575 | ../spi.c          readfromspi        | head : 0F 
+      6585 | ../spi.c          readfromspi        | data : F2 00 82 02 
+      6596 | ../cpp/DWM1000.cppdispatch           |  RX error 
+      6607 | ../spi.c          writetospi         | head : 8F 
+      6617 | ../spi.c          writetospi         | data : 00 90 27 24 
+      7260 | ../wifi/Wifi.cpp  dispatch           | STATION_IDLE
+      7630 | ../spi.c          writetospi         | head : 89 
+      7640 | ../spi.c          writetospi         | data : 41 88 05 CA DE 57 41 56 45 21 
+      7651 | ../spi.c          writetospi         | head : 88 
+      7662 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+      7673 | ../spi.c          writetospi         | head : 8D 
+      7683 | ../spi.c          writetospi         | data : 80 
+      7694 | ../spi.c          writetospi         | head : 8D 
+      7704 | ../spi.c          writetospi         | data : 82 
+      7715 | ../spi.c          readfromspi        | head : 0F 
+      7725 | ../spi.c          readfromspi        | data : F2 00 82 02 
+      7736 | ../cpp/DWM1000.cppdispatch           |  RX error 
+      7747 | ../spi.c          writetospi         | head : 8F 
+      7757 | ../spi.c          writetospi         | data : 00 90 27 24 
+      8280 | ../wifi/Wifi.cpp  dispatch           | STATION_IDLE
+      8770 | ../spi.c          writetospi         | head : 89 
+      8780 | ../spi.c          writetospi         | data : 41 88 06 CA DE 57 41 56 45 21 
+      8791 | ../spi.c          writetospi         | head : 88 
+      8802 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+      8813 | ../spi.c          writetospi         | head : 8D 
+      8823 | ../spi.c          writetospi         | data : 80 
+      8834 | ../spi.c          writetospi         | head : 8D 
+      8844 | ../spi.c          writetospi         | data : 82 
+      8855 | ../spi.c          readfromspi        | head : 0F 
+      8865 | ../spi.c          readfromspi        | data : F2 00 82 02 
+      8876 | ../cpp/DWM1000.cppdispatch           |  RX error 
+      8887 | ../spi.c          writetospi         | head : 8F 
+      8897 | ../spi.c          writetospi         | data : 00 90 27 24 
+      9300 | ../wifi/Wifi.cpp  dispatch           | STATION_IDLE
+      9910 | ../spi.c          writetospi         | head : 89 
+      9920 | ../spi.c          writetospi         | data : 41 88 07 CA DE 57 41 56 45 21 
+      9931 | ../spi.c          writetospi         | head : 88 
+      9942 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+      9952 | ../spi.c          writetospi         | head : 8D 
+      9963 | ../spi.c          writetospi         | data : 80 
+      9974 | ../spi.c          writetospi         | head : 8D 
+      9984 | ../spi.c          writetospi         | data : 82 
+      9995 | ../spi.c          readfromspi        | head : 0F 
+     10005 | ../spi.c          readfromspi        | data : F2 00 82 02 
+     10016 | ../cpp/DWM1000.cppdispatch           |  RX error 
+     10027 | ../spi.c          writetospi         | head : 8F 
+     10037 | ../spi.c          writetospi         | data : 00 90 27 24 
+     10320 | ../wifi/Wifi.cpp  dispatch           | STATION_IDLE
+     11050 | ../spi.c          writetospi         | head : 89 
+     11061 | ../spi.c          writetospi         | data : 41 88 08 CA DE 57 41 56 45 21 
+     11072 | ../spi.c          writetospi         | head : 88 
+     11082 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+     11093 | ../spi.c          writetospi         | head : 8D 
+     11104 | ../spi.c          writetospi         | data : 80 
+     11114 | ../spi.c          writetospi         | head : 8D 
+     11125 | ../spi.c          writetospi         | data : 82 
+     11135 | ../spi.c          readfromspi        | head : 0F 
+     11146 | ../spi.c          readfromspi        | data : F2 00 82 02 
+     11156 | ../cpp/DWM1000.cppdispatch           |  RX error 
+     11167 | ../spi.c          writetospi         | head : 8F 
+     11178 | ../spi.c          writetospi         | data : 00 90 27 24 
+     11340 | ../wifi/Wifi.cpp  dispatch           | STATION_IDLE
+     12190 | ../spi.c          writetospi         | head : 89 
+     12201 | ../spi.c          writetospi         | data : 41 88 09 CA DE 57 41 56 45 21 
+     12212 | ../spi.c          writetospi         | head : 88 
+     12222 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+     12233 | ../spi.c          writetospi         | head : 8D 
+     12244 | ../spi.c          writetospi         | data : 80 
+     12254 | ../spi.c          writetospi         | head : 8D 
+     12265 | ../spi.c          writetospi         | data : 82 
+     12275 | ../spi.c          readfromspi        | head : 0F 
+     12286 | ../spi.c          readfromspi        | data : F2 00 82 02 
+     12296 | ../cpp/DWM1000.cppdispatch           |  RX error 
+     12307 | ../spi.c          writetospi         | head : 8F 
+     12318 | ../spi.c          writetospi         | data : 00 90 27 24 
+     12360 | ../wifi/Wifi.cpp  dispatch           | STATION_IDLE
+     13330 | ../spi.c          writetospi         | head : 89 
+     13341 | ../spi.c          writetospi         | data : 41 88 0A CA DE 57 41 56 45 21 
+     13352 | ../spi.c          writetospi         | head : 88 
+     13362 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+     13373 | ../spi.c          writetospi         | head : 8D 
+     13384 | ../spi.c          writetospi         | data : 80 
+     13394 | ../spi.c          writetospi         | head : 8D 
+     13405 | ../spi.c          writetospi         | data : 82 
+     13415 | ../spi.c          readfromspi        | head : 0F 
+     13426 | ../spi.c          readfromspi        | data : F2 00 82 02 
+     13436 | ../cpp/DWM1000.cppdispatch           |  RX error 
+     13447 | ../spi.c          writetospi         | head : 8F 
+     13458 | ../spi.c          writetospi         | data : 00 90 27 24 
+     13469 | ../wifi/Wifi.cpp  dispatch           | STATION_IDLE
+pm open phy_2,type:2 0 0
+state: 5 -> 0 (2)
+rm 0
+pm close 7 0 0/584
+reconnect
+f r0,      14470 | ../spi.c          writetospi         | head : 89 
+     14481 | ../spi.c          writetospi         | data : 41 88 0B CA DE 57 41 56 45 21 
+     14492 | ../spi.c          writetospi         | head : 88 
+     14503 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+     14513 | ../spi.c          writetospi         | head : 8D 
+     14524 | ../spi.c          writetospi         | data : 80 
+     14534 | ../spi.c          writetospi         | head : 8D 
+     14545 | ../spi.c          writetospi         | data : 82 
+     14556 | ../spi.c          readfromspi        | head : 0F 
+     14566 | ../spi.c          readfromspi        | data : F2 00 82 02 
+     14577 | ../cpp/DWM1000.cppdispatch           |  RX error 
+     14587 | ../spi.c          writetospi         | head : 8F 
+     14598 | ../spi.c          writetospi         | data : 00 90 27 24 
+scandone
+state: 0 -> 2 (b0)
+     14611 | ../wifi/Wifi.cpp  dispatch           | NOT CONNECTED
+f 0, state: 2 -> 3 (0)
+state: 3 -> 5 (10)
+add 0
+aid 2
+cnt 
+scandone
+     15610 | ../spi.c          writetospi         | head : 89 
+     15621 | ../spi.c          writetospi         | data : 41 88 0C CA DE 57 41 56 45 21 
+     15631 | ../spi.c          writetospi         | head : 88 
+     15642 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+     15653 | ../spi.c          writetospi         | head : 8D 
+     15663 | ../spi.c          writetospi         | data : 80 
+     15674 | ../spi.c          writetospi         | head : 8D 
+     15684 | ../spi.c          writetospi         | data : 82 
+     15695 | ../spi.c          readfromspi        | head : 0F 
+     15706 | ../spi.c          readfromspi        | data : F2 00 82 02 
+     15716 | ../cpp/DWM1000.cppdispatch           |  RX error 
+     15727 | ../spi.c          writetospi         | head : 8F 
+     15737 | ../spi.c          writetospi         | data : 00 90 27 24 
+     15749 | ../wifi/Wifi.cpp  dispatch           | STATION_IDLE
+     16750 | ../spi.c          writetospi         | head : 89 
+     16761 | ../spi.c          writetospi         | data : 41 88 0D CA DE 57 41 56 45 21 
+     16772 | ../spi.c          writetospi         | head : 88 
+     16782 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+     16793 | ../spi.c          writetospi         | head : 8D 
+     16804 | ../spi.c          writetospi         | data : 80 
+     16814 | ../spi.c          writetospi         | head : 8D 
+     16825 | ../spi.c          writetospi         | data : 82 
+     16835 | ../spi.c          readfromspi        | head : 0F 
+     16846 | ../spi.c          readfromspi        | data : F2 00 82 02 
+     16856 | ../cpp/DWM1000.cppdispatch           |  RX error 
+     16867 | ../spi.c          writetospi         | head : 8F 
+     16878 | ../spi.c          writetospi         | data : 00 90 27 24 
+     16889 | ../wifi/Wifi.cpp  dispatch           | STATION_IDLE
+     17890 | ../spi.c          writetospi         | head : 89 
+     17901 | ../spi.c          writetospi         | data : 41 88 0E CA DE 57 41 56 45 21 
+     17912 | ../spi.c          writetospi         | head : 88 
+     17922 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+     17933 | ../spi.c          writetospi         | head : 8D 
+     17944 | ../spi.c          writetospi         | data : 80 
+     17954 | ../spi.c          writetospi         | head : 8D 
+     17965 | ../spi.c          writetospi         | data : 82 
+     17975 | ../spi.c          readfromspi        | head : 0F 
+     17986 | ../spi.c          readfromspi        | data : F2 00 82 02 
+     17996 | ../cpp/DWM1000.cppdispatch           |  RX error 
+     18007 | ../spi.c          writetospi         | head : 8F 
+     18018 | ../spi.c          writetospi         | data : 00 90 27 24 
+     18031 | ../wifi/Wifi.cpp  dispatch           | STATION_IDLE
+
+connected with Merckx, channel 11
+dhcp client start...
+ip:192.168.0.121,mask:255.255.255.0,gw:192.168.0.1
+     19030 | ../spi.c          writetospi         | head : 89 
+     19041 | ../spi.c          writetospi         | data : 41 88 0F CA DE 57 41 56 45 21 
+     19051 | ../spi.c          writetospi         | head : 88 
+     19062 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+     19073 | ../spi.c          writetospi         | head : 8D 
+     19083 | ../spi.c          writetospi         | data : 80 
+     19094 | ../spi.c          writetospi         | head : 8D 
+     19104 | ../spi.c          writetospi         | data : 82 
+     19115 | ../spi.c          readfromspi        | head : 0F 
+     19126 | ../spi.c          readfromspi        | data : F2 00 82 02 
+     19136 | ../cpp/DWM1000.cppdispatch           |  RX error 
+     19147 | ../spi.c          writetospi         | head : 8F 
+     19157 | ../spi.c          writetospi         | data : 00 90 27 24 
+     19169 | ../wifi/Wifi.cpp  dispatch           | IP Address : 192.168.0.121
+     19180 | ../wifi/Wifi.cpp  dispatch           | CONNECTED
+     19190 | ../wifi/Tcp.cpp   dispatch           | TcpServer started. 3fff22e0
+     19201 | ../wifi/Tcp.cpp   logConn            |  registerCb - tcp :  3fff22e0  , ip : 0.0.0.0:0  
+     19212 | ../wifi/Tcp.cpp   logConn            |  listen - tcp :  3fff22e0  , ip : 0.0.0.0:0  
+     19223 | ../wifi/Tcp.cpp   dispatch           | Tcp started. 3fff2590
+     20170 | ../spi.c          writetospi         | head : 89 
+     20180 | ../spi.c          writetospi         | data : 41 88 10 CA DE 57 41 56 45 21 
+     20191 | ../spi.c          writetospi         | head : 88 
+     20202 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+     20213 | ../spi.c          writetospi         | head : 8D 
+     20223 | ../spi.c          writetospi         | data : 80 
+     20234 | ../spi.c          writetospi         | head : 8D 
+     20244 | ../spi.c          writetospi         | data : 82 
+     20255 | ../spi.c          readfromspi        | head : 0F 
+     20266 | ../spi.c          readfromspi        | data : F2 00 82 02 
+     20276 | ../cpp/DWM1000.cppdispatch           |  RX error 
+     20287 | ../spi.c          writetospi         | head : 8F 
+     20297 | ../spi.c          writetospi         | data : 00 90 27 24 
+     21230 | ../wifi/Tcp.cpp   listTcp            | / 3FFF22E0:3FFF2530 0 1/ 3FFF2590:0 2 0
+     21310 | ../spi.c          writetospi         | head : 89 
+     21320 | ../spi.c          writetospi         | data : 41 88 11 CA DE 57 41 56 45 21 
+     21331 | ../spi.c          writetospi         | head : 88 
+     21342 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+     21352 | ../spi.c          writetospi         | head : 8D 
+     21363 | ../spi.c          writetospi         | data : 80 
+     21374 | ../spi.c          writetospi         | head : 8D 
+     21384 | ../spi.c          writetospi         | data : 82 
+     21395 | ../spi.c          readfromspi        | head : 0F 
+     21405 | ../spi.c          readfromspi        | data : F2 00 82 02 
+     21416 | ../cpp/DWM1000.cppdispatch           |  RX error 
+     21426 | ../spi.c          writetospi         | head : 8F 
+     21437 | ../spi.c          writetospi         | data : 00 90 27 24 
+     22450 | ../spi.c          writetospi         | head : 89 
+     22461 | ../spi.c          writetospi         | data : 41 88 12 CA DE 57 41 56 45 21 
+     22472 | ../spi.c          writetospi         | head : 88 
+     22482 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+     22493 | ../spi.c          writetospi         | head : 8D 
+     22504 | ../spi.c          writetospi         | data : 80 
+     22514 | ../spi.c          writetospi         | head : 8D 
+     22525 | ../spi.c          writetospi         | data : 82 
+     22535 | ../spi.c          readfromspi        | head : 0F 
+     22546 | ../spi.c          readfromspi        | data : F2 00 82 02 
+     22556 | ../cpp/DWM1000.cppdispatch           |  RX error 
+     22567 | ../spi.c          writetospi         | head : 8F 
+     22578 | ../spi.c          writetospi         | data : 00 90 27 24 
+     23250 | ../wifi/Tcp.cpp   listTcp            | / 3FFF22E0:3FFF2530 0 1/ 3FFF2590:0 2 0
+     23590 | ../spi.c          writetospi         | head : 89 
+     23601 | ../spi.c          writetospi         | data : 41 88 13 CA DE 57 41 56 45 21 
+     23611 | ../spi.c          writetospi         | head : 88 
+     23622 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+     23633 | ../spi.c          writetospi         | head : 8D 
+     23643 | ../spi.c          writetospi         | data : 80 
+     23654 | ../spi.c          writetospi         | head : 8D 
+     23664 | ../spi.c          writetospi         | data : 82 
+     23675 | ../spi.c          readfromspi        | head : 0F 
+     23686 | ../spi.c          readfromspi        | data : F2 00 82 02 
+     23696 | ../cpp/DWM1000.cppdispatch           |  RX error 
+     23707 | ../spi.c          writetospi         | head : 8F 
+     23717 | ../spi.c          writetospi         | data : 00 90 27 24 
+pm open phy_2,type:2 0 0
+     24730 | ../spi.c          writetospi         | head : 89 
+     24740 | ../spi.c          writetospi         | data : 41 88 14 CA DE 57 41 56 45 21 
+     24751 | ../spi.c          writetospi         | head : 88 
+     24762 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+     24773 | ../spi.c          writetospi         | head : 8D 
+     24783 | ../spi.c          writetospi         | data : 80 
+     24794 | ../spi.c          writetospi         | head : 8D 
+     24804 | ../spi.c          writetospi         | data : 82 
+     24815 | ../spi.c          readfromspi        | head : 0F 
+     24825 | ../spi.c          readfromspi        | data : F2 00 82 02 
+     24836 | ../cpp/DWM1000.cppdispatch           |  RX error 
+     24847 | ../spi.c          writetospi         | head : 8F 
+     24857 | ../spi.c          writetospi         | data : 00 90 27 24 
+     25270 | ../wifi/Tcp.cpp   listTcp            | / 3FFF22E0:3FFF2530 0 1/ 3FFF2590:0 2 0
+     25870 | ../spi.c          writetospi         | head : 89 
+     25881 | ../spi.c          writetospi         | data : 41 88 15 CA DE 57 41 56 45 21 
+     25892 | ../spi.c          writetospi         | head : 88 
+     25902 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+     25913 | ../spi.c          writetospi         | head : 8D 
+     25923 | ../spi.c          writetospi         | data : 80 
+     25934 | ../spi.c          writetospi         | head : 8D 
+     25945 | ../spi.c          writetospi         | data : 82 
+     25955 | ../spi.c          readfromspi        | head : 0F 
+     25966 | ../spi.c          readfromspi        | data : F2 00 82 02 
+     25976 | ../cpp/DWM1000.cppdispatch           |  RX error 
+     25987 | ../spi.c          writetospi         | head : 8F 
+     25997 | ../spi.c          writetospi         | data : 00 90 27 24 
+     27010 | ../spi.c          writetospi         | head : 89 
+     27021 | ../spi.c          writetospi         | data : 41 88 16 CA DE 57 41 56 45 21 
+     27032 | ../spi.c          writetospi         | head : 88 
+     27042 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+     27053 | ../spi.c          writetospi         | head : 8D 
+     27063 | ../spi.c          writetospi         | data : 80 
+     27074 | ../spi.c          writetospi         | head : 8D 
+     27085 | ../spi.c          writetospi         | data : 82 
+     27095 | ../spi.c          readfromspi        | head : 0F 
+     27106 | ../spi.c          readfromspi        | data : F2 00 82 02 
+     27116 | ../cpp/DWM1000.cppdispatch           |  RX error 
+     27127 | ../spi.c          writetospi         | head : 8F 
+     27137 | ../spi.c          writetospi         | data : 00 90 27 24 
+     27290 | ../wifi/Tcp.cpp   listTcp            | / 3FFF22E0:3FFF2530 0 1/ 3FFF2590:0 2 0
+     28150 | ../spi.c          writetospi         | head : 89 
+     28161 | ../spi.c          writetospi         | data : 41 88 17 CA DE 57 41 56 45 21 
+     28172 | ../spi.c          writetospi         | head : 88 
+     28182 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+     28193 | ../spi.c          writetospi         | head : 8D 
+     28203 | ../spi.c          writetospi         | data : 80 
+     28214 | ../spi.c          writetospi         | head : 8D 
+     28225 | ../spi.c          writetospi         | data : 82 
+     28235 | ../spi.c          readfromspi        | head : 0F 
+     28246 | ../spi.c          readfromspi        | data : F2 00 82 02 
+     28256 | ../cpp/DWM1000.cppdispatch           |  RX error 
+     28267 | ../spi.c          writetospi         | head : 8F 
+     28277 | ../spi.c          writetospi         | data : 00 90 27 24 
+     29290 | ../spi.c          writetospi         | head : 89 
+     29301 | ../spi.c          writetospi         | data : 41 88 18 CA DE 57 41 56 45 21 
+     29312 | ../spi.c          writetospi         | head : 88 
+     29322 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+     29333 | ../spi.c          writetospi         | head : 8D 
+     29343 | ../spi.c          writetospi         | data : 80 
+     29354 | ../spi.c          writetospi         | head : 8D 
+     29365 | ../spi.c          writetospi         | data : 82 
+     29375 | ../spi.c          readfromspi        | head : 0F 
+     29386 | ../spi.c          readfromspi        | data : F2 00 82 02 
+     29396 | ../cpp/DWM1000.cppdispatch           |  RX error 
+     29407 | ../spi.c          writetospi         | head : 8F 
+     29417 | ../spi.c          writetospi         | data : 00 90 27 24 
+     29432 | ../wifi/Tcp.cpp   listTcp            | / 3FFF22E0:3FFF2530 0 1/ 3FFF2590:0 2 0
+     30430 | ../spi.c          writetospi         | head : 89 
+     30441 | ../spi.c          writetospi         | data : 41 88 19 CA DE 57 41 56 45 21 
+     30452 | ../spi.c          writetospi         | head : 88 
+     30462 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+     30473 | ../spi.c          writetospi         | head : 8D 
+     30483 | ../spi.c          writetospi         | data : 80 
+     30494 | ../spi.c          writetospi         | head : 8D 
+     30505 | ../spi.c          writetospi         | data : 82 
+     30515 | ../spi.c          readfromspi        | head : 0F 
+     30526 | ../spi.c          readfromspi        | data : F2 00 82 02 
+     30536 | ../cpp/DWM1000.cppdispatch           |  RX error 
+     30547 | ../spi.c          writetospi         | head : 8F 
+     30557 | ../spi.c          writetospi         | data : 00 90 27 24 
+     31450 | ../wifi/Tcp.cpp   listTcp            | / 3FFF22E0:3FFF2530 0 1/ 3FFF2590:0 2 0
+     31570 | ../spi.c          writetospi         | head : 89 
+     31581 | ../spi.c          writetospi         | data : 41 88 1A CA DE 57 41 56 45 21 
+     31592 | ../spi.c          writetospi         | head : 88 
+     31603 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+     31614 | ../spi.c          writetospi         | head : 8D 
+     31624 | ../spi.c          writetospi         | data : 80 
+     31635 | ../spi.c          writetospi         | head : 8D 
+     31645 | ../spi.c          writetospi         | data : 82 
+     31656 | ../spi.c          readfromspi        | head : 0F 
+     31666 | ../spi.c          readfromspi        | data : F2 00 82 02 
+     31677 | ../cpp/DWM1000.cppdispatch           |  RX error 
+     31688 | ../spi.c          writetospi         | head : 8F 
+     31698 | ../spi.c          writetospi         | data : 00 90 27 24 
+     32710 | ../spi.c          writetospi         | head : 89 
+     32721 | ../spi.c          writetospi         | data : 41 88 1B CA DE 57 41 56 45 21 
+     32732 | ../spi.c          writetospi         | head : 88 
+     32743 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+     32753 | ../spi.c          writetospi         | head : 8D 
+     32764 | ../spi.c          writetospi         | data : 80 
+     32774 | ../spi.c          writetospi         | head : 8D 
+     32785 | ../spi.c          writetospi         | data : 82 
+     32796 | ../spi.c          readfromspi        | head : 0F 
+     32806 | ../spi.c          readfromspi        | data : F2 00 82 02 
+     32817 | ../cpp/DWM1000.cppdispatch           |  RX error 
+     32827 | ../spi.c          writetospi         | head : 8F 
+     32838 | ../spi.c          writetospi         | data : 00 90 27 24 
+     33470 | ../wifi/Tcp.cpp   listTcp            | / 3FFF22E0:3FFF2530 0 1/ 3FFF2590:0 2 0
+     33850 | ../spi.c          writetospi         | head : 89 
+     33861 | ../spi.c          writetospi         | data : 41 88 1C CA DE 57 41 56 45 21 
+     33872 | ../spi.c          writetospi         | head : 88 
+     33882 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+     33893 | ../spi.c          writetospi         | head : 8D 
+     33903 | ../spi.c          writetospi         | data : 80 
+     33914 | ../spi.c          writetospi         | head : 8D 
+     33925 | ../spi.c          writetospi         | data : 82 
+     33935 | ../spi.c          readfromspi        | head : 0F 
+     33946 | ../spi.c          readfromspi        | data : F2 00 82 02 
+     33956 | ../cpp/DWM1000.cppdispatch           |  RX error 
+     33967 | ../spi.c          writetospi         | head : 8F 
+     33977 | ../spi.c          writetospi         | data : 00 90 27 24 
+     34990 | ../spi.c          writetospi         | head : 89 
+     35001 | ../spi.c          writetospi         | data : 41 88 1D CA DE 57 41 56 45 21 
+     35012 | ../spi.c          writetospi         | head : 88 
+     35022 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+     35033 | ../spi.c          writetospi         | head : 8D 
+     35043 | ../spi.c          writetospi         | data : 80 
+     35054 | ../spi.c          writetospi         | head : 8D 
+     35065 | ../spi.c          writetospi         | data : 82 
+     35075 | ../spi.c          readfromspi        | head : 0F 
+     35086 | ../spi.c          readfromspi        | data : F2 00 82 02 
+     35096 | ../cpp/DWM1000.cppdispatch           |  RX error 
+     35107 | ../spi.c          writetospi         | head : 8F 
+     35117 | ../spi.c          writetospi         | data : 00 90 27 24 
+     35490 | ../wifi/Tcp.cpp   listTcp            | / 3FFF22E0:3FFF2530 0 1/ 3FFF2590:0 2 0
+     36130 | ../spi.c          writetospi         | head : 89 
+     36141 | ../spi.c          writetospi         | data : 41 88 1E CA DE 57 41 56 45 21 
+     36152 | ../spi.c          writetospi         | head : 88 
+     36162 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+     36173 | ../spi.c          writetospi         | head : 8D 
+     36183 | ../spi.c          writetospi         | data : 80 
+     36194 | ../spi.c          writetospi         | head : 8D 
+     36205 | ../spi.c          writetospi         | data : 82 
+     36215 | ../spi.c          readfromspi        | head : 0F 
+     36226 | ../spi.c          readfromspi        | data : F2 00 82 02 
+     36236 | ../cpp/DWM1000.cppdispatch           |  RX error 
+     36247 | ../spi.c          writetospi         | head : 8F 
+     36257 | ../spi.c          writetospi         | data : 00 90 27 24 
+     37270 | ../spi.c          writetospi         | head : 89 
+     37281 | ../spi.c          writetospi         | data : 41 88 1F CA DE 57 41 56 45 21 
+     37292 | ../spi.c          writetospi         | head : 88 
+     37302 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+     37313 | ../spi.c          writetospi         | head : 8D 
+     37323 | ../spi.c          writetospi         | data : 80 
+     37334 | ../spi.c          writetospi         | head : 8D 
+     37345 | ../spi.c          writetospi         | data : 82 
+     37355 | ../spi.c          readfromspi        | head : 0F 
+     37366 | ../spi.c          readfromspi        | data : F2 00 82 02 
+     37376 | ../cpp/DWM1000.cppdispatch           |  RX error 
+     37387 | ../spi.c          writetospi         | head : 8F 
+     37397 | ../spi.c          writetospi         | data : 00 90 27 24 
+     37510 | ../wifi/Tcp.cpp   listTcp            | / 3FFF22E0:3FFF2530 0 1/ 3FFF2590:0 2 0
+     38410 | ../spi.c          writetospi         | head : 89 
+     38421 | ../spi.c          writetospi         | data : 41 88 20 CA DE 57 41 56 45 21 
+     38432 | ../spi.c          writetospi         | head : 88 
+     38442 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+     38453 | ../spi.c          writetospi         | head : 8D 
+     38463 | ../spi.c          writetospi         | data : 80 
+     38474 | ../spi.c          writetospi         | head : 8D 
+     38485 | ../spi.c          writetospi         | data : 82 
+     38495 | ../spi.c          readfromspi        | head : 0F 
+     38506 | ../spi.c          readfromspi        | data : F2 00 82 02 
+     38516 | ../cpp/DWM1000.cppdispatch           |  RX error 
+     38527 | ../spi.c          writetospi         | head : 8F 
+     38537 | ../spi.c          writetospi         | data : 00 90 27 24 
+     39530 | ../wifi/Tcp.cpp   listTcp            | / 3FFF22E0:3FFF2530 0 1/ 3FFF2590:0 2 0
+     39550 | ../spi.c          writetospi         | head : 89 
+     39561 | ../spi.c          writetospi         | data : 41 88 21 CA DE 57 41 56 45 21 
+     39572 | ../spi.c          writetospi         | head : 88 
+     39582 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+     39593 | ../spi.c          writetospi         | head : 8D 
+     39603 | ../spi.c          writetospi         | data : 80 
+     39614 | ../spi.c          writetospi         | head : 8D 
+     39624 | ../spi.c          writetospi         | data : 82 
+     39635 | ../spi.c          readfromspi        | head : 0F 
+     39646 | ../spi.c          readfromspi        | data : F2 00 82 02 
+     39656 | ../cpp/DWM1000.cppdispatch           |  RX error 
+     39667 | ../spi.c          writetospi         | head : 8F 
+     39677 | ../spi.c          writetospi         | data : 00 90 27 24 
+     40690 | ../spi.c          writetospi         | head : 89 
+     40701 | ../spi.c          writetospi         | data : 41 88 22 CA DE 57 41 56 45 21 
+     40712 | ../spi.c          writetospi         | head : 88 
+     40722 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+     40733 | ../spi.c          writetospi         | head : 8D 
+     40744 | ../spi.c          writetospi         | data : 80 
+     40754 | ../spi.c          writetospi         | head : 8D 
+     40765 | ../spi.c          writetospi         | data : 82 
+     40775 | ../spi.c          readfromspi        | head : 0F 
+     40786 | ../spi.c          readfromspi        | data : F2 00 82 02 
+     40797 | ../cpp/DWM1000.cppdispatch           |  RX error 
+     40807 | ../spi.c          writetospi         | head : 8F 
+     40818 | ../spi.c          writetospi         | data : 00 90 27 24 
+     41550 | ../wifi/Tcp.cpp   listTcp            | / 3FFF22E0:3FFF2530 0 1/ 3FFF2590:0 2 0
+     41830 | ../spi.c          writetospi         | head : 89 
+     41841 | ../spi.c          writetospi         | data : 41 88 23 CA DE 57 41 56 45 21 
+     41852 | ../spi.c          writetospi         | head : 88 
+     41862 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+     41873 | ../spi.c          writetospi         | head : 8D 
+     41883 | ../spi.c          writetospi         | data : 80 
+     41894 | ../spi.c          writetospi         | head : 8D 
+     41905 | ../spi.c          writetospi         | data : 82 
+     41915 | ../spi.c          readfromspi        | head : 0F 
+     41926 | ../spi.c          readfromspi        | data : F2 00 82 02 
+     41936 | ../cpp/DWM1000.cppdispatch           |  RX error 
+     41947 | ../spi.c          writetospi         | head : 8F 
+     41958 | ../spi.c          writetospi         | data : 00 90 27 24 
+     42970 | ../spi.c          writetospi         | head : 89 
+     42981 | ../spi.c          writetospi         | data : 41 88 24 CA DE 57 41 56 45 21 
+     42992 | ../spi.c          writetospi         | head : 88 
+     43002 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+     43013 | ../spi.c          writetospi         | head : 8D 
+     43023 | ../spi.c          writetospi         | data : 80 
+     43034 | ../spi.c          writetospi         | head : 8D 
+     43045 | ../spi.c          writetospi         | data : 82 
+     43055 | ../spi.c          readfromspi        | head : 0F 
+     43066 | ../spi.c          readfromspi        | data : F2 00 82 02 
+     43076 | ../cpp/DWM1000.cppdispatch           |  RX error 
+     43087 | ../spi.c          writetospi         | head : 8F 
+     43097 | ../spi.c          writetospi         | data : 00 90 27 24 
+     43570 | ../wifi/Tcp.cpp   listTcp            | / 3FFF22E0:3FFF2530 0 1/ 3FFF2590:0 2 0
+     44110 | ../spi.c          writetospi         | head : 89 
+     44121 | ../spi.c          writetospi         | data : 41 88 25 CA DE 57 41 56 45 21 
+     44132 | ../spi.c          writetospi         | head : 88 
+     44142 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+     44153 | ../spi.c          writetospi         | head : 8D 
+     44163 | ../spi.c          writetospi         | data : 80 
+     44174 | ../spi.c          writetospi         | head : 8D 
+     44185 | ../spi.c          writetospi         | data : 82 
+     44195 | ../spi.c          readfromspi        | head : 0F 
+     44206 | ../spi.c          readfromspi        | data : F2 00 82 02 
+     44216 | ../cpp/DWM1000.cppdispatch           |  RX error 
+     44227 | ../spi.c          writetospi         | head : 8F 
+     44237 | ../spi.c          writetospi         | data : 00 90 27 24 
+     45250 | ../spi.c          writetospi         | head : 89 
+     45261 | ../spi.c          writetospi         | data : 41 88 26 CA DE 57 41 56 45 21 
+     45272 | ../spi.c          writetospi         | head : 88 
+     45283 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+     45293 | ../spi.c          writetospi         | head : 8D 
+     45304 | ../spi.c          writetospi         | data : 80 
+     45314 | ../spi.c          writetospi         | head : 8D 
+     45325 | ../spi.c          writetospi         | data : 82 
+     45336 | ../spi.c          readfromspi        | head : 0F 
+     45346 | ../spi.c          readfromspi        | data : F2 00 82 02 
+     45357 | ../cpp/DWM1000.cppdispatch           |  RX error 
+     45367 | ../spi.c          writetospi         | head : 8F 
+     45378 | ../spi.c          writetospi         | data : 00 90 27 24 
+     45593 | ../wifi/Tcp.cpp   listTcp            | / 3FFF22E0:3FFF2530 0 1/ 3FFF2590:0 2 0
+     46390 | ../spi.c          writetospi         | head : 89 
+     46401 | ../spi.c          writetospi         | data : 41 88 27 CA DE 57 41 56 45 21 
+     46412 | ../spi.c          writetospi         | head : 88 
+     46422 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+     46433 | ../spi.c          writetospi         | head : 8D 
+     46443 | ../spi.c          writetospi         | data : 80 
+     46454 | ../spi.c          writetospi         | head : 8D 
+     46465 | ../spi.c          writetospi         | data : 82 
+     46475 | ../spi.c          readfromspi        | head : 0F 
+     46486 | ../spi.c          readfromspi        | data : F2 00 82 02 
+     46496 | ../cpp/DWM1000.cppdispatch           |  RX error 
+     46507 | ../spi.c          writetospi         | head : 8F 
+     46517 | ../spi.c          writetospi         | data : 00 90 27 24 
+     47530 | ../spi.c          writetospi         | head : 89 
+     47541 | ../spi.c          writetospi         | data : 41 88 28 CA DE 57 41 56 45 21 
+     47552 | ../spi.c          writetospi         | head : 88 
+     47562 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+     47573 | ../spi.c          writetospi         | head : 8D 
+     47583 | ../spi.c          writetospi         | data : 80 
+     47594 | ../spi.c          writetospi         | head : 8D 
+     47605 | ../spi.c          writetospi         | data : 82 
+     47615 | ../spi.c          readfromspi        | head : 0F 
+     47626 | ../spi.c          readfromspi        | data : F2 00 82 02 
+     47636 | ../cpp/DWM1000.cppdispatch           |  RX error 
+     47647 | ../spi.c          writetospi         | head : 8F 
+     47657 | ../spi.c          writetospi         | data : 00 90 27 24 
+     47669 | ../wifi/Tcp.cpp   listTcp            | / 3FFF22E0:3FFF2530 0 1/ 3FFF2590:0 2 0
+     48671 | ../spi.c          writetospi         | head : 89 
+     48681 | ../spi.c          writetospi         | data : 41 88 29 CA DE 57 41 56 45 21 
+     48692 | ../spi.c          writetospi         | head : 88 
+     48703 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+     48714 | ../spi.c          writetospi         | head : 8D 
+     48724 | ../spi.c          writetospi         | data : 80 
+     48735 | ../spi.c          writetospi         | head : 8D 
+     48745 | ../spi.c          writetospi         | data : 82 
+     48756 | ../spi.c          readfromspi        | head : 0F 
+     48767 | ../spi.c          readfromspi        | data : F2 00 82 02 
+     48777 | ../cpp/DWM1000.cppdispatch           |  RX error 
+     48788 | ../spi.c          writetospi         | head : 8F 
+     48798 | ../spi.c          writetospi         | data : 00 90 27 24 
+     49680 | ../wifi/Tcp.cpp   listTcp            | / 3FFF22E0:3FFF2530 0 1/ 3FFF2590:0 2 0
+     49810 | ../spi.c          writetospi         | head : 89 
+     49820 | ../spi.c          writetospi         | data : 41 88 2A CA DE 57 41 56 45 21 
+     49831 | ../spi.c          writetospi         | head : 88 
+     49842 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+     49853 | ../spi.c          writetospi         | head : 8D 
+     49863 | ../spi.c          writetospi         | data : 80 
+     49874 | ../spi.c          writetospi         | head : 8D 
+     49884 | ../spi.c          writetospi         | data : 82 
+     49895 | ../spi.c          readfromspi        | head : 0F 
+     49906 | ../spi.c          readfromspi        | data : F2 00 82 02 
+     49916 | ../cpp/DWM1000.cppdispatch           |  RX error 
+     49927 | ../spi.c          writetospi         | head : 8F 
+     49937 | ../spi.c          writetospi         | data : 00 90 27 24 
+     50950 | ../spi.c          writetospi         | head : 89 
+     50961 | ../spi.c          writetospi         | data : 41 88 2B CA DE 57 41 56 45 21 
+     50972 | ../spi.c          writetospi         | head : 88 
+     50982 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+     50993 | ../spi.c          writetospi         | head : 8D 
+     51003 | ../spi.c          writetospi         | data : 80 
+     51014 | ../spi.c          writetospi         | head : 8D 
+     51025 | ../spi.c          writetospi         | data : 82 
+     51035 | ../spi.c          readfromspi        | head : 0F 
+     51046 | ../spi.c          readfromspi        | data : F2 00 82 02 
+     51056 | ../cpp/DWM1000.cppdispatch           |  RX error 
+     51067 | ../spi.c          writetospi         | head : 8F 
+     51077 | ../spi.c          writetospi         | data : 00 90 27 24 
+     51700 | ../wifi/Tcp.cpp   listTcp            | / 3FFF22E0:3FFF2530 0 1/ 3FFF2590:0 2 0
+     52090 | ../spi.c          writetospi         | head : 89 
+     52101 | ../spi.c          writetospi         | data : 41 88 2C CA DE 57 41 56 45 21 
+     52112 | ../spi.c          writetospi         | head : 88 
+     52122 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+     52133 | ../spi.c          writetospi         | head : 8D 
+     52143 | ../spi.c          writetospi         | data : 80 
+     52154 | ../spi.c          writetospi         | head : 8D 
+     52165 | ../spi.c          writetospi         | data : 82 
+     52175 | ../spi.c          readfromspi        | head : 0F 
+     52186 | ../spi.c          readfromspi        | data : F2 00 82 02 
+     52196 | ../cpp/DWM1000.cppdispatch           |  RX error 
+     52207 | ../spi.c          writetospi         | head : 8F 
+     52218 | ../spi.c          writetospi         | data : 00 90 27 24 
+     53230 | ../spi.c          writetospi         | head : 89 
+     53241 | ../spi.c          writetospi         | data : 41 88 2D CA DE 57 41 56 45 21 
+     53252 | ../spi.c          writetospi         | head : 88 
+     53262 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+     53273 | ../spi.c          writetospi         | head : 8D 
+     53283 | ../spi.c          writetospi         | data : 80 
+     53294 | ../spi.c          writetospi         | head : 8D 
+     53305 | ../spi.c          writetospi         | data : 82 
+     53315 | ../spi.c          readfromspi        | head : 0F 
+     53326 | ../spi.c          readfromspi        | data : F2 00 82 02 
+     53336 | ../cpp/DWM1000.cppdispatch           |  RX error 
+     53347 | ../spi.c          writetospi         | head : 8F 
+     53357 | ../spi.c          writetospi         | data : 00 90 27 24 
+     53720 | ../wifi/Tcp.cpp   listTcp            | / 3FFF22E0:3FFF2530 0 1/ 3FFF2590:0 2 0
+     54370 | ../spi.c          writetospi         | head : 89 
+     54381 | ../spi.c          writetospi         | data : 41 88 2E CA DE 57 41 56 45 21 
+     54392 | ../spi.c          writetospi         | head : 88 
+     54402 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+     54413 | ../spi.c          writetospi         | head : 8D 
+     54423 | ../spi.c          writetospi         | data : 80 
+     54434 | ../spi.c          writetospi         | head : 8D 
+     54445 | ../spi.c          writetospi         | data : 82 
+     54455 | ../spi.c          readfromspi        | head : 0F 
+     54466 | ../spi.c          readfromspi        | data : F2 00 82 02 
+     54476 | ../cpp/DWM1000.cppdispatch           |  RX error 
+     54487 | ../spi.c          writetospi         | head : 8F 
+     54498 | ../spi.c          writetospi         | data : 00 90 27 24 
+     55510 | ../spi.c          writetospi         | head : 89 
+     55521 | ../spi.c          writetospi         | data : 41 88 2F CA DE 57 41 56 45 21 
+     55532 | ../spi.c          writetospi         | head : 88 
+     55542 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+     55553 | ../spi.c          writetospi         | head : 8D 
+     55563 | ../spi.c          writetospi         | data : 80 
+     55574 | ../spi.c          writetospi         | head : 8D 
+     55585 | ../spi.c          writetospi         | data : 82 
+     55595 | ../spi.c          readfromspi        | head : 0F 
+     55606 | ../spi.c          readfromspi        | data : F2 00 82 02 
+     55616 | ../cpp/DWM1000.cppdispatch           |  RX error 
+     55627 | ../spi.c          writetospi         | head : 8F 
+     55638 | ../spi.c          writetospi         | data : 00 90 27 24 
+     55740 | ../wifi/Tcp.cpp   listTcp            | / 3FFF22E0:3FFF2530 0 1/ 3FFF2590:0 2 0
+     56652 | ../spi.c          writetospi         | head : 89 
+     56663 | ../spi.c          writetospi         | data : 41 88 30 CA DE 57 41 56 45 21 
+     56674 | ../spi.c          writetospi         | head : 88 
+     56685 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+     56696 | ../spi.c          writetospi         | head : 8D 
+     56706 | ../spi.c          writetospi         | data : 80 
+     56717 | ../spi.c          writetospi         | head : 8D 
+     56727 | ../spi.c          writetospi         | data : 82 
+     56738 | ../spi.c          readfromspi        | head : 0F 
+     56748 | ../spi.c          readfromspi        | data : F2 00 82 02 
+     56759 | ../cpp/DWM1000.cppdispatch           |  RX error 
+     56770 | ../spi.c          writetospi         | head : 8F 
+     56780 | ../spi.c          writetospi         | data : 00 90 27 24 
+     57760 | ../wifi/Tcp.cpp   listTcp            | / 3FFF22E0:3FFF2530 0 1/ 3FFF2590:0 2 0
+     57800 | ../spi.c          writetospi         | head : 89 
+     57810 | ../spi.c          writetospi         | data : 41 88 31 CA DE 57 41 56 45 21 
+     57821 | ../spi.c          writetospi         | head : 88 
+     57832 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+     57843 | ../spi.c          writetospi         | head : 8D 
+     57853 | ../spi.c          writetospi         | data : 80 
+     57864 | ../spi.c          writetospi         | head : 8D 
+     57874 | ../spi.c          writetospi         | data : 82 
+     57885 | ../spi.c          readfromspi        | head : 0F 
+     57895 | ../spi.c          readfromspi        | data : F2 00 82 02 
+     57906 | ../cpp/DWM1000.cppdispatch           |  RX error 
+     57917 | ../spi.c          writetospi         | head : 8F 
+     57927 | ../spi.c          writetospi         | data : 00 90 27 24 
+     58940 | ../spi.c          writetospi         | head : 89 
+     58951 | ../spi.c          writetospi         | data : 41 88 32 CA DE 57 41 56 45 21 
+     58962 | ../spi.c          writetospi         | head : 88 
+     58972 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+     58983 | ../spi.c          writetospi         | head : 8D 
+     58993 | ../spi.c          writetospi         | data : 80 
+     59004 | ../spi.c          writetospi         | head : 8D 
+     59015 | ../spi.c          writetospi         | data : 82 
+     59025 | ../spi.c          readfromspi        | head : 0F 
+     59036 | ../spi.c          readfromspi        | data : F2 00 82 02 
+     59046 | ../cpp/DWM1000.cppdispatch           |  RX error 
+     59057 | ../spi.c          writetospi         | head : 8F 
+     59067 | ../spi.c          writetospi         | data : 00 90 27 24 
+     59780 | ../wifi/Tcp.cpp   listTcp            | / 3FFF22E0:3FFF2530 0 1/ 3FFF2590:0 2 0
+     60080 | ../spi.c          writetospi         | head : 89 
+     60091 | ../spi.c          writetospi         | data : 41 88 33 CA DE 57 41 56 45 21 
+     60102 | ../spi.c          writetospi         | head : 88 
+     60112 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+     60123 | ../spi.c          writetospi         | head : 8D 
+     60133 | ../spi.c          writetospi         | data : 80 
+     60144 | ../spi.c          writetospi         | head : 8D 
+     60155 | ../spi.c          writetospi         | data : 82 
+     60165 | ../spi.c          readfromspi        | head : 0F 
+     60176 | ../spi.c          readfromspi        | data : F2 00 82 02 
+     60186 | ../cpp/DWM1000.cppdispatch           |  RX error 
+     60197 | ../spi.c          writetospi         | head : 8F 
+     60207 | ../spi.c          writetospi         | data : 00 90 27 24 
+     61220 | ../spi.c          writetospi         | head : 89 
+     61231 | ../spi.c          writetospi         | data : 41 88 34 CA DE 57 41 56 45 21 
+     61242 | ../spi.c          writetospi         | head : 88 
+     61252 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+     61263 | ../spi.c          writetospi         | head : 8D 
+     61273 | ../spi.c          writetospi         | data : 80 
+     61284 | ../spi.c          writetospi         | head : 8D 
+     61295 | ../spi.c          writetospi         | data : 82 
+     61305 | ../spi.c          readfromspi        | head : 0F 
+     61316 | ../spi.c          readfromspi        | data : F2 00 82 02 
+     61326 | ../cpp/DWM1000.cppdispatch           |  RX error 
+     61337 | ../spi.c          writetospi         | head : 8F 
+     61348 | ../spi.c          writetospi         | data : 00 90 27 24 
+     61800 | ../wifi/Tcp.cpp   listTcp            | / 3FFF22E0:3FFF2530 0 1/ 3FFF2590:0 2 0
+     62360 | ../spi.c          writetospi         | head : 89 
+     62371 | ../spi.c          writetospi         | data : 41 88 35 CA DE 57 41 56 45 21 
+     62382 | ../spi.c          writetospi         | head : 88 
+     62392 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+     62403 | ../spi.c          writetospi         | head : 8D 
+     62413 | ../spi.c          writetospi         | data : 80 
+     62424 | ../spi.c          writetospi         | head : 8D 
+     62435 | ../spi.c          writetospi         | data : 82 
+     62445 | ../spi.c          readfromspi        | head : 0F 
+     62456 | ../spi.c          readfromspi        | data : F2 00 82 02 
+     62466 | ../cpp/DWM1000.cppdispatch           |  RX error 
+     62477 | ../spi.c          writetospi         | head : 8F 
+     62487 | ../spi.c          writetospi         | data : 00 90 27 24 
+     63500 | ../spi.c          writetospi         | head : 89 
+     63511 | ../spi.c          writetospi         | data : 41 88 36 CA DE 57 41 56 45 21 
+     63522 | ../spi.c          writetospi         | head : 88 
+     63532 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+     63543 | ../spi.c          writetospi         | head : 8D 
+     63554 | ../spi.c          writetospi         | data : 80 
+     63564 | ../spi.c          writetospi         | head : 8D 
+     63575 | ../spi.c          writetospi         | data : 82 
+     63585 | ../spi.c          readfromspi        | head : 0F 
+     63596 | ../spi.c          readfromspi        | data : F2 00 82 02 
+     63606 | ../cpp/DWM1000.cppdispatch           |  RX error 
+     63617 | ../spi.c          writetospi         | head : 8F 
+     63628 | ../spi.c          writetospi         | data : 00 90 27 24 
+     63820 | ../wifi/Tcp.cpp   listTcp            | / 3FFF22E0:3FFF2530 0 1/ 3FFF2590:0 2 0
+     64641 | ../spi.c          writetospi         | head : 89 
+     64651 | ../spi.c          writetospi         | data : 41 88 37 CA DE 57 41 56 45 21 
+     64662 | ../spi.c          writetospi         | head : 88 
+     64673 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+     64684 | ../spi.c          writetospi         | head : 8D 
+     64694 | ../spi.c          writetospi         | data : 80 
+     64705 | ../spi.c          writetospi         | head : 8D 
+     64715 | ../spi.c          writetospi         | data : 82 
+     64726 | ../spi.c          readfromspi        | head : 0F 
+     64737 | ../spi.c          readfromspi        | data : F2 00 82 02 
+     64747 | ../cpp/DWM1000.cppdispatch           |  RX error 
+     64758 | ../spi.c          writetospi         | head : 8F 
+     64768 | ../spi.c          writetospi         | data : 00 90 27 24 
+     65780 | ../spi.c          writetospi         | head : 89 
+     65791 | ../spi.c          writetospi         | data : 41 88 38 CA DE 57 41 56 45 21 
+     65802 | ../spi.c          writetospi         | head : 88 
+     65812 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+     65823 | ../spi.c          writetospi         | head : 8D 
+     65833 | ../spi.c          writetospi         | data : 80 
+     65844 | ../spi.c          writetospi         | head : 8D 
+     65855 | ../spi.c          writetospi         | data : 82 
+     65865 | ../spi.c          readfromspi        | head : 0F 
+     65876 | ../spi.c          readfromspi        | data : F2 00 82 02 
+     65886 | ../cpp/DWM1000.cppdispatch           |  RX error 
+     65897 | ../spi.c          writetospi         | head : 8F 
+     65907 | ../spi.c          writetospi         | data : 00 90 27 24 
+     65922 | ../wifi/Tcp.cpp   listTcp            | / 3FFF22E0:3FFF2530 0 1/ 3FFF2590:0 2 0
+     66920 | ../spi.c          writetospi         | head : 89 
+     66931 | ../spi.c          writetospi         | data : 41 88 39 CA DE 57 41 56 45 21 
+     66942 | ../spi.c          writetospi         | head : 88 
+     66952 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+     66963 | ../spi.c          writetospi         | head : 8D 
+     66973 | ../spi.c          writetospi         | data : 80 
+     66984 | ../spi.c          writetospi         | head : 8D 
+     66995 | ../spi.c          writetospi         | data : 82 
+     67005 | ../spi.c          readfromspi        | head : 0F 
+     67016 | ../spi.c          readfromspi        | data : F2 00 82 02 
+     67026 | ../cpp/DWM1000.cppdispatch           |  RX error 
+     67037 | ../spi.c          writetospi         | head : 8F 
+     67047 | ../spi.c          writetospi         | data : 00 90 27 24 
+     67940 | ../wifi/Tcp.cpp   listTcp            | / 3FFF22E0:3FFF2530 0 1/ 3FFF2590:0 2 0
+     68060 | ../spi.c          writetospi         | head : 89 
+     68071 | ../spi.c          writetospi         | data : 41 88 3A CA DE 57 41 56 45 21 
+     68082 | ../spi.c          writetospi         | head : 88 
+     68092 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+     68103 | ../spi.c          writetospi         | head : 8D 
+     68113 | ../spi.c          writetospi         | data : 80 
+     68124 | ../spi.c          writetospi         | head : 8D 
+     68135 | ../spi.c          writetospi         | data : 82 
+     68145 | ../spi.c          readfromspi        | head : 0F 
+     68156 | ../spi.c          readfromspi        | data : F2 00 82 02 
+     68166 | ../cpp/DWM1000.cppdispatch           |  RX error 
+     68177 | ../spi.c          writetospi         | head : 8F 
+     68188 | ../spi.c          writetospi         | data : 00 90 27 24 
+     69200 | ../spi.c          writetospi         | head : 89 
+     69211 | ../spi.c          writetospi         | data : 41 88 3B CA DE 57 41 56 45 21 
+     69222 | ../spi.c          writetospi         | head : 88 
+     69233 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+     69243 | ../spi.c          writetospi         | head : 8D 
+     69254 | ../spi.c          writetospi         | data : 80 
+     69264 | ../spi.c          writetospi         | head : 8D 
+     69275 | ../spi.c          writetospi         | data : 82 
+     69286 | ../spi.c          readfromspi        | head : 0F 
+     69296 | ../spi.c          readfromspi        | data : F2 00 82 02 
+     69307 | ../cpp/DWM1000.cppdispatch           |  RX error 
+     69317 | ../spi.c          writetospi         | head : 8F 
+     69328 | ../spi.c          writetospi         | data : 00 90 27 24 
+     69960 | ../wifi/Tcp.cpp   listTcp            | / 3FFF22E0:3FFF2530 0 1/ 3FFF2590:0 2 0
+     70340 | ../spi.c          writetospi         | head : 89 
+     70351 | ../spi.c          writetospi         | data : 41 88 3C CA DE 57 41 56 45 21 
+     70362 | ../spi.c          writetospi         | head : 88 
+     70372 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+     70383 | ../spi.c          writetospi         | head : 8D 
+     70393 | ../spi.c          writetospi         | data : 80 
+     70404 | ../spi.c          writetospi         | head : 8D 
+     70415 | ../spi.c          writetospi         | data : 82 
+     70425 | ../spi.c          readfromspi        | head : 0F 
+     70436 | ../spi.c          readfromspi        | data : F2 00 82 02 
+     70446 | ../cpp/DWM1000.cppdispatch           |  RX error 
+     70457 | ../spi.c          writetospi         | head : 8F 
+     70467 | ../spi.c          writetospi         | data : 00 90 27 24 
+     71480 | ../spi.c          writetospi         | head : 89 
+     71491 | ../spi.c          writetospi         | data : 41 88 3D CA DE 57 41 56 45 21 
+     71502 | ../spi.c          writetospi         | head : 88 
+     71512 | ../spi.c          writetospi         | data : 0C 80 0A 00 
+     71523 | ../spi.c          writetospi         | head : 8D 
+     71533 | ../spi.c          writetospi         | data : 80 
+     71544 | ../spi.c          writetospi         | head : 8D 
+     71555 | ../spi.c          writetospi         | data : 82 
+     71565 | ../spi.c          readfromspi        | head : 0F 
+     71576 | ../spi.c          readfromspi        | data : F2 00 82 02 
+     71586 | ../cpp/DWM1000.cppdispatch           |  RX error 
+     71597 | ../spi.c          writetospi         | head : 8F 
+     71607 | ../spi.c          writetospi         | data : 00 90 27 24 

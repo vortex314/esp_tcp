@@ -35,7 +35,7 @@ typedef unsigned short uint16;
 #ifndef uint32
 #ifndef _DECA_UINT32_
 #define _DECA_UINT32_
-typedef unsigned long uint32;
+typedef unsigned int uint32;
 #endif
 #endif
 
@@ -56,9 +56,10 @@ typedef signed short int16;
 #ifndef int32
 #ifndef _DECA_INT32_
 #define _DECA_INT32_
-typedef signed long int32;
+typedef signed int int32;
 #endif
 #endif
+
 
 #define DWT_SUCCESS (0)
 #define DWT_ERROR   (-1)

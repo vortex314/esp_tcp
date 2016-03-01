@@ -24,6 +24,7 @@
  */
 
 #include "spi.h"
+#include "Sys.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -285,7 +286,7 @@ uint32 spi_transaction(uint8 spi_no, uint8 cmd_bits, uint16 cmd_data,
 	//disable MOSI, MISO, ADDR, COMMAND, DUMMY in case previously set.
 	CLEAR_PERI_REG_MASK(SPI_USER(spi_no),
 			SPI_USR_MOSI|SPI_USR_MISO|SPI_USR_COMMAND|SPI_USR_ADDR|SPI_USR_DUMMY);
-	SET_PERI_REG_MASK(SPI_USER(spi_no), SPI_DOUTDIN); // LMR set full duplex
+//	SET_PERI_REG_MASK(SPI_USER(spi_no), SPI_DOUTDIN); // LMR set full duplex
 
 	//enable functions based on number of bits. 0 bits = disabled.
 	//This is rather inefficient but allows for a very generic function.
@@ -406,20 +407,178 @@ void spi_set_bit_order(int order) {
  //    Parameters:
  //
  ///////////////////////////////////////////////////////////////////////////////*/
+/*
+ * big endian esp8266
+ * 0x12345678 becomes [0x78,0x56,0x34,0x12]
+ * SPI fills in same order bytes[3],[2],[1],[0]
+ *
+ * bytes read are written to : N+3,2,1,0, N+4+3,N+4+2
+ *
+ *
+ */
+//////////////////////////////////////////////////////////////////////////////////
+//
+//
+//
+/////////////////////////////////////////////////////////////////////////////////
+void bytesToWords(uint32_t* pW, uint8_t* pB, uint32_t length) {
+	typedef union {
+		uint32_t word;
+		uint8_t bytes[4];
+	} Map;
+	uint32_t byteIndex, wordIndex;
+	Map* pMap = (Map*) pW;
+	for (wordIndex = 0; wordIndex < (length / 4) + 1; wordIndex++) {
+		uint32_t fraction = length - wordIndex * 4;
+		if (fraction > 4)
+			fraction = 4;
+		pMap->word = 0;
+		for (byteIndex = 0; byteIndex < fraction; byteIndex++) {
+			pMap->bytes[4 - byteIndex] = pB[byteIndex];
+		}
+		pMap++;
+	}
+}
+//////////////////////////////////////////////////////////////////////////////////
+//
+//
+//
+/////////////////////////////////////////////////////////////////////////////////
+void wordsToBytes(uint32_t* pW, uint8_t* pB, uint32_t length) {
+	typedef union {
+		uint32_t word;
+		uint8_t bytes[4];
+	} Map;
+	uint32_t byteIndex, wordIndex;
+	Map* pMap = (Map*) pW;
+	for (wordIndex = 0; wordIndex < (length / 4) + 1; wordIndex++) {
+		uint32_t fraction = length - wordIndex * 4;
+		if (fraction > 4)
+			fraction = 4;
 
+		for (byteIndex = 0; byteIndex < fraction; byteIndex++) {
+			pB[byteIndex] = pMap->bytes[4 - byteIndex];
+		}
+		pMap++;
+	}
+}
+//////////////////////////////////////////////////////////////////////////////////
+//
+//
+//
+/////////////////////////////////////////////////////////////////////////////////
+const char* HEX_CHAR = "0123456789ABCDEF";
+char line[128];
+
+char* bytesToHex(uint8_t* pb, uint32_t len) {
+
+	uint32_t offset = 0;
+	while ((len > 0) && (offset < (sizeof(line) - 2))) {
+		line[offset++] = HEX_CHAR[((*pb) >> 4) & 0xF];
+		line[offset++] = HEX_CHAR[*pb & 0xF];
+		line[offset++] = ' ';
+		len--;
+		pb++;
+	}
+	line[offset++] = '\0';
+	return line;
+}
+//////////////////////////////////////////////////////////////////////////////////
+//
+//
+//
+/////////////////////////////////////////////////////////////////////////////////
 int writetospi(uint16 hLen, const uint8 *hbuff, uint32 bLen,
 		const uint8 *buffer) {
+
+	INFO("head : %s", bytesToHex(hbuff, hLen));
+	INFO("data : %s", bytesToHex(buffer, bLen));
+	uint32_t i;
+	spi_set_hw_cs(false);
+	spi_cs_select();
+	for (i = 0; i < hLen; i++)
+		spi_transaction(HSPI, 8, hbuff[i], 0, 0, 0, 0, 0, 0);
+	for (i = 0; i < bLen; i++)
+		spi_transaction(HSPI, 8, buffer[i], 0, 0, 0, 0, 0, 0);
+	os_delay_us(10);
+	spi_cs_deselect();
 	return 0;
 }
+//////////////////////////////////////////////////////////////////////////////////
+//
+//
+//
+/////////////////////////////////////////////////////////////////////////////////
+
 int readfromspi(uint16 hLen, const uint8 *hbuff, uint32 bLen, uint8 *buffer) {
+	uint32_t i;
+	INFO("head : %s", bytesToHex(hbuff, hLen));
+	spi_set_hw_cs(false);
+	spi_cs_select();
+	for (i = 0; i < hLen; i++)
+		spi_transaction(HSPI, 0, 0, 0, 0, 8, hbuff[i], 0, 0);
+	for (i = 0; i < bLen; i++)
+		buffer[i] = spi_transaction(HSPI, 0, 0, 0, 0, 0, 0, 8, 0);
+//	os_delay_us(100);
+	spi_cs_deselect();
+	INFO("data : %s", bytesToHex(buffer, bLen));
 	return 0;
 }
+//////////////////////////////////////////////////////////////////////////////////
+//
+//
+//
+/////////////////////////////////////////////////////////////////////////////////
 void spi_set_rate_low() {
-	spi_clock(HSPI, SPI_CLK_PREDIV, SPI_CLK_CNTDIV);
+	spi_clock(HSPI, SPI_CLK_PREDIV, 20);
 }
+//////////////////////////////////////////////////////////////////////////////////
+//
+//
+//
+/////////////////////////////////////////////////////////////////////////////////
 void spi_set_rate_high() {
 	spi_clock(HSPI, SPI_CLK_PREDIV, SPI_CLK_CNTDIV);
 }
 
 /*//////////////////////////////////////////////////////////////////////////////*/
+/*	uint32_t din_bits = hLen * 8;
+ uint32_t dout_bits = bLen * 8;
 
+ while (spi_busy(HSPI))
+ ; //wait for SPI to be ready
+
+ //########## Enable SPI Functions ##########//
+ //disable MOSI, MISO, ADDR, COMMAND, DUMMY in case previously set.
+ CLEAR_PERI_REG_MASK(SPI_USER(HSPI),
+ SPI_USR_MOSI|SPI_USR_MISO|SPI_USR_COMMAND|SPI_USR_ADDR|SPI_USR_DUMMY);
+ SET_PERI_REG_MASK(SPI_USER(HSPI), SPI_DOUTDIN); // LMR set full duplex
+ SET_PERI_REG_MASK(SPI_USER(HSPI), SPI_USR_MISO); //enable MISO function in SPI module
+ SET_PERI_REG_MASK(SPI_USER(HSPI), SPI_USR_MOSI); //enable MOSI function in SPI module
+
+ //########## Setup Bitlengths ##########//
+ WRITE_PERI_REG(SPI_USER1(HSPI),
+ ((dout_bits-1)&SPI_USR_MOSI_BITLEN)<<SPI_USR_MOSI_BITLEN_S | //Number of bits to Send
+ ((din_bits-1)&SPI_USR_MISO_BITLEN)<<SPI_USR_MISO_BITLEN_S);//Number of bits to receive
+
+ //########## Setup DOUT data ##########//
+ if (dout_bits) {
+ //copy data to W0
+ uint32_t offset = bytesToWord(SPI_W0(HSPI), hbuff, hLen);
+ bytesToWord(SPI_W0(HSPI), buffer,bLen);
+ }
+
+ SET_PERI_REG_MASK(SPI_CMD(HSPI), SPI_USR); //########## Begin SPI Transaction ##########//
+
+ //########## Return DIN data ##########//
+ wordsToBytes(SPI_W0(HSPI),);
+ if (din_bits) {
+ while (spi_busy(HSPI))
+ ;	//wait for SPI transaction to complete
+
+ if (READ_PERI_REG(SPI_USER(HSPI)) & SPI_RD_BYTE_ORDER) {
+ return READ_PERI_REG(SPI_W0(HSPI)) >> (32 - din_bits); //Assuming data in is written to MSB. TBC
+ } else {
+ return READ_PERI_REG(SPI_W0(HSPI)); //Read in the same way as DOUT is sent. Note existing contents of SPI_W0 remain unless overwritten!
+ }
+ }*/
