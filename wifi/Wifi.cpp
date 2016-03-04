@@ -63,32 +63,35 @@ bool Wifi::dispatch(Msg& msg) {
 		int erc;
 //	ets_delay_us(300000);
 		INFO("WIFI_INIT");
-//	if ( (erc = wifi_set_opmode(STATION_MODE) )){
+//		if ((erc = wifi_set_opmode(STATION_MODE))) {
 //		ets_delay_us(300000);
-		INFO("op mode %d", wifi_get_opmode());
-		INFO("op mode default %d", wifi_get_opmode_default());
-		INFO("phy mode %d", wifi_get_phy_mode());
+			INFO("op mode %d", wifi_get_opmode());
+			INFO("op mode default %d", wifi_get_opmode_default());
+			INFO("phy mode %d", wifi_get_phy_mode());
 //		 wifi_set_opmode(STATION_MODE);
-		wifi_set_opmode_current(STATION_MODE);
-		ets_delay_us(30000);
-		; // STATIONAP_MODE was STATION_MODE
-		if (wifi_set_phy_mode(PHY_MODE_11B)) { // true or false
-			os_memset(&stationConf, 0, sizeof(struct station_config));
-			ets_strncpy((char*) stationConf.ssid, _ssid,
-					sizeof(stationConf.ssid));
-			ets_strncpy((char*) stationConf.password, _pswd,
-					sizeof(stationConf.password));
-			stationConf.bssid_set = 0;
-			if (wifi_station_set_config_current(&stationConf)) {
-				INFO("3");
-				if (wifi_station_connect()) {
-					INFO("4");
-					goto DISCONNECTED;
-					//	wifi_station_set_auto_connect(TRUE);
+			wifi_set_opmode_current(STATION_MODE);
+			ets_delay_us(30000);
+			; // STATIONAP_MODE was STATION_MODE
+			if (wifi_set_phy_mode(PHY_MODE_11B)) { // true or false
+				os_memset(&stationConf, 0, sizeof(struct station_config));
+				ets_strncpy((char*) stationConf.ssid, _ssid,
+						sizeof(stationConf.ssid));
+				ets_strncpy((char*) stationConf.password, _pswd,
+						sizeof(stationConf.password));
+				INFO("%s:%s",stationConf.ssid,stationConf.password);
+				stationConf.bssid_set = 0;
+
+				wifi_station_set_config(&stationConf);
+				if (wifi_station_set_config_current(&stationConf)) {
+					INFO("3");
+					if (wifi_station_connect()) {
+						INFO("4");
+						goto DISCONNECTED;
+						//	wifi_station_set_auto_connect(TRUE);
+					}
 				}
-			}
+//			}
 		}
-//	}
 		//	wifi_station_set_auto_connect(FALSE);
 		INFO(" WIFI INIT failed , retrying... %d", erc);
 		goto DISCONNECTED;

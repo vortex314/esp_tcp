@@ -10,10 +10,20 @@
 
 #include "Config.h"
 
+#define PAGE_SIGNATURE 0xDEADBEEF
 #define PAGE_SIZE 0x1000
+
+#ifdef K512
 #define PAGE_START	0x78000
 #define PAGE_COUNT 4		// 78000,79000,7A000,7B000
-#define PAGE_SIGNATURE 0xDEADBEEF
+#endif
+
+#define M4
+#ifdef M4
+#define PAGE_START	0x3F8000
+#define PAGE_COUNT 4		// 3F8000,3F9000,3FA000,3FB000
+#endif
+
 
 typedef struct  {
 	union {

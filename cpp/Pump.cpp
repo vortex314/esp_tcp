@@ -26,6 +26,8 @@ extern "C" {
 #include "Wifi.h"
 #include "Sys.h"
 #include "Tcp.h"
+#include "MqttMsg.h"
+#include "Mqtt.h"
 #include "Gpio.h"
 #include "Cmd.h"
 #include <DWM1000.h>
@@ -40,6 +42,10 @@ TcpClient* tcpClient;
 TcpServer* tcpServer;
 Cmd* cmd;
 DWM1000* dwm1000;
+MqttMsg* mqttMsg;
+Mqtt* mqtt;
+MqttFramer* mqttFramer;
+
 
 Gpio* gpioReset;
 Gpio* gpioFlash;
@@ -131,11 +137,11 @@ extern "C" IROM void MsgInit() {
 	gpioReset = new Gpio(2); // D2, GPIO4 see http://esp8266.co.uk/tutorials/introduction-to-the-gpio-api/
 	gpioReset->setMode("OOD");
 
-	if ( wildcardMatch("put/aa/bb/stm32/cmd","put/*/*/stm32/cmd",true,'\0')) INFO("matched");
+//	if ( wildcardMatch("put/aa/bb/stm32/cmd","put/*/*/stm32/cmd",true,'\0')) INFO("matched");
 
-	new Router("put/*/*/stm32/cmd", &stm32);
+//	new Router("put/*/*/stm32/cmd", &stm32);
 	Cbor cbor(10);
-	Router::publish("put/aa/bb/stm32/cmd",cbor);
+//	Router::publish("put/aa/bb/stm32/cmd",cbor);
 
 	/*	for (int i=1;i<10;i++) {
 	 ets_delay_us(100000);
@@ -150,8 +156,16 @@ extern "C" IROM void MsgInit() {
 	CreateMutex(&mutex);
 	msg = new Msg(512);
 
-//	flash = new Flash();
-//	flash->init();
+	flash = new Flash();
+	flash->init();
+	char value[20];
+	flash->get(value,sizeof(value),"key","default");
+	INFO("value : %s ",value);
+//	flash->set("key","newValue1");
+//	flash->get(value,sizeof(value),"key","default");
+//	INFO("value : %s ",value);
+
+
 	INFO(" SSID : %s, PSWD : %s", (const char*) STA_SSID,
 			(const char*) STA_PASS);
 
@@ -164,8 +178,13 @@ extern "C" IROM void MsgInit() {
 	tcp = new Tcp(wifi);
 	INFO("tcp %X ", tcp);
 
-	slipFramer = new SlipFramer(tcp);
-	cmd = new Cmd(slipFramer);
+//	wifi = new Wifi();
+//	tcp = new Tcp(wifi);
+//	mqttFramer = new MqttFramer(tcp);
+//	mqtt = new Mqtt(mqttFramer);
+
+//	slipFramer = new SlipFramer(tcp);
+//	cmd = new Cmd(slipFramer);
 
 //	tcpClient = new TcpClient(wifi);
 //	tcpClient->config("iot.eclipse.org", 1883);
