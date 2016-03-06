@@ -46,7 +46,6 @@ MqttMsg* mqttMsg;
 Mqtt* mqtt;
 MqttFramer* mqttFramer;
 
-
 Gpio* gpioReset;
 Gpio* gpioFlash;
 
@@ -119,7 +118,7 @@ Tcp* tcp;
 class Stm32: public Subscriber {
 public:
 
-	Erc handle(Cbor& msg){
+	Erc handle(Cbor& msg) {
 		INFO("have been called");
 		return E_OK;
 	}
@@ -158,10 +157,23 @@ extern "C" IROM void MsgInit() {
 
 	flash = new Flash();
 	flash->init();
-	char value[20];
-	flash->get(value,sizeof(value),"key","default");
-	INFO("value : %s ",value);
-//	flash->set("key","newValue1");
+	char value[40], key[40];
+	flash->set("key","newValue1");
+	flash->set("mqtt/host","test.mosquitto.org");
+	flash->set("mqtt/port","1883");
+	flash->set("mqtt/prefix","limero/anchor1");
+	flash->get(value, sizeof(value), "key", "default");
+	INFO("value : %s ", value);
+	flash->init();
+	for (int i = 2; i < 100; i += 2) {
+		if (flash->get(key, sizeof(key), i))
+			break;
+		if (flash->get(value, sizeof(value), i + 1))
+			break;
+		INFO(" %d : %s = %s ", i, key, value);
+	}
+
+
 //	flash->get(value,sizeof(value),"key","default");
 //	INFO("value : %s ",value);
 
@@ -193,7 +205,7 @@ extern "C" IROM void MsgInit() {
 
 	gpioFlash = new Gpio(0);
 
-	dwm1000=new DWM1000();
+	dwm1000 = new DWM1000();
 
 	task_start();
 

@@ -11,11 +11,11 @@
 #include "Sys.h"
 class Config {
 public:
-	virtual ~Config(){};
-	IROM virtual bool set(const char* key, const char*s)=0;
-	IROM virtual bool set(const char* key, int value)=0;
-	IROM virtual void get(int& value, const char* key, int dflt)=0;
-	IROM virtual void get(char* value, int length, const char* key,
+	virtual ~Config() {
+	}
+
+	virtual bool set(const char* key, const char*s)=0;
+	virtual Erc get(char* value, int length, const char* key,
 			const char* dflt)=0;
 };
 
