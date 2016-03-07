@@ -13,7 +13,6 @@
 #include "Config.h"
 
 #define PAGE_SIGNATURE 0xDEADBEEF
-#define PAGE_SIZE 0x1000	// 16 * 256 = 4K
 
 #ifdef K512
 #define PAGE_START	0x78000
@@ -22,6 +21,7 @@
 
 #define M4
 #ifdef M4
+#define PAGE_SIZE 0x1000	// 16 * 256 = 4K
 #define PAGE_START	0x3F8000
 #define PAGE_COUNT 4		// 3F8000,3F9000,3FA000,3FB000
 #endif
@@ -37,41 +37,41 @@ typedef struct {
 	};
 } Quad;
 
-class Flash: public Config {
+class Flash {
 private:
-	uint32_t _pageIdx;
+
+	uint32_t _page;
 	uint32_t _sequence;
 	uint32_t _freePos;
 	uint16_t _keyMax;
+	uint16_t _highestIndex;
 
-	void findOrCreateActivePage();
+	Erc findOrCreateActivePage();
 	bool initializePage(uint32_t pageIdx, uint32_t sequence);
 	bool scanPage(uint32_t pageIdx);
 
 	bool isValidPage(uint32_t pageIdx, uint32_t& sequence);
-	uint32_t nextPage(uint32_t pageIdx);
-	bool loadItem(uint16_t& offset, uint16_t& index, uint16_t& length);
-	uint16_t findItem(uint16_t index);
-	bool writeItem(uint16_t sequence, uint8_t* start, uint32_t length);
-	uint16_t findFreeBegin();
-
-	int findKey(const char*s);
-	int findOrCreateKey(const char*s);
-
-	bool loadItem(uint16_t offset, uint8_t* start, uint16_t& length);
 
 public:
 	Flash();
 	~Flash();
 	void init();
-	static Erc read(uint32_t address, uint8_t* dest);
-	static Erc read(uint32_t address, uint32_t* dest);
-	static Erc write(uint32_t address, uint32_t w);
-	bool set(const char* key, const char*s);
-	void get(int& value, const char* key, int dflt);
-	Erc get(char* value, int length, const char* key, const char* dflt);
-	Erc get(char* value, int maxLength,uint32_t index);
-	static uint32_t pageAddress(uint32_t pageIdx);
+
+	Erc write(uint32_t address,uint32_t word);
+	Erc read(uint32_t address,uint32_t* word);
+	Erc read(uint32_t address,uint8_t* byte);
+	Erc initPage(uint32_t sequence);
+
+	Erc put(uint16_t index,uint8_t* data,uint16_t length);
+	Erc get(uint16_t index,uint8_t* data,uint16_t* maxLength);
+	Erc findIndex(uint16_t index,uint32_t* address);
+	Erc findValue(const char* value,uint16_t* index);
+
+	Erc put(const char* key,const char* value);
+	Erc put(const char* key,uint8_t* value,uint16_t length);
+	Erc get(const char* key,uint8_t* value,uint16_t* maxLength);
+	Erc get(const char* key,char* value,uint16_t* maxLength);
+
 };
 
 #endif /* FLASH_H_ */

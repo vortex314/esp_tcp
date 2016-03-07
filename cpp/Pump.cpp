@@ -158,7 +158,22 @@ extern "C" IROM void MsgInit() {
 	flash = new Flash();
 	flash->init();
 	char value[40], key[40];
-	flash->set("key","newValue1");
+//	flash->put((uint16_t)0,(uint8_t*)"mqtt/port",9);
+//	flash->put((uint16_t)1,(uint8_t*)"test.mosquitto.org",18);
+	uint16_t length=sizeof(key);
+	flash->get((uint16_t)0,(uint8_t*)key,&length);
+	key[length]=0;
+	INFO(" key : %s ",key);
+	length=sizeof(value);
+	flash->get((uint16_t)1,(uint8_t*)value,&length);
+	value[length]=0;
+	INFO(" value : %s ",value);
+	length=sizeof(value);
+	flash->get("mqtt/port",value,&length);
+	INFO(" value : %s ",value);
+
+/*	char value[40], key[40];
+	flash->put("key","newValue1");
 	flash->set("mqtt/host","test.mosquitto.org");
 	flash->set("mqtt/port","1883");
 	flash->set("mqtt/prefix","limero/anchor1");
@@ -172,7 +187,7 @@ extern "C" IROM void MsgInit() {
 			break;
 		INFO(" %d : %s = %s ", i, key, value);
 	}
-
+*/
 
 //	flash->get(value,sizeof(value),"key","default");
 //	INFO("value : %s ",value);
