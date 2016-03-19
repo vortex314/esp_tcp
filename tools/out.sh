@@ -10,8 +10,8 @@ PROJECT=$1
 echo "---------------" $PROJECT "------------------------"
 ./reset $TTY
 ../tools/esptool.py --port $TTY  read_mac
-../tools/esptool.py --port $TTY  read_flash  0x3F8000 0x100 dump.bin
-od -x dump.bin
+../tools/esptool.py --port $TTY  read_flash  0x3F8000 0x100 dump.bin 
+od --endian=little -X -c dump.bin > $LOG
 # ../tools/esptool.py --port $TTY  erase_flash
 ../tools/esptool.py elf2image ../Debug/$PROJECT
 ./esptool2 -debug -bin -boot2 -1024 -dio -40 ../Debug/$PROJECT $PROJECT.bin .text .data .rodata # was 4096

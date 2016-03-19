@@ -34,7 +34,7 @@ extern "C" {
 
 mutex_t mutex;
 
-Flash* flash;
+Flash* flash = 0;
 LedBlink *led;
 Msg* msg;
 Wifi* wifi;
@@ -115,6 +115,7 @@ SlipFramer* slipFramer;
 Tcp* tcp;
 #include <Wildcard.h>
 #include <Router.h>
+#include <Json.h>
 class Stm32: public Subscriber {
 public:
 
@@ -124,7 +125,75 @@ public:
 	}
 };
 Stm32 stm32;
+#include <Base64.h>
 
+//Enum Cmd(STRINGS, Values);
+
+void getConfig(Str& dest, const char* key, const char* defaultValue) {
+	if (flash == 0) {
+		flash = new Flash();
+		flash->init();
+	};
+	dest.clear();
+	uint16_t len = dest.capacity();
+	if (flash->get(key, dest.data(), &len) == E_OK) {
+		INFO("%s : %d", dest.data(), len);
+		dest.length(len);
+		dest.c_str();
+		INFO("%s : %d", dest.data(), len);
+		return;
+	}
+	dest = defaultValue;
+}
+
+
+void getConfig(uint32_t* dest, const char* key, uint32_t defaultValue) {
+	if (flash == 0) {
+		flash = new Flash();
+		flash->init();
+	};
+	uint16_t len = 4;
+	if (flash->get(key, (uint8_t*) dest, &len) == E_OK) {
+		INFO("%d : %d", *dest, len);
+		return;
+	}
+	*dest = defaultValue;
+}
+
+/*
+ char value[40], key[40];
+ //	flash->put((uint16_t)0,(uint8_t*)"mqtt/port",9);
+ //	flash->put((uint16_t)1,(uint8_t*)"test.mosquitto.org",18);
+ uint16_t length = sizeof(key);
+ flash->get((uint16_t) 0, (uint8_t*) key, &length);
+ key[length] = 0;
+ INFO(" key : %s ", key);
+ length = sizeof(value);
+ flash->get((uint16_t) 1, (uint8_t*) value, &length);
+ value[length] = 0;
+ INFO(" value : %s ", value);
+ length = sizeof(value);
+ flash->get("mqtt/port", value, &length);
+ INFO(" value : %s ", value);
+ char value[40], key[40];
+ flash->put("key","newValue1");
+ flash->set("mqtt/host","test.mosquitto.org");
+ flash->set("mqtt/port","1883");
+ flash->set("mqtt/prefix","limero/anchor1");
+ flash->get(value, sizeof(value), "key", "default");
+ INFO("value : %s ", value);
+ flash->init();
+ for (int i = 2; i < 100; i += 2) {
+ if (flash->get(key, sizeof(key), i))
+ break;
+ if (flash->get(value, sizeof(value), i + 1))
+ break;
+ INFO(" %d : %s = %s ", i, key, value);
+ }
+ */
+
+//	flash->get(value,sizeof(value),"key","default");
+//	INFO("value : %s ",value);
 extern "C" void deca_example();
 
 extern "C" IROM void MsgInit() {
@@ -135,6 +204,53 @@ extern "C" IROM void MsgInit() {
 //	initPins();
 	gpioReset = new Gpio(2); // D2, GPIO4 see http://esp8266.co.uk/tutorials/introduction-to-the-gpio-api/
 	gpioReset->setMode("OOD");
+	Json json(100);
+	Str str(30);
+	str = "Hello World";
+	uint8_t array[] = { 0, 1, 2, 0x80, 0xFF };
+	Bytes bytes(array, sizeof(array));
+	Str str2(30);
+
+	Base64::encode(str, bytes);
+	bytes.toHex(str2.clear());
+
+	INFO("%s:%s", str.c_str(), str2.c_str());
+
+	Base64::decode(bytes, str);
+	bytes.toHex(str2.clear());
+
+	INFO("%s:%s", str.c_str(), str2.c_str());
+
+	json.addMap().addKey("id").add(1234).addKey("cmd").add("write").addKey(
+			"data").add(str.c_str());
+	json.addKey("object").addMap().addKey("sub1").add(true);
+	json.addKey("arr").addArray().add(1).add("hi").addBreak().addBreak().addBreak();
+
+	if (json.parse() != E_OK)
+		INFO(" parsing failed for %s ", json.c_str());
+
+	json.clear().append("{\"key\":1234,\"cmd\":{\"key2\":11111}}");
+
+	INFO("%s", json.c_str());
+
+	json.parse();
+	if (json.findKey("cmd")) {
+		json.mapToken(str);
+		INFO("cmd : %s", str.c_str());
+		if (json.findKey("key2")) {
+			Str str(0);
+			json.mapToken(str);
+			INFO("key2 : %s", str.c_str());
+		}
+	}
+	json.rewind();
+	if (json.findKey("key")) {
+		json.mapToken(str);
+		INFO("key : %s", str.c_str());
+	}
+
+	getConfig(str, "mqtt/port", "test.eclipse.org");
+	INFO(" config %s : %d ", str.data(), str.length());
 
 //	if ( wildcardMatch("put/aa/bb/stm32/cmd","put/*/*/stm32/cmd",true,'\0')) INFO("matched");
 
@@ -155,49 +271,16 @@ extern "C" IROM void MsgInit() {
 	CreateMutex(&mutex);
 	msg = new Msg(512);
 
-	flash = new Flash();
-	flash->init();
-	char value[40], key[40];
-//	flash->put((uint16_t)0,(uint8_t*)"mqtt/port",9);
-//	flash->put((uint16_t)1,(uint8_t*)"test.mosquitto.org",18);
-	uint16_t length=sizeof(key);
-	flash->get((uint16_t)0,(uint8_t*)key,&length);
-	key[length]=0;
-	INFO(" key : %s ",key);
-	length=sizeof(value);
-	flash->get((uint16_t)1,(uint8_t*)value,&length);
-	value[length]=0;
-	INFO(" value : %s ",value);
-	length=sizeof(value);
-	flash->get("mqtt/port",value,&length);
-	INFO(" value : %s ",value);
 
-/*	char value[40], key[40];
-	flash->put("key","newValue1");
-	flash->set("mqtt/host","test.mosquitto.org");
-	flash->set("mqtt/port","1883");
-	flash->set("mqtt/prefix","limero/anchor1");
-	flash->get(value, sizeof(value), "key", "default");
-	INFO("value : %s ", value);
-	flash->init();
-	for (int i = 2; i < 100; i += 2) {
-		if (flash->get(key, sizeof(key), i))
-			break;
-		if (flash->get(value, sizeof(value), i + 1))
-			break;
-		INFO(" %d : %s = %s ", i, key, value);
-	}
-*/
+	Str SSID(50);
+	Str PASS(100);
 
-//	flash->get(value,sizeof(value),"key","default");
-//	INFO("value : %s ",value);
-
-
-	INFO(" SSID : %s, PSWD : %s", (const char*) STA_SSID,
-			(const char*) STA_PASS);
+	getConfig(SSID, "wifi/ssid", (const char*) STA_SSID);
+	getConfig(PASS, "wifi/pswd", (const char*) STA_PASS);
+	INFO(" SSID : %s, PSWD : %s", SSID.c_str(),PASS.c_str());
 
 	wifi = new Wifi();
-	wifi->config((const char*) STA_SSID, (const char*) STA_PASS);
+	wifi->config(SSID.c_str(), PASS.c_str());
 
 	tcpServer = new TcpServer(wifi);
 	tcpServer->config(0, 2323);
