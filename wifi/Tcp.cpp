@@ -146,7 +146,9 @@ void Tcp::logConn(const char* s, void* arg) {
 
 void Tcp::registerCb(struct espconn* pconn) {
 
+
 	pconn->reverse = this;
+	logConn(__FUNCTION__, arg);
 	espconn_regist_time(pconn, 1000, 1);		// disconnect after 1000 sec
 	espconn_regist_connectcb(pconn, connectCb);
 	espconn_regist_disconcb(pconn, disconnectCb);
@@ -233,7 +235,8 @@ void Tcp::connectCb(void* arg) {
 
 		espconn_set_opt(pconn, ESPCONN_NODELAY);
 		espconn_set_opt(pconn, ESPCONN_COPY);
-		espconn_set_keepalive(pconn, ESPCONN_KEEPALIVE, (void*) 1000);
+		espconn_set_keepalive(pconn, ESPCONN_KEEPALIVE, (void*) 1);
+		espconn_set_keepalive(pconn, ESPCONN_KEEPIDLE, (void*) 1);
 		espconn_regist_time(pconn, 1000, 0);
 
 		Msg::publish(pTcp, SIG_CONNECTED);
@@ -499,6 +502,7 @@ _conn->proto.tcp = (esp_tcp *) malloc(sizeof(esp_tcp));
 ets_memset(_conn->proto.tcp, 0, sizeof(esp_tcp));
 _local_port = 23;
 _conn->reverse = (Tcp*) this;
+espconn_regist_time
 logConn(__FUNCTION__, _conn);
 _connected = true;	// to allocate TCP instance
 }

@@ -17,7 +17,7 @@ Cmd::~Cmd() {
 void Cmd::init(){
 }
 
-
+#include <Json.h>
 #include <Message.h>
 
 IROM bool Cmd::dispatch(Msg& msg) {
@@ -27,17 +27,17 @@ IROM bool Cmd::dispatch(Msg& msg) {
 	while (true) {
 		PT_YIELD_UNTIL(msg.is(_stream, SIG_RXD) );
 		if (msg.is(_stream, SIG_RXD)) {
+
 			INFO(" Message received ");
-			uint32_t messageId=0;
-			msg.rewind();
-			Message request(0);
+			Json request(0);
 			msg.rewind().getMapped(request);
-			request.getField(Message::MESSAGE_ID, messageId);
-			INFO("Processing ... ");
+			INFO("%s",request.c_str());
+			request.findKey("id");
+
 			//TODO handle cmd
-			Message response(200);
-			response.addField(Message::MESSAGE_ID, messageId);
-			_stream->write(response);
+			Json response(200);
+			response.addMap().addKey("error").add(E_OK).addBreak();
+			_stream->send(response);
 		}
 	}
 PT_END()

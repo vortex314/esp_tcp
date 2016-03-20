@@ -293,8 +293,8 @@ extern "C" IROM void MsgInit() {
 //	mqttFramer = new MqttFramer(tcp);
 //	mqtt = new Mqtt(mqttFramer);
 
-//	slipFramer = new SlipFramer(tcp);
-//	cmd = new Cmd(slipFramer);
+	slipFramer = new SlipFramer(tcp);
+	cmd = new Cmd(slipFramer);
 
 //	tcpClient = new TcpClient(wifi);
 //	tcpClient->config("iot.eclipse.org", 1883);
@@ -303,7 +303,7 @@ extern "C" IROM void MsgInit() {
 
 	gpioFlash = new Gpio(0);
 
-	dwm1000 = new DWM1000();
+//	dwm1000 = new DWM1000();
 
 	task_start();
 
