@@ -19,6 +19,7 @@ void Cmd::init(){
 
 #include <Json.h>
 #include <Message.h>
+#include <Log.h>
 
 IROM bool Cmd::dispatch(Msg& msg) {
 	PT_BEGIN()
@@ -31,7 +32,8 @@ IROM bool Cmd::dispatch(Msg& msg) {
 			INFO(" Message received ");
 			Json request(0);
 			msg.rewind().getMapped(request);
-			INFO("%s",request.c_str());
+			Log::log().append(request);
+			Log::log().flush();
 			request.findKey("id");
 
 			//TODO handle cmd
