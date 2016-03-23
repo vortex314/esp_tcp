@@ -73,13 +73,14 @@ private:
 	uint32_t _overflowTxd;
 	uint32_t _overflowRxd;
 	TcpType _type;
+	uint64_t _lastRxd;
 
 public:
 
 	IpAddress _remote_ip;
-	IROM Tcp(Wifi* wifi); //
-	IROM Tcp(Wifi* wifi, struct espconn* conn); //
-	IROM ~Tcp(); //
+	 Tcp(Wifi* wifi); //
+	 Tcp(Wifi* wifi, struct espconn* conn); //
+	 ~Tcp(); //
 	inline void setType(TcpType t){
 		_type=t;
 	}
@@ -87,56 +88,57 @@ public:
 		return _type;
 	}
 
-	IROM void logConn(const char* s, void *arg);
-	void IROM loadEspconn(struct espconn* conn);
+	 void logConn(const char* s, void *arg);
+	void  loadEspconn(struct espconn* conn);
 
-	void IROM connect();
-	void IROM connect(const char* host, uint16_t port);
+	void  connect();
+	void  connect(const char* host, uint16_t port);
 
-	void IROM disconnect();
+	void  disconnect();
 
-	IROM void registerCb(struct espconn* pconn);	//
-	static IROM void globalInit(Wifi* wifi, uint32_t maxConnections);
-	static IROM Tcp* findTcp(struct espconn* pconn);
-	static IROM void listTcp();
-	static IROM Tcp* findFreeTcp(struct espconn* pconn);
-	static IROM bool match(struct espconn* pconn, Tcp* pTcp); //
-	void IROM reg();
-	void IROM unreg();
-	uint32_t IROM count(); //
-	uint32_t IROM used(); //
-	static IROM void connectCb(void* arg);	//
-	IROM static void reconnectCb(void* arg, int8 err); // mqtt_tcpclient_recon_cb(void *arg, sint8 errType)
-	IROM static void disconnectCb(void* arg); //
-	IROM static void dnsFoundCb(const char *name, ip_addr_t *ipaddr, void *arg); //
-	IROM static void recvCb(void* arg, char *pdata, unsigned short len); //
-	IROM static void sendCb(void* arg); //
-	IROM static void writeFinishCb(void* arg); //
+	 void registerCb(struct espconn* pconn);	//
+	static  void globalInit(Wifi* wifi, uint32_t maxConnections);
+	static  Tcp* findTcp(struct espconn* pconn);
+	static  void listTcp();
+	static  Tcp* findFreeTcp(struct espconn* pconn);
+	static  bool match(struct espconn* pconn, Tcp* pTcp); //
+	void  reg();
+	void  unreg();
+	uint32_t  count(); //
+	uint32_t  used(); //
+	static  void connectCb(void* arg);	//
+	 static void reconnectCb(void* arg, int8 err); // mqtt_tcpclient_recon_cb(void *arg, sint8 errType)
+	 static void disconnectCb(void* arg); //
+	 static void dnsFoundCb(const char *name, ip_addr_t *ipaddr, void *arg); //
+	 static void recvCb(void* arg, char *pdata, unsigned short len); //
+	 static void sendCb(void* arg); //
+	 static void writeFinishCb(void* arg); //
 
-	IROM void send();	//
-	IROM Erc write(Bytes& bytes); //
-	IROM Erc write(uint8_t b); //
-	IROM Erc write(uint8_t* pb, uint32_t length); //
-	IROM bool hasData(); //
-	IROM bool hasSpace(); //
-	IROM uint8_t read(); //
-	virtual IROM bool dispatch(Msg& msg); //
-	IROM bool isConnected(); //
+	 void send();	//
+	 Erc write(Bytes& bytes); //
+	 Erc write(uint8_t b); //
+	 Erc write(uint8_t* pb, uint32_t length); //
+	 bool hasData(); //
+	 bool hasSpace(); //
+	 uint8_t read(); //
+	virtual  bool dispatch(Msg& msg); //
+	 bool isConnected(); //
 
 };
 
 class TcpServer: public Tcp {
 public:
-	IROM TcpServer(Wifi* wifi);
-	bool IROM dispatch(Msg& msg); //
-	Erc IROM config(uint32_t maxConnections, uint16_t port);
+	 TcpServer(Wifi* wifi);
+	virtual bool  dispatch(Msg& msg); //
+	Erc  config(uint32_t maxConnections, uint16_t port);
 	void listen();
 };
 
 class TcpClient: public Tcp {
 public:
-	IROM TcpClient(Wifi* wifi);IROM bool dispatch(Msg& msg); //
-	void IROM config(const char* host, uint16_t port);
+	 TcpClient(Wifi* wifi);
+	 virtual bool dispatch(Msg& msg); //
+	void  config(const char* host, uint16_t port);
 
 };
 

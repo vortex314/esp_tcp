@@ -13,6 +13,7 @@ Tcp* Tcp::_first = 0;
 
 Tcp::Tcp(Wifi* wifi) :
 		Handler("Tcp"), _txd(256), _buffer(100) {
+	INFO("this : %X ",this);
 	_type = LIVE;
 	_next = 0;
 	_conn = 0;
@@ -26,6 +27,7 @@ Tcp::Tcp(Wifi* wifi) :
 	_overflowTxd = 0;
 	_connections = 0;
 	_local_port = 0;
+	_lastRxd = Sys::millis();
 	reg();
 }
 
@@ -60,23 +62,23 @@ void Tcp::unreg() {
 	}
 }
 /*
-uint32_t Tcp::used() {
-	uint32_t count = 0;
-	Tcp* cursor;
-	for (cursor = _first; cursor != 0; cursor = cursor->_next) {
-		if (cursor->isConnected())
-			count++;
-	}
-	return count;
-}
+ uint32_t Tcp::used() {
+ uint32_t count = 0;
+ Tcp* cursor;
+ for (cursor = _first; cursor != 0; cursor = cursor->_next) {
+ if (cursor->isConnected())
+ count++;
+ }
+ return count;
+ }
 
-uint32_t Tcp::count() {
-	uint32_t count = 0;
-	Tcp* cursor;
-	for (cursor = _first; cursor != 0; cursor = cursor->_next)
-		count++;
-	return count;
-}*/
+ uint32_t Tcp::count() {
+ uint32_t count = 0;
+ Tcp* cursor;
+ for (cursor = _first; cursor != 0; cursor = cursor->_next)
+ count++;
+ return count;
+ }*/
 
 bool Tcp::match(struct espconn* pconn, Tcp* pTcp) {
 	/*	INFO(" compare %X:%d : %X:%d ", *((uint32_t* )pTcp->_remote_ip.b),
@@ -135,9 +137,7 @@ void Tcp::logConn(const char* s, void* arg) {
 	struct espconn* pconn = (struct espconn*) arg;
 	if (pconn) {
 //	INFO(" %X:%X %X", this, pconn, pconn->reverse);
-		INFO(
-				" %s - tcp :  %x  , ip : %d.%d.%d.%d:%d  ",
-				s,  pconn->reverse,
+		INFO(" %s - tcp :  %x  , ip : %d.%d.%d.%d:%d  ", s, pconn->reverse,
 				pconn->proto.tcp->remote_ip[0], pconn->proto.tcp->remote_ip[1],
 				pconn->proto.tcp->remote_ip[2], pconn->proto.tcp->remote_ip[3],
 				pconn->proto.tcp->remote_port);
@@ -145,7 +145,6 @@ void Tcp::logConn(const char* s, void* arg) {
 }
 
 void Tcp::registerCb(struct espconn* pconn) {
-
 
 	pconn->reverse = this;
 	logConn(__FUNCTION__, pconn);
@@ -171,8 +170,6 @@ void Tcp::registerCb(struct espconn* pconn) {
  }*/
 
 uint8_t StrToIP(const char* str, void *ip);
-
-
 
 Erc Tcp::write(Bytes& bytes) {
 	return write(bytes.data(), bytes.length());
@@ -323,6 +320,7 @@ void Tcp::recvCb(void* arg, char *pdata, unsigned short len) {
 	Tcp *pTcp = findTcp(pconn);
 	if (pTcp) {
 		pTcp->_bytesRxd += len;
+		pTcp->_lastRxd = Sys::millis();
 		Bytes bytes;
 		bytes.map((uint8_t*) pdata, (uint32_t) len);
 
@@ -330,7 +328,7 @@ void Tcp::recvCb(void* arg, char *pdata, unsigned short len) {
 		if (erc = Msg::queue().putf("uuB", pTcp, SIG_RXD, &bytes)) {
 			pTcp->_overflowRxd++;
 		}
-		INFO("erc %d bytes.length %d pTcp %X ",erc,bytes.length(),pTcp);
+		INFO("erc %d bytes.length %d pTcp %X ", erc, bytes.length(), pTcp);
 		pTcp->logConn(__FUNCTION__, arg);
 		return;
 	} else {
@@ -415,18 +413,25 @@ bool Tcp::dispatch(Msg& msg) {
 			if (isConnected()) {
 				goto CONNECTED;
 			}
-			if ( timeout()){
-//				while(1);
+			if (timeout()) {
+
 			}
 		}
 	}
 	CONNECTED: {
 		while (true) {
+			timeout(5000);
 			PT_YIELD_UNTIL(!isConnected() || !_wifi->isConnected());
+			if ( timeout()) INFO("timeout tcp");
 			if (!_wifi->isConnected())
 				goto WIFI_DISCONNECTED;
 			if (!isConnected())
 				goto CONNECTING;
+			if (timeout()) {
+				INFO("%d:%d", _lastRxd, Sys::millis());
+				if (_lastRxd > (Sys::millis() + 10000))
+					disconnect();
+			}
 		}
 	}
 	;
@@ -437,6 +442,7 @@ return true;
 
 TcpClient::TcpClient(Wifi* wifi) :
 	Tcp(wifi) {
+	INFO("this : %X ",this);
 setType(CLIENT);
 _conn = new (struct espconn);
 strcpy(_host, "");
@@ -478,7 +484,10 @@ CONNECTING: {
 }
 CONNECTED: {
 	while (true) {
+		timeout(5000);
 		PT_YIELD_UNTIL(!isConnected() || !_wifi->isConnected());
+		if ( timeout()) INFO("timeout client");
+
 		if (!_wifi->isConnected())
 			goto WIFI_DISCONNECTED;
 		if (!isConnected())
@@ -493,6 +502,8 @@ return true;
 
 TcpServer::TcpServer(Wifi* wifi) :
 Tcp(wifi) {
+	INFO("this : %X ",this);
+
 setType(SERVER);
 _conn = new (struct espconn);
 ets_memset(_conn, 0, sizeof(_conn));
