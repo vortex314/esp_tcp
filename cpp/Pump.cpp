@@ -93,17 +93,7 @@ void IROM tick_timer_start() {
 	os_timer_arm(&pumpTimer, 10, 1);
 }
 
-//-----------------------------------------------------------------------------------
-//		initialize global variables
-//-----------------------------------------------------------------------------------
-extern void (*__init_array_start)(void);
-extern void (*__init_array_end)(void);
 
-static void do_global_ctors(void) {
-	void (**p)(void);
-	for (p = &__init_array_start; p != &__init_array_end; ++p)
-		(*p)();
-}
 //----------------------------------------------------------------------------------
 
 char deviceName[40];
@@ -146,7 +136,6 @@ void getConfig(Str& dest, const char* key, const char* defaultValue) {
 	dest = defaultValue;
 }
 
-
 void getConfig(uint32_t* dest, const char* key, uint32_t defaultValue) {
 	if (flash == 0) {
 		flash = new Flash();
@@ -162,7 +151,7 @@ void getConfig(uint32_t* dest, const char* key, uint32_t defaultValue) {
 
 /*
  char value[40], key[40];
- //	flash->put((uint16_t)0,(uint8_t*)"mqtt/port",9);
+ //	flash->put((ui	SysLogInit();nt16_t)0,(uint8_t*)"mqtt/port",9);
  //	flash->put((uint16_t)1,(uint8_t*)"test.mosquitto.org",18);
  uint16_t length = sizeof(key);
  flash->get((uint16_t) 0, (uint8_t*) key, &length);
@@ -196,9 +185,11 @@ void getConfig(uint32_t* dest, const char* key, uint32_t defaultValue) {
 //	INFO("value : %s ",value);
 extern "C" void deca_example();
 
+#include <Logger.h>
+
 extern "C" IROM void MsgInit() {
 
-	do_global_ctors();
+//	do_global_ctors();
 //	deca_example();
 
 //	initPins();
@@ -211,15 +202,16 @@ extern "C" IROM void MsgInit() {
 	Bytes bytes(array, sizeof(array));
 	Str str2(30);
 
-	Base64::encode(str, bytes);
-	bytes.toHex(str2.clear());
+	LOG<< " Bytes " << bytes << FLUSH;
+	LOG<< " Str " << str << FLUSH;
 
-	INFO("%s:%s", str.c_str(), str2.c_str());
+	Base64::encode(str, bytes);
+
+	LOG<< str << ":"<< bytes;
 
 	Base64::decode(bytes, str);
-	bytes.toHex(str2.clear());
 
-	INFO("%s:%s", str.c_str(), str2.c_str());
+	LOG<< str << ":"<< bytes;
 
 	json.addMap().addKey("id").add(1234).addKey("cmd").add("write").addKey(
 			"data").add(str.c_str());
@@ -271,13 +263,12 @@ extern "C" IROM void MsgInit() {
 	CreateMutex(&mutex);
 	msg = new Msg(512);
 
-
 	Str SSID(50);
 	Str PASS(100);
 
 	getConfig(SSID, "wifi/ssid", (const char*) STA_SSID);
 	getConfig(PASS, "wifi/pswd", (const char*) STA_PASS);
-	INFO(" SSID : %s, PSWD : %s", SSID.c_str(),PASS.c_str());
+	LOG<< " SSID : "<< SSID  << ", PSWD : " << PASS << FLUSH;
 
 	wifi = new Wifi();
 	wifi->config(SSID.c_str(), PASS.c_str());

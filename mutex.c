@@ -13,7 +13,7 @@ void ICACHE_FLASH_ATTR CreateMutex(mutex_t *mutex) {
 	*mutex = 1;
 }
 
-extern uint32_t conflicts;
+ uint32_t conflicts;
 // try to get a mutex
 // returns true if successful, false if mutex not free
 // as the esp8266 doesn't support the atomic S32C1I instruction

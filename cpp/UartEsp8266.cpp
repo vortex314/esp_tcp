@@ -13,6 +13,7 @@
  */
 
 #include "UartEsp8266.h"
+#include <Logger.h>
 extern "C" {
 #include "uart.h"
 void uart_tx_intr_enable(uint32_t uartno);

@@ -6,6 +6,7 @@
  */
 
 #include <DWM1000.h>
+#include <Logger.h>
 
 extern "C" {
 #include <spi.h>

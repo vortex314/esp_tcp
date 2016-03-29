@@ -44,10 +44,8 @@ typedef union {
 
 class Tcp: public Handler, public Stream {
 public:
-	typedef enum  {
-		SERVER,
-		CLIENT,
-		LIVE
+	typedef enum {
+		SERVER, CLIENT, LIVE
 	} TcpType;
 protected:
 	Wifi* _wifi;
@@ -78,67 +76,66 @@ private:
 public:
 
 	IpAddress _remote_ip;
-	 Tcp(Wifi* wifi); //
-	 Tcp(Wifi* wifi, struct espconn* conn); //
-	 ~Tcp(); //
-	inline void setType(TcpType t){
-		_type=t;
+	Tcp(Wifi* wifi); //
+	Tcp(Wifi* wifi, struct espconn* conn); //
+	~Tcp(); //
+	inline void setType(TcpType t) {
+		_type = t;
 	}
-	inline  TcpType getType(){
+	inline TcpType getType() {
 		return _type;
 	}
 
-	 void logConn(const char* s, void *arg);
-	void  loadEspconn(struct espconn* conn);
+	void logConn(const char* s, void *arg);
+	void loadEspconn(struct espconn* conn);
 
-	void  connect();
-	void  connect(const char* host, uint16_t port);
+	void disconnect();
 
-	void  disconnect();
+	void registerCb(struct espconn* pconn);	//
+	static void globalInit(Wifi* wifi, uint32_t maxConnections);
+	static Tcp* findTcp(struct espconn* pconn);
+	static void listTcp();
+	static Tcp* findFreeTcp(struct espconn* pconn);
+	static bool match(struct espconn* pconn, Tcp* pTcp); //
+	void reg();
+	void unreg();
+	uint32_t count(); //
+	uint32_t used(); //
+	static void connectCb(void* arg);	//
+	static void reconnectCb(void* arg, int8 err); // mqtt_tcpclient_recon_cb(void *arg, sint8 errType)
+	static void disconnectCb(void* arg); //
+	static void dnsFoundCb(const char *name, ip_addr_t *ipaddr, void *arg); //
+	static void recvCb(void* arg, char *pdata, unsigned short len); //
+	static void sendCb(void* arg); //
+	static void writeFinishCb(void* arg); //
 
-	 void registerCb(struct espconn* pconn);	//
-	static  void globalInit(Wifi* wifi, uint32_t maxConnections);
-	static  Tcp* findTcp(struct espconn* pconn);
-	static  void listTcp();
-	static  Tcp* findFreeTcp(struct espconn* pconn);
-	static  bool match(struct espconn* pconn, Tcp* pTcp); //
-	void  reg();
-	void  unreg();
-	uint32_t  count(); //
-	uint32_t  used(); //
-	static  void connectCb(void* arg);	//
-	 static void reconnectCb(void* arg, int8 err); // mqtt_tcpclient_recon_cb(void *arg, sint8 errType)
-	 static void disconnectCb(void* arg); //
-	 static void dnsFoundCb(const char *name, ip_addr_t *ipaddr, void *arg); //
-	 static void recvCb(void* arg, char *pdata, unsigned short len); //
-	 static void sendCb(void* arg); //
-	 static void writeFinishCb(void* arg); //
-
-	 void send();	//
-	 Erc write(Bytes& bytes); //
-	 Erc write(uint8_t b); //
-	 Erc write(uint8_t* pb, uint32_t length); //
-	 bool hasData(); //
-	 bool hasSpace(); //
-	 uint8_t read(); //
-	virtual  bool dispatch(Msg& msg); //
-	 bool isConnected(); //
+	void send();	//
+	Erc write(Bytes& bytes); //
+	Erc write(uint8_t b); //
+	Erc write(uint8_t* pb, uint32_t length); //
+	bool hasData(); //
+	bool hasSpace(); //
+	uint8_t read(); //
+	virtual bool dispatch(Msg& msg); //
+	bool isConnected(); //
 
 };
 
 class TcpServer: public Tcp {
 public:
-	 TcpServer(Wifi* wifi);
-	virtual bool  dispatch(Msg& msg); //
-	Erc  config(uint32_t maxConnections, uint16_t port);
+	TcpServer(Wifi* wifi);
+	virtual bool dispatch(Msg& msg); //
+	Erc config(uint32_t maxConnections, uint16_t port);
 	void listen();
 };
 
 class TcpClient: public Tcp {
 public:
-	 TcpClient(Wifi* wifi);
-	 virtual bool dispatch(Msg& msg); //
-	void  config(const char* host, uint16_t port);
+	TcpClient(Wifi* wifi);
+	virtual bool dispatch(Msg& msg); //
+	void config(const char* host, uint16_t port);
+	void connect();
+//	void  connect(const char* host, uint16_t port);
 
 };
 

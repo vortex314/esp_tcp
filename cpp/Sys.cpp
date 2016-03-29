@@ -23,6 +23,7 @@ extern uint64_t SysUpTime;
 #include "mutex.h"
 mutex_t mallocMutex=1;
 #include "Sys.h"
+#include <Logger.h>
 
 
 IRAM void* malloc(size_t size) {
@@ -47,17 +48,12 @@ IRAM uint64_t Sys::millis() {
 	return SysMillis();
 }
 
+void Sys::delayUs(uint32_t delay){
+	os_delay_us(delay);
+}
+
 #include "stdarg.h"
 
-
-void IRAM Sys::log(SysLogLevel level, const char* file, const char * function,
-		const char * format, ...) {
-	va_list args;
-	va_start(args, format);
-	SysLog(level, file, function, format, args);
-
-	va_end(args);
-}
 
 #ifdef __cplusplus
 }

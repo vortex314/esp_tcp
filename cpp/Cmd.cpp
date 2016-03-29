@@ -19,7 +19,7 @@ void Cmd::init(){
 
 #include <Json.h>
 #include <Message.h>
-#include <Log.h>
+#include <Logger.h>
 
 IROM bool Cmd::dispatch(Msg& msg) {
 	PT_BEGIN()
@@ -29,16 +29,15 @@ IROM bool Cmd::dispatch(Msg& msg) {
 		PT_YIELD_UNTIL(msg.is(_stream, SIG_RXD) );
 		if (msg.is(_stream, SIG_RXD)) {
 
-			INFO(" Message received ");
 			Json request(0);
 			msg.rewind().getMapped(request);
-			Log::log().append(request);
-			Log::log().flush();
+			LOG << " request : " << request << FLUSH;
 			request.findKey("id");
 
 			//TODO handle cmd
 			Json response(200);
 			response.addMap().addKey("error").add(E_OK).addBreak();
+			LOG << " response : " << response << FLUSH;
 			_stream->send(response);
 		}
 	}

@@ -42,6 +42,7 @@ extern "C" {
 #include "stdint.h"
 #include "Flash.h"
 #include "Sys.h"
+#include <Logger.h>
 
 uint32_t roundQuad(uint32_t value) {
 	if (value & 0x3)

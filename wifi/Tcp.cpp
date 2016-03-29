@@ -7,13 +7,14 @@
 
 #include "Tcp.h"
 #include <string.h>
+#include <Logger.h>
 
 //uint32_t Tcp::_maxConnections = 5;
 Tcp* Tcp::_first = 0;
 
 Tcp::Tcp(Wifi* wifi) :
 		Handler("Tcp"), _txd(256), _buffer(100) {
-	INFO("this : %X ",this);
+	INFO("this : %X ", this);
 	_type = LIVE;
 	_next = 0;
 	_conn = 0;
@@ -148,13 +149,12 @@ void Tcp::registerCb(struct espconn* pconn) {
 
 	pconn->reverse = this;
 	logConn(__FUNCTION__, pconn);
-	espconn_regist_time(pconn, 10, 1);		// disconnect after 1000 sec
+//	espconn_regist_time(pconn, 10, 1);		// disconnect after 1000 sec
 	espconn_regist_connectcb(pconn, connectCb);
 	espconn_regist_disconcb(pconn, disconnectCb);
 	espconn_regist_recvcb(pconn, recvCb);
 	espconn_regist_sentcb(pconn, sendCb);
 	espconn_regist_write_finish(pconn, writeFinishCb);
-	logConn(__FUNCTION__, pconn);
 }
 /*
  Tcp* getInstance(void *arg) {
@@ -231,15 +231,20 @@ void Tcp::connectCb(void* arg) {
 		pTcp->registerCb(pconn);
 
 		espconn_set_opt(pconn, ESPCONN_NODELAY);
-		espconn_set_opt(pconn, ESPCONN_COPY);
-		espconn_set_keepalive(pconn, ESPCONN_KEEPALIVE, (void*) 1);
-		espconn_set_keepalive(pconn, ESPCONN_KEEPIDLE, (void*) 1);
-		espconn_regist_time(pconn, 10, 0);
+		 espconn_set_opt(pconn, ESPCONN_COPY);
+		 espconn_set_keepalive(pconn, ESPCONN_KEEPALIVE, (void*) 1);
+		 espconn_set_keepalive(pconn, ESPCONN_KEEPIDLE, (void*) 1);
+		 espconn_regist_time(pconn, 100, 0);
 
 		Msg::publish(pTcp, SIG_CONNECTED);
 		pTcp->_connected = true;
+		pTcp->_lastRxd = Sys::millis();
 	} else {
-		INFO(" no free TCP : disconnecting ");
+		INFO(" no free TCP : disconnecting %X ", pconn);
+		INFO("  tcp :  %x  , ip : %d.%d.%d.%d:%d  ", pconn->reverse,
+				pconn->proto.tcp->remote_ip[0], pconn->proto.tcp->remote_ip[1],
+				pconn->proto.tcp->remote_ip[2], pconn->proto.tcp->remote_ip[3],
+				pconn->proto.tcp->remote_port);
 		espconn_disconnect(pconn);
 	}
 	return;
@@ -362,7 +367,7 @@ void Tcp::dnsFoundCb(const char *name, ip_addr_t *ipaddr, void *arg) {
 //____________________________________________________________
 //			Tcp::connect
 //____________________________________________________________
-void Tcp::connect() {
+void TcpClient::connect() {
 
 	INFO(" Connecting ");
 //	ets_memset(_conn, 0, sizeof(_conn));
@@ -388,14 +393,19 @@ void Tcp::connect() {
 
 void Tcp::disconnect() {
 	espconn_disconnect(_conn);
+	_connected = false;
 }
-
+/*
+ *
+ */
 bool Tcp::isConnected() {
 	return _connected;
 }
 //____________________________________________________________
 //
+//
 //____________________________________________________________
+//
 bool Tcp::dispatch(Msg& msg) {
 	PT_BEGIN()
 	;
@@ -408,29 +418,30 @@ bool Tcp::dispatch(Msg& msg) {
 	}
 	CONNECTING: {
 		while (true) {
-			timeout(10000);
-			PT_YIELD_UNTIL(isConnected() || timeout());
+			PT_YIELD_UNTIL(isConnected() || !_wifi->isConnected());
 			if (isConnected()) {
 				goto CONNECTED;
 			}
-			if (timeout()) {
-
+			if (!_wifi->isConnected()) {
+				goto WIFI_DISCONNECTED;
 			}
 		}
 	}
 	CONNECTED: {
 		while (true) {
 			timeout(5000);
-			PT_YIELD_UNTIL(!isConnected() || !_wifi->isConnected());
-			if ( timeout()) INFO("timeout tcp");
+			PT_YIELD_UNTIL(
+					!isConnected() || !_wifi->isConnected() || timeout());
 			if (!_wifi->isConnected())
 				goto WIFI_DISCONNECTED;
 			if (!isConnected())
 				goto CONNECTING;
 			if (timeout()) {
-				INFO("%d:%d", _lastRxd, Sys::millis());
-				if (_lastRxd > (Sys::millis() + 10000))
+				INFO("%d:%d %d", _lastRxd + 5000, Sys::millis());
+				if ((_lastRxd + 5000) < Sys::millis()) {
+					INFO(" timeout - disconnect %X:%X", this, _conn);
 					disconnect();
+				}
 			}
 		}
 	}
@@ -442,7 +453,7 @@ return true;
 
 TcpClient::TcpClient(Wifi* wifi) :
 	Tcp(wifi) {
-	INFO("this : %X ",this);
+INFO("this : %X ", this);
 setType(CLIENT);
 _conn = new (struct espconn);
 strcpy(_host, "");
@@ -486,7 +497,8 @@ CONNECTED: {
 	while (true) {
 		timeout(5000);
 		PT_YIELD_UNTIL(!isConnected() || !_wifi->isConnected());
-		if ( timeout()) INFO("timeout client");
+		if (timeout())
+			INFO("timeout client");
 
 		if (!_wifi->isConnected())
 			goto WIFI_DISCONNECTED;
@@ -502,7 +514,7 @@ return true;
 
 TcpServer::TcpServer(Wifi* wifi) :
 Tcp(wifi) {
-	INFO("this : %X ",this);
+INFO("this : %X ", this);
 
 setType(SERVER);
 _conn = new (struct espconn);
@@ -518,7 +530,6 @@ _connected = true;	// to allocate TCP instance
 }
 
 Erc TcpServer::config(uint32_t maxConnections, uint16_t port) {
-
 _local_port = port;
 _conn->proto.tcp->local_port = _local_port;
 uint32_t i;

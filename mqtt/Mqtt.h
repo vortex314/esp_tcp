@@ -14,7 +14,7 @@
 #include "Stream.h"
 #include "CircBuf.h"
 #include "MqttConstants.h"
-#include "Log.h"
+#include "Logger.h"
 #include "MqttMsg.h"
 #include <CborQueue.h>
 #include "Handler.h"

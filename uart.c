@@ -28,6 +28,7 @@
 extern UartDevice UartDev;
 
 #include "Sys.h"
+#include <Logger.h>
 
 extern void uart0RecvByte(uint8_t b);
 extern void uart0Write(uint8_t b);

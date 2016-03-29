@@ -1,7 +1,5 @@
 #include "Sys.h"
-
-
-
+#include <Logger.h>
 
 void * operator new(size_t size) {
  return malloc(size);
@@ -95,7 +93,7 @@ IROM int _ctype(char c) {
  Query whether output stream is a terminal. For consistency with the other minimal implementations,
  */
 IROM int _isatty(int file) {
-	DEBUG("SHouldn't arrive here !");
+	ERROR("SHouldn't arrive here !");
 	switch (file) {
 		case STDOUT_FILENO:
 		case STDERR_FILENO:

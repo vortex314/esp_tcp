@@ -9,6 +9,7 @@
 #include "Erc.h"
 #include "Sys.h"
 #include "Board.h"
+#include <Logger.h>
 
 //#include "Message.h"
 //#include "assert.h"

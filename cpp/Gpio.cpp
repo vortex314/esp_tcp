@@ -57,7 +57,7 @@ Erc Gpio::setMode(const char* str) {
 
 	return E_OK;
 }
-
+#include <string.h>
 Erc Gpio::getMode(char* str) {
 	char mode[5];
 	strcpy(mode,"----");

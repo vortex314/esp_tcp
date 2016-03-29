@@ -7,6 +7,7 @@
 
 #include <Router.h>
 #include <Wildcard.h>
+#include <Logger.h>
 
 Router::Router(const char* pattern, Subscriber* subscriber) {
 	_next = 0;

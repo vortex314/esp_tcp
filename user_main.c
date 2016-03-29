@@ -48,6 +48,7 @@
 #include "gpio16.h"
 #include "Sys.h"
 #include "util.h"
+#include <Logger.h>
 
 extern void MsgInit();
 
@@ -80,13 +81,23 @@ spi_rx_byte_order(HSPI,SPI_BYTE_ORDER_HIGH_TO_LOW)
  */
 
 #include "spi.h"
+//-----------------------------------------------------------------------------------
+//		initialize global variables
+//-----------------------------------------------------------------------------------
+extern void (*__init_array_start)(void);
+extern void (*__init_array_end)(void);
 
+static void do_global_ctors(void) {
+	void (**p)(void);
+	for (p = &__init_array_start; p != &__init_array_end; ++p)
+		(*p)();
+}
 
 
 void user_init(void) {
 
 	ThreadLockInit();
-	SysLogInit();
+	do_global_ctors();
 
 	uart_init(BIT_RATE_115200, BIT_RATE_115200);
 	uart_config(0, 115200, "8E1");

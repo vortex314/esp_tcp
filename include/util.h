@@ -8,8 +8,8 @@ extern "C" {
 extern void os_printf_plus(const char* s, ...);
 extern void logShort(const char * format, ...);
 
-#define debug(fmt,...) SysLog(__FILE__,__FUNCTION__,fmt,##__VA_ARGS__)
-#define info(fmt,...)  SysLog(__FILE__, __PRETTY_FUNCTION__ ,fmt,##__VA_ARGS__)
+//#define debug(fmt,...) SysLog(__FILE__,__FUNCTION__,fmt,##__VA_ARGS__)
+//#define info(fmt,...)  SysLog(__FILE__, __PRETTY_FUNCTION__ ,fmt,##__VA_ARGS__)
 #define BOOL uint8_t
 
 typedef enum __attribute__ ((__packed__))

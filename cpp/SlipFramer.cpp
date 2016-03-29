@@ -6,6 +6,7 @@
  */
 
 #include <SlipFramer.h>
+#include <Logger.h>
 
 SlipFramer::SlipFramer(Tcp* tcp) :
 		Handler("Receiver") {

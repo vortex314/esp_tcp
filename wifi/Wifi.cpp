@@ -29,6 +29,7 @@ extern "C" {
 #include "espmissingincludes.h"
 }
 #include "Sys.h"
+#include <Logger.h>
 
 Wifi::Wifi() :
 		Handler("Wifi") {

@@ -26,14 +26,14 @@ private:
 	Mode _mode;
 	static const char* _sMode[];
 public:
-	Gpio(uint8_t pin) IROM;
-	virtual ~Gpio() IROM;
-	Erc setMode(const char* str) IROM;
-	Erc getMode(char* str) IROM;
-	Erc digitalWrite(uint8_t i) IROM;
-	Erc digitalRead(uint8_t* i) IROM;
-	Erc analogRead(int v) IROM;
-	Erc analogWrite(int* v) IROM;
+	Gpio(uint8_t pin) ;
+	virtual ~Gpio() ;
+	Erc setMode(const char* str) ;
+	Erc getMode(char* str) ;
+	Erc digitalWrite(uint8_t i) ;
+	Erc digitalRead(uint8_t* i) ;
+	Erc analogRead(int v) ;
+	Erc analogWrite(int* v) ;
 };
 
 #endif /* GPIO_H_ */

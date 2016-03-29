@@ -8,6 +8,7 @@
 #include "MqttMsg.h"
 #include <string.h>
 #include <cstring>
+#include <Logger.h>
 
 const char* const MqttNames[] = { "UNKNOWN", "CONNECT", "CONNACK", "PUBLISH",
 		"PUBACK", "PUBREC", "PUBREL", "PUBCOMP", "SUBSCRIBE", "SUBACK",
