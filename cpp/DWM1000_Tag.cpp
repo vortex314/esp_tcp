@@ -319,9 +319,8 @@ bool DWM1000_Tag::dispatch(Msg& msg) {
 					dwt_starttx(DWT_START_TX_DELAYED);
 
 					/* Poll DW1000 until TX frame sent event set. See NOTE 8 below. */
-					while (!(dwt_read32bitreg(SYS_STATUS_ID) & SYS_STATUS_TXFRS)) {
-					};
-
+					timeout(100);
+					PT_YIELD_UNTIL((dwt_read32bitreg(SYS_STATUS_ID) & SYS_STATUS_TXFRS) || timeout());;
 					/* Clear TXFRS event. */
 					dwt_write32bitreg(SYS_STATUS_ID, SYS_STATUS_TXFRS);
 
