@@ -1564,3 +1564,342 @@ pm open phy_2,type:2 0 0
 0d:00:01:56,392| ../spi.c       | writetospi| data : 0C 80 0A 00 
 0d:00:01:56,403| ../cpp/DWM1000_Tag.cpp| dispatch|  Start TXF 
 0d:00:01:56,413| ../spi.c       | writetospi| head : 8D 
+0d:00:01:56,424| ../spi.c       | writetospi| data : 80 
+0d:00:01:56,434| ../spi.c       | writetospi| head : 8D 
+0d:00:01:56,445| ../spi.c       | writetospi| data : 82 
+0d:00:01:56,559| ../spi.c       | readfromspi| head : 0F 
+0d:00:01:56,570| ../spi.c       | readfromspi| data : F2 00 82 02 
+0d:00:01:56,581| ../cpp/DWM1000_Tag.cpp| dispatch|  SYS_STATUS 028200F2
+0d:00:01:56,591| ../cpp/DWM1000_Tag.cpp| dispatch|  RX Timeout
+0d:00:01:56,592| ../spi.c       | writetospi| head : 8F 
+0d:00:01:56,613| ../spi.c       | writetospi| data : 00 90 27 24 
+0d:00:01:57,629| ../spi.c       | writetospi| head : 89 
+0d:00:01:57,640| ../spi.c       | writetospi| data : 41 88 00 CA DE 56 45 57 41 21 
+0d:00:01:57,651| ../spi.c       | writetospi| head : 88 
+0d:00:01:57,662| ../spi.c       | writetospi| data : 0C 80 0A 00 
+0d:00:01:57,673| ../cpp/DWM1000_Tag.cpp| dispatch|  Start TXF 
+0d:00:01:57,683| ../spi.c       | writetospi| head : 8D 
+0d:00:01:57,694| ../spi.c       | writetospi| data : 80 
+0d:00:01:57,705| ../spi.c       | writetospi| head : 8D 
+0d:00:01:57,715| ../spi.c       | writetospi| data : 82 
+0d:00:01:57,829| ../spi.c       | readfromspi| head : 0F 
+0d:00:01:57,840| ../spi.c       | readfromspi| data : F2 00 82 02 
+0d:00:01:57,851| ../cpp/DWM1000_Tag.cpp| dispatch|  SYS_STATUS 028200F2
+0d:00:01:57,861| ../cpp/DWM1000_Tag.cpp| dispatch|  RX Timeout
+0d:00:01:57,862| ../spi.c       | writetospi| head : 8F 
+0d:00:01:57,883| ../spi.c       | writetospi| data : 00 90 27 24 
+0d:00:01:58,899| ../spi.c       | writetospi| head : 89 
+0d:00:01:58,910| ../spi.c       | writetospi| data : 41 88 00 CA DE 56 45 57 41 21 
+0d:00:01:58,921| ../spi.c       | writetospi| head : 88 
+0d:00:01:58,932| ../spi.c       | writetospi| data : 0C 80 0A 00 
+0d:00:01:58,943| ../cpp/DWM1000_Tag.cpp| dispatch|  Start TXF 
+0d:00:01:58,953| ../spi.c       | writetospi| head : 8D 
+0d:00:01:58,964| ../spi.c       | writetospi| data : 80 
+0d:00:01:58,974| ../spi.c       | writetospi| head : 8D 
+0d:00:01:58,985| ../spi.c       | writetospi| data : 82 
+0d:00:01:59,099| ../spi.c       | readfromspi| head : 0F 
+0d:00:01:59,111| ../spi.c       | readfromspi| data : F2 00 82 02 
+0d:00:01:59,121| ../cpp/DWM1000_Tag.cpp| dispatch|  SYS_STATUS 028200F2
+0d:00:01:59,132| ../cpp/DWM1000_Tag.cpp| dispatch|  RX Timeout
+0d:00:01:59,132| ../spi.c       | writetospi| head : 8F 
+0d:00:01:59,153| ../spi.c       | writetospi| data : 00 90 27 24 
+0d:00:02:00,169| ../spi.c       | writetospi| head : 89 
+0d:00:02:00,180| ../spi.c       | writetospi| data : 41 88 00 CA DE 56 45 57 41 21 
+0d:00:02:00,191| ../spi.c       | writetospi| head : 88 
+0d:00:02:00,202| ../spi.c       | writetospi| data : 0C 80 0A 00 
+0d:00:02:00,213| ../cpp/DWM1000_Tag.cpp| dispatch|  Start TXF 
+0d:00:02:00,223| ../spi.c       | writetospi| head : 8D 
+0d:00:02:00,234| ../spi.c       | writetospi| data : 80 
+0d:00:02:00,244| ../spi.c       | writetospi| head : 8D 
+0d:00:02:00,255| ../spi.c       | writetospi| data : 82 
+0d:00:02:00,369| ../spi.c       | readfromspi| head : 0F 
+0d:00:02:00,381| ../spi.c       | readfromspi| data : F2 00 82 02 
+0d:00:02:00,391| ../cpp/DWM1000_Tag.cpp| dispatch|  SYS_STATUS 028200F2
+0d:00:02:00,402| ../cpp/DWM1000_Tag.cpp| dispatch|  RX Timeout
+0d:00:02:00,402| ../spi.c       | writetospi| head : 8F 
+0d:00:02:00,423| ../spi.c       | writetospi| data : 00 90 27 24 
+0d:00:02:01,439| ../spi.c       | writetospi| head : 89 
+0d:00:02:01,450| ../spi.c       | writetospi| data : 41 88 00 CA DE 56 45 57 41 21 
+0d:00:02:01,461| ../spi.c       | writetospi| head : 88 
+0d:00:02:01,472| ../spi.c       | writetospi| data : 0C 80 0A 00 
+0d:00:02:01,483| ../cpp/DWM1000_Tag.cpp| dispatch|  Start TXF 
+0d:00:02:01,493| ../spi.c       | writetospi| head : 8D 
+0d:00:02:01,504| ../spi.c       | writetospi| data : 80 
+0d:00:02:01,514| ../spi.c       | writetospi| head : 8D 
+0d:00:02:01,525| ../spi.c       | writetospi| data : 82 
+0d:00:02:01,640| ../spi.c       | readfromspi| head : 0F 
+0d:00:02:01,651| ../spi.c       | readfromspi| data : F2 01 82 02 
+0d:00:02:01,661| ../cpp/DWM1000_Tag.cpp| dispatch|  SYS_STATUS 028201F2
+0d:00:02:01,672| ../cpp/DWM1000_Tag.cpp| dispatch|  RX Timeout
+0d:00:02:01,672| ../spi.c       | writetospi| head : 8F 
+0d:00:02:01,693| ../spi.c       | writetospi| data : 00 90 27 24 
+0d:00:02:02,709| ../spi.c       | writetospi| head : 89 
+0d:00:02:02,720| ../spi.c       | writetospi| data : 41 88 00 CA DE 56 45 57 41 21 
+0d:00:02:02,731| ../spi.c       | writetospi| head : 88 
+0d:00:02:02,742| ../spi.c       | writetospi| data : 0C 80 0A 00 
+0d:00:02:02,753| ../cpp/DWM1000_Tag.cpp| dispatch|  Start TXF 
+0d:00:02:02,763| ../spi.c       | writetospi| head : 8D 
+0d:00:02:02,774| ../spi.c       | writetospi| data : 80 
+0d:00:02:02,784| ../spi.c       | writetospi| head : 8D 
+0d:00:02:02,795| ../spi.c       | writetospi| data : 82 
+0d:00:02:02,909| ../spi.c       | readfromspi| head : 0F 
+0d:00:02:02,921| ../spi.c       | readfromspi| data : F2 00 82 02 
+0d:00:02:02,931| ../cpp/DWM1000_Tag.cpp| dispatch|  SYS_STATUS 028200F2
+0d:00:02:02,942| ../cpp/DWM1000_Tag.cpp| dispatch|  RX Timeout
+0d:00:02:02,942| ../spi.c       | writetospi| head : 8F 
+0d:00:02:02,963| ../spi.c       | writetospi| data : 00 90 27 24 
+0d:00:02:03,979| ../spi.c       | writetospi| head : 89 
+0d:00:02:03,990| ../spi.c       | writetospi| data : 41 88 00 CA DE 56 45 57 41 21 
+0d:00:02:04,001| ../spi.c       | writetospi| head : 88 
+0d:00:02:04,012| ../spi.c       | writetospi| data : 0C 80 0A 00 
+0d:00:02:04,023| ../cpp/DWM1000_Tag.cpp| dispatch|  Start TXF 
+0d:00:02:04,033| ../spi.c       | writetospi| head : 8D 
+0d:00:02:04,044| ../spi.c       | writetospi| data : 80 
+0d:00:02:04,054| ../spi.c       | writetospi| head : 8D 
+0d:00:02:04,065| ../spi.c       | writetospi| data : 82 
+0d:00:02:04,180| ../spi.c       | readfromspi| head : 0F 
+0d:00:02:04,191| ../spi.c       | readfromspi| data : F2 00 82 02 
+0d:00:02:04,202| ../cpp/DWM1000_Tag.cpp| dispatch|  SYS_STATUS 028200F2
+0d:00:02:04,212| ../cpp/DWM1000_Tag.cpp| dispatch|  RX Timeout
+0d:00:02:04,212| ../spi.c       | writetospi| head : 8F 
+0d:00:02:04,234| ../spi.c       | writetospi| data : 00 90 27 24 
+0d:00:02:05,249| ../spi.c       | writetospi| head : 89 
+0d:00:02:05,260| ../spi.c       | writetospi| data : 41 88 00 CA DE 56 45 57 41 21 
+0d:00:02:05,271| ../spi.c       | writetospi| head : 88 
+0d:00:02:05,282| ../spi.c       | writetospi| data : 0C 80 0A 00 
+0d:00:02:05,293| ../cpp/DWM1000_Tag.cpp| dispatch|  Start TXF 
+0d:00:02:05,303| ../spi.c       | writetospi| head : 8D 
+0d:00:02:05,314| ../spi.c       | writetospi| data : 80 
+0d:00:02:05,324| ../spi.c       | writetospi| head : 8D 
+0d:00:02:05,335| ../spi.c       | writetospi| data : 82 
+0d:00:02:05,449| ../spi.c       | readfromspi| head : 0F 
+0d:00:02:05,460| ../spi.c       | readfromspi| data : F2 00 82 02 
+0d:00:02:05,471| ../cpp/DWM1000_Tag.cpp| dispatch|  SYS_STATUS 028200F2
+0d:00:02:05,482| ../cpp/DWM1000_Tag.cpp| dispatch|  RX Timeout
+0d:00:02:05,482| ../spi.c       | writetospi| head : 8F 
+0d:00:02:05,503| ../spi.c       | writetospi| data : 00 90 27 24 
+0d:00:02:06,519| ../spi.c       | writetospi| head : 89 
+0d:00:02:06,530| ../spi.c       | writetospi| data : 41 88 00 CA DE 56 45 57 41 21 
+0d:00:02:06,541| ../spi.c       | writetospi| head : 88 
+0d:00:02:06,552| ../spi.c       | writetospi| data : 0C 80 0A 00 
+0d:00:02:06,563| ../cpp/DWM1000_Tag.cpp| dispatch|  Start TXF 
+0d:00:02:06,573| ../spi.c       | writetospi| head : 8D 
+0d:00:02:06,584| ../spi.c       | writetospi| data : 80 
+0d:00:02:06,594| ../spi.c       | writetospi| head : 8D 
+0d:00:02:06,605| ../spi.c       | writetospi| data : 82 
+0d:00:02:06,719| ../spi.c       | readfromspi| head : 0F 
+0d:00:02:06,730| ../spi.c       | readfromspi| data : F2 00 82 02 
+0d:00:02:06,741| ../cpp/DWM1000_Tag.cpp| dispatch|  SYS_STATUS 028200F2
+0d:00:02:06,752| ../cpp/DWM1000_Tag.cpp| dispatch|  RX Timeout
+0d:00:02:06,752| ../spi.c       | writetospi| head : 8F 
+0d:00:02:06,773| ../spi.c       | writetospi| data : 00 90 27 24 
+0d:00:02:07,789| ../spi.c       | writetospi| head : 89 
+0d:00:02:07,800| ../spi.c       | writetospi| data : 41 88 00 CA DE 56 45 57 41 21 
+0d:00:02:07,811| ../spi.c       | writetospi| head : 88 
+0d:00:02:07,822| ../spi.c       | writetospi| data : 0C 80 0A 00 
+0d:00:02:07,833| ../cpp/DWM1000_Tag.cpp| dispatch|  Start TXF 
+0d:00:02:07,843| ../spi.c       | writetospi| head : 8D 
+0d:00:02:07,854| ../spi.c       | writetospi| data : 80 
+0d:00:02:07,864| ../spi.c       | writetospi| head : 8D 
+0d:00:02:07,875| ../spi.c       | writetospi| data : 82 
+0d:00:02:07,989| ../spi.c       | readfromspi| head : 0F 
+0d:00:02:08,001| ../spi.c       | readfromspi| data : F2 00 82 02 
+0d:00:02:08,011| ../cpp/DWM1000_Tag.cpp| dispatch|  SYS_STATUS 028200F2
+0d:00:02:08,022| ../cpp/DWM1000_Tag.cpp| dispatch|  RX Timeout
+0d:00:02:08,022| ../spi.c       | writetospi| head : 8F 
+0d:00:02:08,043| ../spi.c       | writetospi| data : 00 90 27 24 
+0d:00:02:09,059| ../spi.c       | writetospi| head : 89 
+0d:00:02:09,070| ../spi.c       | writetospi| data : 41 88 00 CA DE 56 45 57 41 21 
+0d:00:02:09,081| ../spi.c       | writetospi| head : 88 
+0d:00:02:09,092| ../spi.c       | writetospi| data : 0C 80 0A 00 
+0d:00:02:09,103| ../cpp/DWM1000_Tag.cpp| dispatch|  Start TXF 
+0d:00:02:09,113| ../spi.c       | writetospi| head : 8D 
+0d:00:02:09,124| ../spi.c       | writetospi| data : 80 
+0d:00:02:09,134| ../spi.c       | writetospi| head : 8D 
+0d:00:02:09,145| ../spi.c       | writetospi| data : 82 
+0d:00:02:09,259| ../spi.c       | readfromspi| head : 0F 
+0d:00:02:09,271| ../spi.c       | readfromspi| data : F2 00 82 02 
+0d:00:02:09,281| ../cpp/DWM1000_Tag.cpp| dispatch|  SYS_STATUS 028200F2
+0d:00:02:09,292| ../cpp/DWM1000_Tag.cpp| dispatch|  RX Timeout
+0d:00:02:09,292| ../spi.c       | writetospi| head : 8F 
+0d:00:02:09,313| ../spi.c       | writetospi| data : 00 90 27 24 
+0d:00:02:10,329| ../spi.c       | writetospi| head : 89 
+0d:00:02:10,340| ../spi.c       | writetospi| data : 41 88 00 CA DE 56 45 57 41 21 
+0d:00:02:10,351| ../spi.c       | writetospi| head : 88 
+0d:00:02:10,362| ../spi.c       | writetospi| data : 0C 80 0A 00 
+0d:00:02:10,373| ../cpp/DWM1000_Tag.cpp| dispatch|  Start TXF 
+0d:00:02:10,383| ../spi.c       | writetospi| head : 8D 
+0d:00:02:10,394| ../spi.c       | writetospi| data : 80 
+0d:00:02:10,404| ../spi.c       | writetospi| head : 8D 
+0d:00:02:10,415| ../spi.c       | writetospi| data : 82 
+0d:00:02:10,529| ../spi.c       | readfromspi| head : 0F 
+0d:00:02:10,541| ../spi.c       | readfromspi| data : F2 00 82 02 
+0d:00:02:10,551| ../cpp/DWM1000_Tag.cpp| dispatch|  SYS_STATUS 028200F2
+0d:00:02:10,562| ../cpp/DWM1000_Tag.cpp| dispatch|  RX Timeout
+0d:00:02:10,562| ../spi.c       | writetospi| head : 8F 
+0d:00:02:10,583| ../spi.c       | writetospi| data : 00 90 27 24 
+0d:00:02:11,599| ../spi.c       | writetospi| head : 89 
+0d:00:02:11,610| ../spi.c       | writetospi| data : 41 88 00 CA DE 56 45 57 41 21 
+0d:00:02:11,621| ../spi.c       | writetospi| head : 88 
+0d:00:02:11,632| ../spi.c       | writetospi| data : 0C 80 0A 00 
+0d:00:02:11,643| ../cpp/DWM1000_Tag.cpp| dispatch|  Start TXF 
+0d:00:02:11,653| ../spi.c       | writetospi| head : 8D 
+0d:00:02:11,664| ../spi.c       | writetospi| data : 80 
+0d:00:02:11,674| ../spi.c       | writetospi| head : 8D 
+0d:00:02:11,685| ../spi.c       | writetospi| data : 82 
+0d:00:02:11,799| ../spi.c       | readfromspi| head : 0F 
+0d:00:02:11,811| ../spi.c       | readfromspi| data : F2 00 82 02 
+0d:00:02:11,821| ../cpp/DWM1000_Tag.cpp| dispatch|  SYS_STATUS 028200F2
+0d:00:02:11,832| ../cpp/DWM1000_Tag.cpp| dispatch|  RX Timeout
+0d:00:02:11,832| ../spi.c       | writetospi| head : 8F 
+0d:00:02:11,853| ../spi.c       | writetospi| data : 00 90 27 24 
+0d:00:02:12,869| ../spi.c       | writetospi| head : 89 
+0d:00:02:12,880| ../spi.c       | writetospi| data : 41 88 00 CA DE 56 45 57 41 21 
+0d:00:02:12,891| ../spi.c       | writetospi| head : 88 
+0d:00:02:12,902| ../spi.c       | writetospi| data : 0C 80 0A 00 
+0d:00:02:12,913| ../cpp/DWM1000_Tag.cpp| dispatch|  Start TXF 
+0d:00:02:12,923| ../spi.c       | writetospi| head : 8D 
+0d:00:02:12,934| ../spi.c       | writetospi| data : 80 
+0d:00:02:12,944| ../spi.c       | writetospi| head : 8D 
+0d:00:02:12,955| ../spi.c       | writetospi| data : 82 
+0d:00:02:13,069| ../spi.c       | readfromspi| head : 0F 
+0d:00:02:13,081| ../spi.c       | readfromspi| data : F2 00 82 02 
+0d:00:02:13,091| ../cpp/DWM1000_Tag.cpp| dispatch|  SYS_STATUS 028200F2
+0d:00:02:13,102| ../cpp/DWM1000_Tag.cpp| dispatch|  RX Timeout
+0d:00:02:13,102| ../spi.c       | writetospi| head : 8F 
+0d:00:02:13,123| ../spi.c       | writetospi| data : 00 90 27 24 
+0d:00:02:14,139| ../spi.c       | writetospi| head : 89 
+0d:00:02:14,150| ../spi.c       | writetospi| data : 41 88 00 CA DE 56 45 57 41 21 
+0d:00:02:14,161| ../spi.c       | writetospi| head : 88 
+0d:00:02:14,172| ../spi.c       | writetospi| data : 0C 80 0A 00 
+0d:00:02:14,183| ../cpp/DWM1000_Tag.cpp| dispatch|  Start TXF 
+0d:00:02:14,193| ../spi.c       | writetospi| head : 8D 
+0d:00:02:14,204| ../spi.c       | writetospi| data : 80 
+0d:00:02:14,215| ../spi.c       | writetospi| head : 8D 
+0d:00:02:14,225| ../spi.c       | writetospi| data : 82 
+0d:00:02:14,339| ../spi.c       | readfromspi| head : 0F 
+0d:00:02:14,350| ../spi.c       | readfromspi| data : F2 00 82 02 
+0d:00:02:14,361| ../cpp/DWM1000_Tag.cpp| dispatch|  SYS_STATUS 028200F2
+0d:00:02:14,371| ../cpp/DWM1000_Tag.cpp| dispatch|  RX Timeout
+0d:00:02:14,372| ../spi.c       | writetospi| head : 8F 
+0d:00:02:14,393| ../spi.c       | writetospi| data : 00 90 27 24 
+0d:00:02:15,409| ../spi.c       | writetospi| head : 89 
+0d:00:02:15,420| ../spi.c       | writetospi| data : 41 88 00 CA DE 56 45 57 41 21 
+0d:00:02:15,431| ../spi.c       | writetospi| head : 88 
+0d:00:02:15,442| ../spi.c       | writetospi| data : 0C 80 0A 00 
+0d:00:02:15,453| ../cpp/DWM1000_Tag.cpp| dispatch|  Start TXF 
+0d:00:02:15,463| ../spi.c       | writetospi| head : 8D 
+0d:00:02:15,474| ../spi.c       | writetospi| data : 80 
+0d:00:02:15,484| ../spi.c       | writetospi| head : 8D 
+0d:00:02:15,495| ../spi.c       | writetospi| data : 82 
+0d:00:02:15,609| ../spi.c       | readfromspi| head : 0F 
+0d:00:02:15,620| ../spi.c       | readfromspi| data : F2 00 82 02 
+0d:00:02:15,631| ../cpp/DWM1000_Tag.cpp| dispatch|  SYS_STATUS 028200F2
+0d:00:02:15,641| ../cpp/DWM1000_Tag.cpp| dispatch|  RX Timeout
+0d:00:02:15,642| ../spi.c       | writetospi| head : 8F 
+0d:00:02:15,663| ../spi.c       | writetospi| data : 00 90 27 24 
+0d:00:02:16,679| ../spi.c       | writetospi| head : 89 
+0d:00:02:16,690| ../spi.c       | writetospi| data : 41 88 00 CA DE 56 45 57 41 21 
+0d:00:02:16,701| ../spi.c       | writetospi| head : 88 
+0d:00:02:16,712| ../spi.c       | writetospi| data : 0C 80 0A 00 
+0d:00:02:16,723| ../cpp/DWM1000_Tag.cpp| dispatch|  Start TXF 
+0d:00:02:16,733| ../spi.c       | writetospi| head : 8D 
+0d:00:02:16,744| ../spi.c       | writetospi| data : 80 
+0d:00:02:16,755| ../spi.c       | writetospi| head : 8D 
+0d:00:02:16,765| ../spi.c       | writetospi| data : 82 
+0d:00:02:16,879| ../spi.c       | readfromspi| head : 0F 
+0d:00:02:16,890| ../spi.c       | readfromspi| data : F2 00 82 02 
+0d:00:02:16,901| ../cpp/DWM1000_Tag.cpp| dispatch|  SYS_STATUS 028200F2
+0d:00:02:16,911| ../cpp/DWM1000_Tag.cpp| dispatch|  RX Timeout
+0d:00:02:16,912| ../spi.c       | writetospi| head : 8F 
+0d:00:02:16,933| ../spi.c       | writetospi| data : 00 90 27 24 
+0d:00:02:17,949| ../spi.c       | writetospi| head : 89 
+0d:00:02:17,960| ../spi.c       | writetospi| data : 41 88 00 CA DE 56 45 57 41 21 
+0d:00:02:17,971| ../spi.c       | writetospi| head : 88 
+0d:00:02:17,982| ../spi.c       | writetospi| data : 0C 80 0A 00 
+0d:00:02:17,993| ../cpp/DWM1000_Tag.cpp| dispatch|  Start TXF 
+0d:00:02:18,003| ../spi.c       | writetospi| head : 8D 
+0d:00:02:18,014| ../spi.c       | writetospi| data : 80 
+0d:00:02:18,025| ../spi.c       | writetospi| head : 8D 
+0d:00:02:18,035| ../spi.c       | writetospi| data : 82 
+0d:00:02:18,149| ../spi.c       | readfromspi| head : 0F 
+0d:00:02:18,161| ../spi.c       | readfromspi| data : F2 00 82 02 
+0d:00:02:18,171| ../cpp/DWM1000_Tag.cpp| dispatch|  SYS_STATUS 028200F2
+0d:00:02:18,182| ../cpp/DWM1000_Tag.cpp| dispatch|  RX Timeout
+0d:00:02:18,182| ../spi.c       | writetospi| head : 8F 
+0d:00:02:18,203| ../spi.c       | writetospi| data : 00 90 27 24 
+0d:00:02:19,219| ../spi.c       | writetospi| head : 89 
+0d:00:02:19,230| ../spi.c       | writetospi| data : 41 88 00 CA DE 56 45 57 41 21 
+0d:00:02:19,241| ../spi.c       | writetospi| head : 88 
+0d:00:02:19,252| ../spi.c       | writetospi| data : 0C 80 0A 00 
+0d:00:02:19,263| ../cpp/DWM1000_Tag.cpp| dispatch|  Start TXF 
+0d:00:02:19,273| ../spi.c       | writetospi| head : 8D 
+0d:00:02:19,284| ../spi.c       | writetospi| data : 80 
+0d:00:02:19,294| ../spi.c       | writetospi| head : 8D 
+0d:00:02:19,305| ../spi.c       | writetospi| data : 82 
+0d:00:02:19,419| ../spi.c       | readfromspi| head : 0F 
+0d:00:02:19,431| ../spi.c       | readfromspi| data : F2 00 82 02 
+0d:00:02:19,441| ../cpp/DWM1000_Tag.cpp| dispatch|  SYS_STATUS 028200F2
+0d:00:02:19,452| ../cpp/DWM1000_Tag.cpp| dispatch|  RX Timeout
+0d:00:02:19,452| ../spi.c       | writetospi| head : 8F 
+0d:00:02:19,473| ../spi.c       | writetospi| data : 00 90 27 24 
+0d:00:02:20,489| ../spi.c       | writetospi| head : 89 
+0d:00:02:20,500| ../spi.c       | writetospi| data : 41 88 00 CA DE 56 45 57 41 21 
+0d:00:02:20,511| ../spi.c       | writetospi| head : 88 
+0d:00:02:20,522| ../spi.c       | writetospi| data : 0C 80 0A 00 
+0d:00:02:20,533| ../cpp/DWM1000_Tag.cpp| dispatch|  Start TXF 
+0d:00:02:20,543| ../spi.c       | writetospi| head : 8D 
+0d:00:02:20,554| ../spi.c       | writetospi| data : 80 
+0d:00:02:20,564| ../spi.c       | writetospi| head : 8D 
+0d:00:02:20,575| ../spi.c       | writetospi| data : 82 
+0d:00:02:20,689| ../spi.c       | readfromspi| head : 0F 
+0d:00:02:20,701| ../spi.c       | readfromspi| data : F2 00 82 02 
+0d:00:02:20,711| ../cpp/DWM1000_Tag.cpp| dispatch|  SYS_STATUS 028200F2
+0d:00:02:20,722| ../cpp/DWM1000_Tag.cpp| dispatch|  RX Timeout
+0d:00:02:20,722| ../spi.c       | writetospi| head : 8F 
+0d:00:02:20,743| ../spi.c       | writetospi| data : 00 90 27 24 
+0d:00:02:21,759| ../spi.c       | writetospi| head : 89 
+0d:00:02:21,770| ../spi.c       | writetospi| data : 41 88 00 CA DE 56 45 57 41 21 
+0d:00:02:21,781| ../spi.c       | writetospi| head : 88 
+0d:00:02:21,792| ../spi.c       | writetospi| data : 0C 80 0A 00 
+0d:00:02:21,803| ../cpp/DWM1000_Tag.cpp| dispatch|  Start TXF 
+0d:00:02:21,813| ../spi.c       | writetospi| head : 8D 
+0d:00:02:21,824| ../spi.c       | writetospi| data : 80 
+0d:00:02:21,834| ../spi.c       | writetospi| head : 8D 
+0d:00:02:21,845| ../spi.c       | writetospi| data : 82 
+0d:00:02:21,959| ../spi.c       | readfromspi| head : 0F 
+0d:00:02:21,971| ../spi.c       | readfromspi| data : F2 00 82 02 
+0d:00:02:21,981| ../cpp/DWM1000_Tag.cpp| dispatch|  SYS_STATUS 028200F2
+0d:00:02:21,992| ../cpp/DWM1000_Tag.cpp| dispatch|  RX Timeout
+0d:00:02:21,992| ../spi.c       | writetospi| head : 8F 
+0d:00:02:22,013| ../spi.c       | writetospi| data : 00 90 27 24 
+0d:00:02:23,029| ../spi.c       | writetospi| head : 89 
+0d:00:02:23,040| ../spi.c       | writetospi| data : 41 88 00 CA DE 56 45 57 41 21 
+0d:00:02:23,051| ../spi.c       | writetospi| head : 88 
+0d:00:02:23,062| ../spi.c       | writetospi| data : 0C 80 0A 00 
+0d:00:02:23,073| ../cpp/DWM1000_Tag.cpp| dispatch|  Start TXF 
+0d:00:02:23,083| ../spi.c       | writetospi| head : 8D 
+0d:00:02:23,094| ../spi.c       | writetospi| data : 80 
+0d:00:02:23,104| ../spi.c       | writetospi| head : 8D 
+0d:00:02:23,115| ../spi.c       | writetospi| data : 82 
+0d:00:02:23,230| ../spi.c       | readfromspi| head : 0F 
+0d:00:02:23,241| ../spi.c       | readfromspi| data : F2 00 82 02 
+0d:00:02:23,252| ../cpp/DWM1000_Tag.cpp| dispatch|  SYS_STATUS 028200F2
+0d:00:02:23,262| ../cpp/DWM1000_Tag.cpp| dispatch|  RX Timeout
+0d:00:02:23,262| ../spi.c       | writetospi| head : 8F 
+0d:00:02:23,284| ../spi.c       | writetospi| data : 00 90 27 24 
+0d:00:02:24,299| ../spi.c       | writetospi| head : 89 
+0d:00:02:24,310| ../spi.c       | writetospi| data : 41 88 00 CA DE 56 45 57 41 21 
+0d:00:02:24,321| ../spi.c       | writetospi| head : 88 
+0d:00:02:24,332| ../spi.c       | writetospi| data : 0C 80 0A 00 
+0d:00:02:24,343| ../cpp/DWM1000_Tag.cpp| dispatch|  Start TXF 
+0d:00:02:24,353| ../spi.c       | writetospi| head : 8D 
+0d:00:02:24,364| ../spi.c       | writetospi| data : 80 
+0d:00:02:24,374| ../spi.c       | writetospi| head : 8D 
+0d:00:02:24,385| ../spi.c       | writetospi| data : 82 
+0d:00:02:24,499| ../spi.c       | readfromspi| head : 0F 
+0d:00:02:24,510| ../spi.c       | readfromspi| data : F2 00 82 02 
+0d:00:02:24,521| ../cpp/DWM1000_Tag.cpp| dispatch|  SYS_STATUS 028200F2
+0d:00:02:24,531| ../cpp/DWM1000_Tag.cpp| dispatch|  RX Timeout
+0d:00:02:24,532| ../spi.c       | writetospi| head : 8F 
+0d:00:02:24,553| ../spi.c       | writetospi| data : 00 90 27 24 
