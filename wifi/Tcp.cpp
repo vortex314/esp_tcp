@@ -136,6 +136,7 @@ void Tcp::loadEspconn(struct espconn* pconn) {
 
 void Tcp::logConn(const char* s, void* arg) {
 	struct espconn* pconn = (struct espconn*) arg;
+	return;
 	if (pconn) {
 //	INFO(" %X:%X %X", this, pconn, pconn->reverse);
 		INFO(" %s - tcp :  %x  , ip : %d.%d.%d.%d:%d  ", s, pconn->reverse,
@@ -333,7 +334,7 @@ void Tcp::recvCb(void* arg, char *pdata, unsigned short len) {
 		if (erc = Msg::queue().putf("uuB", pTcp, SIG_RXD, &bytes)) {
 			pTcp->_overflowRxd++;
 		}
-		INFO("erc %d bytes.length %d pTcp %X ", erc, bytes.length(), pTcp);
+//		INFO("erc %d bytes.length %d pTcp %X ", erc, bytes.length(), pTcp);
 		pTcp->logConn(__FUNCTION__, arg);
 		return;
 	} else {

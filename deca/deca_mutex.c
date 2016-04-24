@@ -48,6 +48,12 @@
  *
  * returns the state of the DW1000 interrupt
  */
+decaIrqStatus_t decamutexon(void)
+{
+	return 0;
+}
+
+/* LIMERO
 decaIrqStatus_t decamutexon(void)           
 {
 	decaIrqStatus_t s = port_GetEXT_IRQStatus();
@@ -57,7 +63,7 @@ decaIrqStatus_t decamutexon(void)
 	}
 	return s ;   // return state before disable, value is used to re-enable in decamutexoff call
 }
-
+*/
 /*! ------------------------------------------------------------------------------------------------------------------
  * Function: decamutexoff()
  *
@@ -73,9 +79,15 @@ decaIrqStatus_t decamutexon(void)
  *
  * returns the state of the DW1000 interrupt
  */
+void decamutexoff(decaIrqStatus_t s)
+{
+
+}
+/* LIMERO
 void decamutexoff(decaIrqStatus_t s)        // put a function here that re-enables the interrupt at the end of the critical section
 {
 	if(s) { //need to check the port state as we can't use level sensitive interrupt on the STM ARM
 		port_EnableEXT_IRQ();
 	}
 }
+*/

@@ -27,10 +27,10 @@ mutex_t mallocMutex=1;
 
 
 IRAM void* malloc(size_t size) {
-	while(!GetMutex(&mallocMutex));
+//	while(!GetMutex(&mallocMutex));
 	void* pv = pvPortMalloc(size);
 	ASSERT(pv);
-	ReleaseMutex(&mallocMutex);
+//	ReleaseMutex(&mallocMutex);
 	return pv;
 }
 

@@ -32,6 +32,9 @@ IROM bool Cmd::dispatch(Msg& msg) {
 			Json request(0);
 			msg.rewind().getMapped(request);
 			LOG << " request : " << request << FLUSH;
+			LOG << " heap :" << (int)system_get_free_heap_size() << " stack : " ;
+			Logger::logger->appendHex((uint32_t)&request);
+
 			request.findKey("id");
 
 			//TODO handle cmd

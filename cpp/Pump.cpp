@@ -30,7 +30,8 @@ extern "C" {
 #include "Mqtt.h"
 #include "Gpio.h"
 #include "Cmd.h"
-#include <DWM1000.h>
+#include <DWM1000_Anchor.h>
+#include <DWM1000_Tag.h>
 
 mutex_t mutex;
 
@@ -41,7 +42,8 @@ Wifi* wifi;
 TcpClient* tcpClient;
 TcpServer* tcpServer;
 Cmd* cmd;
-DWM1000* dwm1000;
+DWM1000_Anchor* dwm1000Anchor;
+DWM1000_Tag* dwm1000Tag;
 MqttMsg* mqttMsg;
 Mqtt* mqtt;
 MqttFramer* mqttFramer;
@@ -273,19 +275,19 @@ extern "C" IROM void MsgInit() {
 	wifi = new Wifi();
 	wifi->config(SSID.c_str(), PASS.c_str());
 
-	tcpServer = new TcpServer(wifi);
-	tcpServer->config(0, 2323);
+//	tcpServer = new TcpServer(wifi);
+//	tcpServer->config(0, 2323);
 
-	tcp = new Tcp(wifi);
-	INFO("tcp %X ", tcp);
+//	tcp = new Tcp(wifi);
+//	INFO("tcp %X ", tcp);
 
 //	wifi = new Wifi();
 //	tcp = new Tcp(wifi);
 //	mqttFramer = new MqttFramer(tcp);
 //	mqtt = new Mqtt(mqttFramer);
 
-	slipFramer = new SlipFramer(tcp);
-	cmd = new Cmd(slipFramer);
+//	slipFramer = new SlipFramer(tcp);
+//	cmd = new Cmd(slipFramer);
 
 //	tcpClient = new TcpClient(wifi);
 //	tcpClient->config("iot.eclipse.org", 1883);
@@ -294,7 +296,8 @@ extern "C" IROM void MsgInit() {
 
 	gpioFlash = new Gpio(0);
 
-//	dwm1000 = new DWM1000();
+//	dwm1000Anchor = new DWM1000_Anchor();
+	dwm1000Tag = new DWM1000_Tag();
 
 	task_start();
 

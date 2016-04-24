@@ -30,7 +30,7 @@ public:
 	int IROM findValueByname(const char* s);
 	const char* findNameByValue(uint32_t value);
 };
-
+#include "string.h"
 int Symbols::findValueByname(const char* s) {
 	for (int i = 0; i < _count; i++)
 		if (strcmp(symbol[i].name, s) == 0)
