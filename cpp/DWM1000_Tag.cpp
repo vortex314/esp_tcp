@@ -45,8 +45,8 @@ static uint8 tx_poll_msg[] = { //
 		0x41, 0x88,	// byte 0/1: frame control (0x8841 to indicate a data frame using 16-bit addressing).
 				0, 	// byte 2: sequence number, incremented for each new frame.
 				0xCA, 0xDE, // byte 3/4 : PAN ID (0xDECA)
-				'V', 'E', 	// byte 5/6: destination address, see NOTE 3 below.
-				'W', 'A',	// byte 7/8: source address, see NOTE 3 below.
+				'W', 'A', 	// byte 5/6: destination address, see NOTE 3 below.
+				'V', 'E',	// byte 7/8: source address, see NOTE 3 below.
 				0x21, // byte 9: function code (specific values to indicate which message it is in the ranging process).
 				0, 0 };	// All messages end with a 2-byte checksum automatically set by DW1000.
 
@@ -54,8 +54,8 @@ static uint8 rx_resp_msg[] = { //
 		0x41, 0x88,	// byte 0/1: frame control (0x8841 to indicate a data frame using 16-bit addressing).
 				0, 	// byte 2: sequence number, incremented for each new frame.
 				0xCA, 0xDE, // byte 3/4 : PAN ID (0xDECA)
-				'W', 'A', 	// byte 5/6: destination address, see NOTE 3 below.
-				'V', 'E',	// byte 7/8: source address, see NOTE 3 below.
+				'V', 'E', 	// byte 5/6: destination address, see NOTE 3 below.
+				'W', 'A',	// byte 7/8: source address, see NOTE 3 below.
 				0x10, // byte 9: function code (specific values to indicate which message it is in the ranging process). [Response message]
 				0x02, // byte 10: activity code (0x02 to tell the initiator to go on with the ranging exchange).
 				0, 0, // byte 11/12: activity parameter, not used for activity code 0x02.
@@ -64,8 +64,8 @@ static uint8 rx_resp_msg[] = { //
 static uint8 tx_final_msg[] = { 0x41, 0x88,	// byte 0/1: frame control (0x8841 to indicate a data frame using 16-bit addressing).
 		0, 			// byte 2: sequence number, incremented for each new frame.
 		0xCA, 0xDE, // byte 3/4 : PAN ID (0xDECA)
-		'V', 'E', 	// byte 5/6: destination address, see NOTE 3 below.
-		'W', 'A',	// byte 7/8: source address, see NOTE 3 below.
+		'W', 'A', 	// byte 5/6: destination address, see NOTE 3 below.
+		'V', 'E',	// byte 7/8: source address, see NOTE 3 below.
 		0x23, // byte 9: function code (specific values to indicate which message it is in the ranging process). [Final message]
 		0, 0, 0, 0, // byte 10 -> 13: poll message transmission timestamp
 		0, 0, 0, 0, // byte 14 -> 17: response message reception timestamp
@@ -141,7 +141,7 @@ void DWM1000_Tag::initSpi() {
 	spi_init(HSPI);
 	spi_mode(HSPI, 0, 0);
 	//	spi_clock(HSPI, SPI_CLK_PREDIV, SPI_CLK_CNTDIV);
-	spi_clock(HSPI, 10, 10);//
+	spi_clock(HSPI, 10, 20);//
 //	spi_tx_byte_order(HSPI, SPI_BYTE_ORDER_HIGH_TO_LOW);
 //	spi_rx_byte_order(HSPI, SPI_BYTE_ORDER_HIGH_TO_LOW);
 	spi_tx_byte_order(HSPI, SPI_BYTE_ORDER_LOW_TO_HIGH);
@@ -171,34 +171,36 @@ void DWM1000_Tag::init() {
 	initSpi();
 
 	uint64_t eui = 0xF1F2F3F4F5F6F7F;
+	dwt_seteui((uint8_t*) &eui);
+	dwt_geteui((uint8_t*) &eui);
+	LOG<< HEX << "EUID : "<< eui <<FLUSH;
+	dwt_seteui((uint8_t*) &eui);
+	dwt_geteui((uint8_t*) &eui);
+	LOG<< HEX << "EUID : "<< eui <<FLUSH;
 
 //	dwt_softreset();
 	deca_sleep(100);
 
-	if (dwt_configure(&config) == DWT_ERROR)
-		LOG<< "dwt_configure failed." <<FLUSH; // Configure DW1000. See NOTE 2 below.
-		else
-		LOG <<"dwt_configure succeeded."<<FLUSH;
-	uint32_t device_id = dwt_readdevid();
-	uint32_t part_id = dwt_getpartid();
-	uint32_t lot_id = dwt_getlotid();
-	LOG<< HEX << " device id : " << device_id << ", part id : " << part_id << ", lot_id :" << lot_id <<FLUSH;
+    while ( dwt_initialise(DWT_LOADUCODE)) {
+    	LOG << " dwt_initialise failed " << FLUSH;
+    }
+    LOG << " dwt_initialise done." << FLUSH;
+    while ( dwt_configure(&config)) {
+    	LOG << " dwt_configure failed " << FLUSH;
+    }
+    LOG << " dwt_configure done." << FLUSH;
 
-	/* Apply default antenna delay value. See NOTE 1 below. */
-	dwt_setrxantennadelay(RX_ANT_DLY);
+	uint32_t device_id = dwt_readdevid();
+	LOG<< HEX << " device id : " << device_id <<FLUSH;
+
+
+	dwt_setrxantennadelay(RX_ANT_DLY);	/* Apply default antenna delay value. See NOTE 1 below. */
 	dwt_settxantennadelay(TX_ANT_DLY);
 
 	/* Set expected response's delay and timeout. See NOTE 4 and 5 below.
 	 * As this example only handles one incoming frame with always the same delay and timeout, those values can be set here once for all. */
 	dwt_setrxaftertxdelay(POLL_TX_TO_RESP_RX_DLY_UUS);
 	dwt_setrxtimeout(RESP_RX_TIMEOUT_UUS);
-
-	dwt_seteui((uint8_t*) &eui);
-	dwt_geteui((uint8_t*) &eui);
-	LOG<< HEX << "EUID : "<< eui <<FLUSH;
-	dwt_seteui((uint8_t*) &eui);
-	dwt_geteui((uint8_t*) &eui);
-	LOG<< HEX << "EUID : "<< eui <<FLUSH;
 
 	_count = 0;
 }

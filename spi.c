@@ -501,7 +501,7 @@ int writetospi(uint16 hLen, const uint8 *hbuff, uint32 bLen,
 		spi_transaction(HSPI, 8, hbuff[i], 0, 0, 0, 0, 0, 0);
 	for (i = 0; i < bLen; i++)
 		spi_transaction(HSPI, 8, buffer[i], 0, 0, 0, 0, 0, 0);
-	os_delay_us(10);
+	os_delay_us(100);
 	spi_cs_deselect();
 	return 0;
 }
@@ -520,7 +520,7 @@ int readfromspi(uint16 hLen, const uint8 *hbuff, uint32 bLen, uint8 *buffer) {
 		spi_transaction(HSPI, 0, 0, 0, 0, 8, hbuff[i], 0, 0);
 	for (i = 0; i < bLen; i++)
 		buffer[i] = spi_transaction(HSPI, 0, 0, 0, 0, 0, 0, 8, 0);
-//	os_delay_us(100);
+	os_delay_us(100);
 	spi_cs_deselect();
 	INFO("data : %s", bytesToHex(buffer, bLen));
 	return 0;

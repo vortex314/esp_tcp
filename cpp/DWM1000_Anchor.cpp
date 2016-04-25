@@ -47,8 +47,8 @@ static uint8 rx_poll_msg[] = { //
 		0x41, 0x88,	// byte 0/1: frame control (0x8841 to indicate a data frame using 16-bit addressing).
 				0, 	// byte 2: sequence number, incremented for each new frame.
 				0xCA, 0xDE, // byte 3/4 : PAN ID (0xDECA)
-				'V', 'E', 	// byte 5/6: destination address, see NOTE 3 below.
-				'W', 'A',	// byte 7/8: source address, see NOTE 3 below.
+				'W', 'A', 	// byte 5/6: destination address, see NOTE 3 below.
+				'V', 'E',	// byte 7/8: source address, see NOTE 3 below.
 				0x21, // byte 9: function code (specific values to indicate which message it is in the ranging process).
 				0, 0 };	// All messages end with a 2-byte checksum automatically set by DW1000.
 
@@ -56,8 +56,8 @@ static uint8 tx_resp_msg[] = { //
 		0x41, 0x88,	// byte 0/1: frame control (0x8841 to indicate a data frame using 16-bit addressing).
 				0, 	// byte 2: sequence number, incremented for each new frame.
 				0xCA, 0xDE, // byte 3/4 : PAN ID (0xDECA)
-				'W', 'A', 	// byte 5/6: destination address, see NOTE 3 below.
-				'V', 'E',	// byte 7/8: source address, see NOTE 3 below.
+				'V', 'E', 	// byte 5/6: destination address, see NOTE 3 below.
+				'W', 'A',	// byte 7/8: source address, see NOTE 3 below.
 				0x10, // byte 9: function code (specific values to indicate which message it is in the ranging process). [Response message]
 				0x02, // byte 10: activity code (0x02 to tell the initiator to go on with the ranging exchange).
 				0, 0, // byte 11/12: activity parameter, not used for activity code 0x02.
@@ -66,8 +66,8 @@ static uint8 tx_resp_msg[] = { //
 static uint8 rx_final_msg[] = { 0x41, 0x88,	// byte 0/1: frame control (0x8841 to indicate a data frame using 16-bit addressing).
 		0, 			// byte 2: sequence number, incremented for each new frame.
 		0xCA, 0xDE, // byte 3/4 : PAN ID (0xDECA)
-		'V', 'E', 	// byte 5/6: destination address, see NOTE 3 below.
-		'W', 'A',	// byte 7/8: source address, see NOTE 3 below.
+		'W', 'A', 	// byte 5/6: destination address, see NOTE 3 below.
+		'V', 'E',	// byte 7/8: source address, see NOTE 3 below.
 		0x23, // byte 9: function code (specific values to indicate which message it is in the ranging process). [Final message]
 		0, 0, 0, 0, // byte 10 -> 13: poll message transmission timestamp
 		0, 0, 0, 0, // byte 14 -> 17: response message reception timestamp
@@ -87,7 +87,7 @@ static uint8 frame_seq_nb = 0;
 
 /* Buffer to store received response message.
  * Its size is adjusted to longest frame that this example code is supposed to handle. */
-#define RX_BUF_LEN 20
+#define RX_BUF_LEN 24
 static uint8 rx_buffer[RX_BUF_LEN];
 
 /* Hold copy of status register state here for reference, so reader can examine it at a breakpoint. */
@@ -114,10 +114,9 @@ typedef unsigned long long uint64;
 /* This is the delay from Frame RX timestamp to TX reply timestamp used for calculating/setting the DW1000's delayed TX function. This includes the
  * frame length of approximately 2.46 ms with above configuration. */
 #define POLL_RX_TO_RESP_TX_DLY_UUS 2600
-/* This is the delay from the end of the frame transmission to the enable of the receiver, as programmed for the DW1000's wait for response feature. */
-#define RESP_TX_TO_FINAL_RX_DLY_UUS 500
-/* Receive final timeout. See NOTE 5 below. */
-#define FINAL_RX_TIMEOUT_UUS 3300
+#define RESP_TX_TO_FINAL_RX_DLY_UUS 500 /* This is the delay from the end of the frame transmission to the enable of the receiver, as programmed for the DW1000's wait for response feature. */
+#define FINAL_RX_TIMEOUT_UUS 3300	/* Receive final timeout. See NOTE 5 below. */
+
 
 /* Timestamps of frames transmission/reception.
  * As they are 40-bit wide, we need to define a 64-bit int type to handle them. */
@@ -133,7 +132,6 @@ static uint64 final_rx_ts;
 /* Hold copies of computed time of flight and distance here for reference, so reader can examine it at a breakpoint. */
 static double tof;
 static double distance;
-
 
 /* Declaration of static functions. */
 static uint64 get_tx_timestamp_u64(void);
@@ -165,7 +163,7 @@ void DWM1000_Anchor::initSpi() {
 	spi_init(HSPI);
 	spi_mode(HSPI, 0, 0);
 	//	spi_clock(HSPI, SPI_CLK_PREDIV, SPI_CLK_CNTDIV);
-	spi_clock(HSPI, 10, 10);//
+	spi_clock(HSPI, 10, 20);//
 //	spi_tx_byte_order(HSPI, SPI_BYTE_ORDER_HIGH_TO_LOW);
 //	spi_rx_byte_order(HSPI, SPI_BYTE_ORDER_HIGH_TO_LOW);
 	spi_tx_byte_order(HSPI, SPI_BYTE_ORDER_LOW_TO_HIGH);
@@ -194,18 +192,31 @@ void DWM1000_Anchor::init() {
 	resetChip();
 	initSpi();
 
+
 	uint64_t eui = 0xF1F2F3F4F5F6F7F;
+	dwt_seteui((uint8_t*) &eui);
+	dwt_geteui((uint8_t*) &eui);
+	LOG<< HEX << "EUID : "<< eui <<FLUSH;
+	dwt_seteui((uint8_t*) &eui);
+	dwt_geteui((uint8_t*) &eui);
+	LOG<< HEX << "EUID : "<< eui <<FLUSH;
 
 //	dwt_softreset();
 	deca_sleep(100);
 
-	if (dwt_configure(&config) == DWT_ERROR)
-		LOG<< "dwt_configure failed." <<FLUSH; // Configure DW1000. See NOTE 2 below.
-		else
-		LOG <<"dwt_configure succeeded."<<FLUSH;
+    while ( dwt_initialise(DWT_LOADUCODE)) {
+    	LOG << " dwt_initialise failed " << FLUSH;
+    }
+    LOG << " dwt_initialise done." << FLUSH;
+    while ( dwt_configure(&config)) {
+    	LOG << " dwt_configure failed " << FLUSH;
+    }
+    LOG << " dwt_configure done." << FLUSH;
+
 	uint32_t device_id = dwt_readdevid();
 	uint32_t part_id = dwt_getpartid();
 	uint32_t lot_id = dwt_getlotid();
+
 	LOG<< HEX << " device id : " << device_id << ", part id : " << part_id << ", lot_id :" << lot_id <<FLUSH;
 
 	/* Apply default antenna delay value. See NOTE 1 below. */
@@ -217,12 +228,9 @@ void DWM1000_Anchor::init() {
 	dwt_setrxaftertxdelay(POLL_TX_TO_RESP_RX_DLY_UUS);
 	dwt_setrxtimeout(RESP_RX_TIMEOUT_UUS);
 
-	dwt_seteui((uint8_t*) &eui);
-	dwt_geteui((uint8_t*) &eui);
-	LOG<< HEX << "EUID : "<< eui <<FLUSH;
-	dwt_seteui((uint8_t*) &eui);
-	dwt_geteui((uint8_t*) &eui);
-	LOG<< HEX << "EUID : "<< eui <<FLUSH;
+    dwt_initialise(DWT_LOADUCODE);
+
+
 
 	_count = 0;
 }
@@ -244,136 +252,142 @@ bool DWM1000_Anchor::dispatch(Msg& msg) {
 	PT_WAIT_UNTIL(msg.is(0, SIG_INIT));
 	init();
 	while (true) {
-		timeout(100);
+
+		timeout(100);					// try every 100 msec
 		PT_YIELD_UNTIL(timeout());
-        dwt_setrxtimeout(0);  	/* Clear reception timeout to start next ranging process. */
-        dwt_rxenable(0); 		/* Activate reception immediately. */
-        while(true){	/* Poll for reception of a frame or error/timeout. See NOTE 7 below. */
-        	timeout(100);
-        	PT_YIELD_UNTIL(timeout());
-        	if(((status_reg = dwt_read32bitreg(SYS_STATUS_ID)) & (SYS_STATUS_RXFCG | SYS_STATUS_ALL_RX_ERR)))
-                break;
-        }
+
+		dwt_setrxtimeout(0); /* Clear reception timeout to start next ranging process. */
+		dwt_rxenable(0); /* Activate reception immediately. */
+		while (true) { /* Poll for reception of a frame or error/timeout. See NOTE 7 below. */
+			timeout(1000);/* This is the delay from the end of the frame transmission to the enable of the receiver, as programmed for the DW1000's wait for response feature. */
+
+			PT_YIELD_UNTIL(timeout());
+			status_reg = dwt_read32bitreg(SYS_STATUS_ID);
+			LOG<< HEX << " status reg.:" << status_reg << FLUSH;
+			if (status_reg & (SYS_STATUS_RXFCG | SYS_STATUS_ALL_RX_ERR))
+				break;
+		}
+		LOG<< " $$$$$$$$$$$$$$$$$ DATA RECEIVED "<<FLUSH;
 		///____________________________________________________________________________
 
+		if (status_reg & SYS_STATUS_RXFCG) {
+			uint32 frame_len;
+			dwt_write32bitreg(SYS_STATUS_ID, SYS_STATUS_RXFCG); /* Clear good RX frame event in the DW1000 status register. */
 
-        if (status_reg & SYS_STATUS_RXFCG)
-        {
-            uint32 frame_len;
-            dwt_write32bitreg(SYS_STATUS_ID, SYS_STATUS_RXFCG);	/* Clear good RX frame event in the DW1000 status register. */
+			/* A frame has been received, read it into the local buffer. */
+			frame_len = dwt_read32bitreg(RX_FINFO_ID) & RX_FINFO_RXFL_MASK_1023;
+			if (frame_len <= RX_BUFFER_LEN) {
+				dwt_readrxdata(rx_buffer, frame_len, 0);
+			}
 
-            /* A frame has been received, read it into the local buffer. */
-            frame_len = dwt_read32bitreg(RX_FINFO_ID) & RX_FINFO_RXFL_MASK_1023;
-            if (frame_len <= RX_BUFFER_LEN)
-            {
-                dwt_readrxdata(rx_buffer, frame_len, 0);
-            }
+			/* Check that the frame is a poll sent by "DS TWR initiator" example.
+			 * As the sequence number field of the frame is not relevant, it is cleared to simplify the validation of the frame. */
+			rx_buffer[ALL_MSG_SN_IDX] = 0;
+			if (memcmp(rx_buffer, rx_poll_msg, ALL_MSG_COMMON_LEN) == 0) {
+				uint32 resp_tx_time;
 
-            /* Check that the frame is a poll sent by "DS TWR initiator" example.
-             * As the sequence number field of the frame is not relevant, it is cleared to simplify the validation of the frame. */
-            rx_buffer[ALL_MSG_SN_IDX] = 0;
-            if (memcmp(rx_buffer, rx_poll_msg, ALL_MSG_COMMON_LEN) == 0)
-            {
-                uint32 resp_tx_time;
+				poll_rx_ts = get_rx_timestamp_u64(); /* Retrieve poll reception timestamp. */
 
+				/* Set send time for response. See NOTE 8 below. */
+				resp_tx_time = (poll_rx_ts
+						+ (POLL_RX_TO_RESP_TX_DLY_UUS * UUS_TO_DWT_TIME)) >> 8;
+				dwt_setdelayedtrxtime(resp_tx_time);
 
-                poll_rx_ts = get_rx_timestamp_u64(); /* Retrieve poll reception timestamp. */
+				/* Set expected delay and timeout for final message reception. */
+				dwt_setrxaftertxdelay(RESP_TX_TO_FINAL_RX_DLY_UUS);
+				dwt_setrxtimeout(FINAL_RX_TIMEOUT_UUS);
 
-                /* Set send time for response. See NOTE 8 below. */
-                resp_tx_time = (poll_rx_ts + (POLL_RX_TO_RESP_TX_DLY_UUS * UUS_TO_DWT_TIME)) >> 8;
-                dwt_setdelayedtrxtime(resp_tx_time);
+				/* Write and send the response message. See NOTE 9 below.*/
+				tx_resp_msg[ALL_MSG_SN_IDX] = frame_seq_nb;
+				dwt_writetxdata(sizeof(tx_resp_msg), tx_resp_msg, 0);
+				dwt_writetxfctrl(sizeof(tx_resp_msg), 0);
+				dwt_starttx(DWT_START_TX_DELAYED | DWT_RESPONSE_EXPECTED);
 
-                /* Set expected delay and timeout for final message reception. */
-                dwt_setrxaftertxdelay(RESP_TX_TO_FINAL_RX_DLY_UUS);
-                dwt_setrxtimeout(FINAL_RX_TIMEOUT_UUS);
+				/* We assume that the transmission is achieved correctly, now poll for reception of expected "final" frame or error/timeout.
+				 * See NOTE 7 below. */
+//				while (true) { /* Poll for reception of a frame or error/timeout. See NOTE 7 below. */
+					timeout(100);
+					PT_YIELD_UNTIL(timeout());
+					status_reg = dwt_read32bitreg(SYS_STATUS_ID);
+					LOG<< HEX << " status reg2:" << status_reg << FLUSH;
+//					if (status_reg & (SYS_STATUS_RXFCG | SYS_STATUS_ALL_RX_ERR))
+//						break;
+//				}
+				//               while (!((status_reg = dwt_read32bitreg(SYS_STATUS_ID)) & (SYS_STATUS_RXFCG | SYS_STATUS_ALL_RX_ERR)))
+				//               { };
 
-                /* Write and send the response message. See NOTE 9 below.*/
-                tx_resp_msg[ALL_MSG_SN_IDX] = frame_seq_nb;
-                dwt_writetxdata(sizeof(tx_resp_msg), tx_resp_msg, 0);
-                dwt_writetxfctrl(sizeof(tx_resp_msg), 0);
-                dwt_starttx(DWT_START_TX_DELAYED | DWT_RESPONSE_EXPECTED);
+				/* Increment frame sequence number after transmission of the response message (modulo 256). */
+				frame_seq_nb++;
 
-                /* We assume that the transmission is achieved correctly, now poll for reception of expected "final" frame or error/timeout.
-                 * See NOTE 7 below. */
-                while(true){	/* Poll for reception of a frame or error/timeout. See NOTE 7 below. */
-                	timeout(100);
-                	PT_YIELD_UNTIL(timeout());
-                	if(((status_reg = dwt_read32bitreg(SYS_STATUS_ID)) & (SYS_STATUS_RXFCG | SYS_STATUS_ALL_RX_ERR)))
-                        break;
-                }
- //               while (!((status_reg = dwt_read32bitreg(SYS_STATUS_ID)) & (SYS_STATUS_RXFCG | SYS_STATUS_ALL_RX_ERR)))
- //               { };
+				if (status_reg & SYS_STATUS_RXFCG) {
+					/* Clear good RX frame event and TX frame sent in the DW1000 status register. */
+					dwt_write32bitreg(SYS_STATUS_ID,
+							SYS_STATUS_RXFCG | SYS_STATUS_TXFRS);
 
-                /* Increment frame sequence number after transmission of the response message (modulo 256). */
-                frame_seq_nb++;
+					/* A frame has been received, read it into the local buffer. */
+					frame_len = dwt_read32bitreg(
+							RX_FINFO_ID) & RX_FINFO_RXFLEN_MASK;
+					if (frame_len <= RX_BUF_LEN) {
+						dwt_readrxdata(rx_buffer, frame_len, 0);
+					}
 
-                if (status_reg & SYS_STATUS_RXFCG)
-                {
-                    /* Clear good RX frame event and TX frame sent in the DW1000 status register. */
-                    dwt_write32bitreg(SYS_STATUS_ID, SYS_STATUS_RXFCG | SYS_STATUS_TXFRS);
+					/* Check that the frame is a final message sent by "DS TWR initiator" example.
+					 * As the sequence number field of the frame is not used in this example, it can be zeroed to ease the validation of the frame. */
+					rx_buffer[ALL_MSG_SN_IDX] = 0;
+					if (memcmp(rx_buffer, rx_final_msg, ALL_MSG_COMMON_LEN)
+							== 0) {
+						uint32 poll_tx_ts, resp_rx_ts, final_tx_ts;
+						uint32 poll_rx_ts_32, resp_tx_ts_32, final_rx_ts_32;
+						double Ra, Rb, Da, Db;
+						int64 tof_dtu;
 
-                    /* A frame has been received, read it into the local buffer. */
-                    frame_len = dwt_read32bitreg(RX_FINFO_ID) & RX_FINFO_RXFLEN_MASK;
-                    if (frame_len <= RX_BUF_LEN)
-                    {
-                        dwt_readrxdata(rx_buffer, frame_len, 0);
-                    }
+						/* Retrieve response transmission and final reception timestamps. */
+						resp_tx_ts = get_tx_timestamp_u64();
+						final_rx_ts = get_rx_timestamp_u64();
 
-                    /* Check that the frame is a final message sent by "DS TWR initiator" example.
-                     * As the sequence number field of the frame is not used in this example, it can be zeroed to ease the validation of the frame. */
-                    rx_buffer[ALL_MSG_SN_IDX] = 0;
-                    if (memcmp(rx_buffer, rx_final_msg, ALL_MSG_COMMON_LEN) == 0)
-                    {
-                        uint32 poll_tx_ts, resp_rx_ts, final_tx_ts;
-                        uint32 poll_rx_ts_32, resp_tx_ts_32, final_rx_ts_32;
-                        double Ra, Rb, Da, Db;
-                        int64 tof_dtu;
+						/* Get timestamps embedded in the final message. */
+						final_msg_get_ts(&rx_buffer[FINAL_MSG_POLL_TX_TS_IDX],
+								&poll_tx_ts);
+						final_msg_get_ts(&rx_buffer[FINAL_MSG_RESP_RX_TS_IDX],
+								&resp_rx_ts);
+						final_msg_get_ts(&rx_buffer[FINAL_MSG_FINAL_TX_TS_IDX],
+								&final_tx_ts);
 
-                        /* Retrieve response transmission and final reception timestamps. */
-                        resp_tx_ts = get_tx_timestamp_u64();
-                        final_rx_ts = get_rx_timestamp_u64();
+						/* Compute time of flight. 32-bit subtractions give correct answers even if clock has wrapped. See NOTE 10 below. */
+						poll_rx_ts_32 = (uint32) poll_rx_ts;
+						resp_tx_ts_32 = (uint32) resp_tx_ts;
+						final_rx_ts_32 = (uint32) final_rx_ts;
+						Ra = (double) (resp_rx_ts - poll_tx_ts);
+						Rb = (double) (final_rx_ts_32 - resp_tx_ts_32);
+						Da = (double) (final_tx_ts - resp_rx_ts);
+						Db = (double) (resp_tx_ts_32 - poll_rx_ts_32);
+						tof_dtu = (int64) ((Ra * Rb - Da * Db)
+								/ (Ra + Rb + Da + Db));
 
-                        /* Get timestamps embedded in the final message. */
-                        final_msg_get_ts(&rx_buffer[FINAL_MSG_POLL_TX_TS_IDX], &poll_tx_ts);
-                        final_msg_get_ts(&rx_buffer[FINAL_MSG_RESP_RX_TS_IDX], &resp_rx_ts);
-                        final_msg_get_ts(&rx_buffer[FINAL_MSG_FINAL_TX_TS_IDX], &final_tx_ts);
+						tof = tof_dtu * DWT_TIME_UNITS;
+						distance = tof * SPEED_OF_LIGHT;
 
-                        /* Compute time of flight. 32-bit subtractions give correct answers even if clock has wrapped. See NOTE 10 below. */
-                        poll_rx_ts_32 = (uint32)poll_rx_ts;
-                        resp_tx_ts_32 = (uint32)resp_tx_ts;
-                        final_rx_ts_32 = (uint32)final_rx_ts;
-                        Ra = (double)(resp_rx_ts - poll_tx_ts);
-                        Rb = (double)(final_rx_ts_32 - resp_tx_ts_32);
-                        Da = (double)(final_tx_ts - resp_rx_ts);
-                        Db = (double)(resp_tx_ts_32 - poll_rx_ts_32);
-                        tof_dtu = (int64)((Ra * Rb - Da * Db) / (Ra + Rb + Da + Db));
-
-                        tof = tof_dtu * DWT_TIME_UNITS;
-                        distance = tof * SPEED_OF_LIGHT;
-
-                        /* Display computed distance on LCD. */
- //                       sprintf(dist_str, "DIST: %3.2f m", distance);
-  //                      lcd_display_str(dist_str);
-                    }
-                }
-                else
-                {
-                    /* Clear RX error events in the DW1000 status register. */
-                    dwt_write32bitreg(SYS_STATUS_ID, SYS_STATUS_ALL_RX_ERR);
-                }
-            }
-        }
-        else
-        {
-            /* Clear RX error events in the DW1000 status register. */
-            dwt_write32bitreg(SYS_STATUS_ID, SYS_STATUS_ALL_RX_ERR);
-        }
+						/* Display computed distance on LCD. */
+//						char dist_str[20];
+//						sprintf(dist_str,"%3.2f", distance);
+						//                      lcd_display_str(dist_str);
+						LOG<< " distance : " << (float)distance << "m. " << FLUSH;
+					}
+				} else {
+					/* Clear RX error events in the DW1000 status register. */
+					dwt_write32bitreg(SYS_STATUS_ID, SYS_STATUS_ALL_RX_ERR);
+				}
+			}
+		} else {
+			/* Clear RX error events in the DW1000 status register. */
+			dwt_write32bitreg(SYS_STATUS_ID, SYS_STATUS_ALL_RX_ERR);
+		}
 
 	}
 
-PT_END()
-;
-return false;
+	PT_END()
+	;
+	return false;
 }
 
 /*! ------------------------------------------------------------------------------------------------------------------
@@ -386,18 +400,16 @@ return false;
  *
  * @return  64-bit value of the read time-stamp.
  */
-static uint64 get_tx_timestamp_u64(void)
-{
-    uint8 ts_tab[5];
-    uint64 ts = 0;
-    int i;
-    dwt_readtxtimestamp(ts_tab);
-    for (i = 4; i >= 0; i--)
-    {
-        ts <<= 8;
-        ts |= ts_tab[i];
-    }
-    return ts;
+static uint64 get_tx_timestamp_u64(void) {
+	uint8 ts_tab[5];
+	uint64 ts = 0;
+	int i;
+	dwt_readtxtimestamp(ts_tab);
+	for (i = 4; i >= 0; i--) {
+		ts <<= 8;
+		ts |= ts_tab[i];
+	}
+	return ts;
 }
 
 /*! ------------------------------------------------------------------------------------------------------------------
@@ -410,18 +422,16 @@ static uint64 get_tx_timestamp_u64(void)
  *
  * @return  64-bit value of the read time-stamp.
  */
-static uint64 get_rx_timestamp_u64(void)
-{
-    uint8 ts_tab[5];
-    uint64 ts = 0;
-    int i;
-    dwt_readrxtimestamp(ts_tab);
-    for (i = 4; i >= 0; i--)
-    {
-        ts <<= 8;
-        ts |= ts_tab[i];
-    }
-    return ts;
+static uint64 get_rx_timestamp_u64(void) {
+	uint8 ts_tab[5];
+	uint64 ts = 0;
+	int i;
+	dwt_readrxtimestamp(ts_tab);
+	for (i = 4; i >= 0; i--) {
+		ts <<= 8;
+		ts |= ts_tab[i];
+	}
+	return ts;
 }
 
 /*! ------------------------------------------------------------------------------------------------------------------
@@ -435,14 +445,12 @@ static uint64 get_rx_timestamp_u64(void)
  *
  * @return none
  */
-static void final_msg_get_ts(const uint8 *ts_field, uint32 *ts)
-{
-    int i;
-    *ts = 0;
-    for (i = 0; i < FINAL_MSG_TS_LEN; i++)
-    {
-        *ts += ts_field[i] << (i * 8);
-    }
+static void final_msg_get_ts(const uint8 *ts_field, uint32 *ts) {
+	int i;
+	*ts = 0;
+	for (i = 0; i < FINAL_MSG_TS_LEN; i++) {
+		*ts += ts_field[i] << (i * 8);
+	}
 }
 
 /*****************************************************************************************************************************************************
