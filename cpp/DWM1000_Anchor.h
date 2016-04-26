@@ -20,6 +20,11 @@ public:
 	void resetChip();
 	void initSpi();
 	bool dispatch(Msg& msg);
+	void enableIsr();
+	static bool interrupt_detected ;
+	static void my_dwt_isr();
+	bool isInterruptDetected();
+	bool clearInterrupt();
 };
 
 #endif /* DWM1000_Anchor_Tag_H_ */

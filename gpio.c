@@ -111,7 +111,7 @@ IROM  int __digitalRead(uint8_t pin) {
  GPIO INTERRUPTS
  */
 
-typedef void (*voidFuncPtr)(void);
+
 
 typedef struct {
 	uint8_t mode;
@@ -147,7 +147,7 @@ void IRAM interrupt_handler(void *arg) {
 	ETS_GPIO_INTR_ENABLE();
 }
 
-IROM void __attachInterrupt(uint8_t pin, voidFuncPtr userFunc, int mode) {
+void __attachInterrupt(uint8_t pin, voidFuncPtr userFunc, int mode) {
 	if (pin < 16) {
 		interrupt_handler_t *handler = &interrupt_handlers[pin];
 		handler->mode = mode;
@@ -159,7 +159,7 @@ IROM void __attachInterrupt(uint8_t pin, voidFuncPtr userFunc, int mode) {
 	}
 }
 
-IROM void __detachInterrupt(uint8_t pin) {
+ void __detachInterrupt(uint8_t pin) {
 	if (pin < 16) {
 		GPC(pin) &= ~(0xF << GPCI); //INT mode disabled
 		GPIEC = (1 << pin); //Clear Interrupt for this pin

@@ -7,6 +7,7 @@
 
 #include <DWM1000_Tag.h>
 #include <Logger.h>
+#include <Gpio.h>
 
 extern "C" {
 #include <spi.h>
@@ -128,11 +129,34 @@ DWM1000_Tag::~DWM1000_Tag() {
 //
 void DWM1000_Tag::resetChip() {
 	LOG<< " Reset DWM1000_Tag "<<FLUSH;
-	int pin = 5;	// RESET PIN == D1 == GPIO5
+	int pin = D1;	// RESET PIN == D1 == GPIO5
 	pinMode(pin, 1);// OUTPUT
 	digitalWrite(pin, 0);// PULL LOW
 	os_delay_us(10000);// 10ms
 	digitalWrite(pin, 1);// PUT HIGH
+}
+//_________________________________________________ IRQ handler
+//
+bool DWM1000_Tag::interrupt_detected = false;
+void DWM1000_Tag::my_dwt_isr() {
+	interrupt_detected = true;
+}
+
+bool DWM1000_Tag::isInterruptDetected() {
+	return interrupt_detected;
+}
+
+bool DWM1000_Tag::clearInterrupt() {
+	interrupt_detected = false;
+}
+
+//_________________________________________________ Configure IRQ pin
+//
+void DWM1000_Tag::enableIsr() {
+	LOG<< " IRQ SET "<<FLUSH;
+	int pin = D2;	// RESET PIN == D1 == GPIO5
+	pinMode(pin, 0);// INPUT
+	attachInterrupt(pin,my_dwt_isr,CHANGE);
 }
 //_________________________________________________ INITIALIZE SPI
 //
@@ -169,6 +193,7 @@ void DWM1000_Tag::init() {
 
 	resetChip();
 	initSpi();
+	enableIsr();
 
 	uint64_t eui = 0xF1F2F3F4F5F6F7F;
 	dwt_seteui((uint8_t*) &eui);
@@ -181,55 +206,41 @@ void DWM1000_Tag::init() {
 //	dwt_softreset();
 	deca_sleep(100);
 
-    while ( dwt_initialise(DWT_LOADUCODE)) {
-    	LOG << " dwt_initialise failed " << FLUSH;
-    }
-    LOG << " dwt_initialise done." << FLUSH;
-    while ( dwt_configure(&config)) {
-    	LOG << " dwt_configure failed " << FLUSH;
-    }
-    LOG << " dwt_configure done." << FLUSH;
+	while (dwt_initialise(DWT_LOADUCODE)) {
+		LOG<< " dwt_initialise failed " << FLUSH;
+	}
+	LOG<< " dwt_initialise done." << FLUSH;
+	while (dwt_configure(&config)) {
+		LOG<< " dwt_configure failed " << FLUSH;
+	}
+	LOG<< " dwt_configure done." << FLUSH;
 
 	uint32_t device_id = dwt_readdevid();
 	LOG<< HEX << " device id : " << device_id <<FLUSH;
 
-
-	dwt_setrxantennadelay(RX_ANT_DLY);	/* Apply default antenna delay value. See NOTE 1 below. */
+	dwt_setrxantennadelay(RX_ANT_DLY); /* Apply default antenna delay value. See NOTE 1 below. */
 	dwt_settxantennadelay(TX_ANT_DLY);
 
 	/* Set expected response's delay and timeout. See NOTE 4 and 5 below.
 	 * As this example only handles one incoming frame with always the same delay and timeout, those values can be set here once for all. */
 	dwt_setrxaftertxdelay(POLL_TX_TO_RESP_RX_DLY_UUS);
 	dwt_setrxtimeout(RESP_RX_TIMEOUT_UUS);
+	dwt_setinterrupt(DWT_INT_RFCG, 1);	// enable
 
 	_count = 0;
 }
-/*
- uint32_t readDW1000(uint32_t offset, uint32_t length) {
- return spi_transaction(HSPI, 0, 0, 0, 0, 8, offset, length, 0);
 
- }
-
- uint32_t writeDW1000(uint32_t offset, uint32_t length, uint32_t value) {
- return spi_transaction(HSPI, 0, 0, 8, offset, length, value, 0, 0);
-
- }
- */
-extern "C" char* bytesToHex(uint8_t* pb, uint32_t len);
+//extern "C" char* bytesToHex(uint8_t* pb, uint32_t len);
 static int _timeoutCounter = 0;
 bool DWM1000_Tag::dispatch(Msg& msg) {
 	PT_BEGIN()
 	PT_WAIT_UNTIL(msg.is(0, SIG_INIT));
 	init();
-	while (true) {
-		timeout(100);
-		PT_YIELD_UNTIL(timeout());
-		/* Start transmission. */
-//		dwt_starttx(DWT_START_TX_IMMEDIATE);
-		/* Poll DW1000 until TX frame sent event set. See NOTE 4 below.
-		 * STATUS register is 5 bytes long but, as the event we are looking at is in the first byte of the register, we can use this simplest API
-		 * function to access it.*/
-		while (1) {
+
+	POLL_SEND: {
+		while (true) {
+			timeout(1000);				// delay  between POLL
+			PT_YIELD_UNTIL(timeout());
 			/* Write frame data to DW1000 and prepare transmission. See NOTE 7 below. */
 			tx_poll_msg[ALL_MSG_SN_IDX] = frame_seq_nb;
 			dwt_writetxdata(sizeof(tx_poll_msg), tx_poll_msg, 0);
@@ -239,28 +250,23 @@ bool DWM1000_Tag::dispatch(Msg& msg) {
 			 * set by dwt_setrxaftertxdelay() has elapsed. */
 			LOG<< " Start TXF " << FLUSH;
 			dwt_starttx(DWT_START_TX_IMMEDIATE | DWT_RESPONSE_EXPECTED);
-
+			dwt_setinterrupt(DWT_INT_TFRS, 0);
+			dwt_setinterrupt(DWT_INT_RFCG, 1);	// enable
+			clearInterrupt();
 			_timeoutCounter = 0;
-			while (true) {
-				/* We assume that the transmission is achieved correctly, poll for reception of a frame or error/timeout. See NOTE 8 below. */
-				timeout(100);
-				PT_YIELD_UNTIL(timeout());
-				status_reg = dwt_read32bitreg(SYS_STATUS_ID);
-				LOG<< HEX <<" SYS_STATUS " << status_reg << FLUSH;
-				if (status_reg & (SYS_STATUS_RXFCG | SYS_STATUS_ALL_RX_ERR)) {
-					break;
-				};
 
-				if (_timeoutCounter++ > 10)
-					break;
-			}
+			/* We assume that the transmission is achieved correctly, poll for reception of a frame or error/timeout. See NOTE 8 below. */
+			timeout(10);
+			PT_YIELD_UNTIL(timeout() || isInterruptDetected());
+			if (isInterruptDetected())
+				LOG<< " INTERRUPT DETECTED " << FLUSH;
+			status_reg = dwt_read32bitreg(SYS_STATUS_ID);
+			LOG<< HEX <<" SYS_STATUS " << status_reg << FLUSH;
 			if (status_reg == 0xDEADDEAD) {
-
 				init();
-			} else if (_timeoutCounter++ > 10) {
-
-				continue;
-			} else if (status_reg & SYS_STATUS_ALL_RX_ERR) {
+			} else if (status_reg & SYS_STATUS_RXFCG)
+				goto RESP_RECEIVED;
+			else if (status_reg & SYS_STATUS_ALL_RX_ERR) {
 
 				if (status_reg & SYS_STATUS_RXRFTO)
 					INFO(" RX Timeout");
@@ -268,79 +274,79 @@ bool DWM1000_Tag::dispatch(Msg& msg) {
 					INFO(" RX error ");
 				dwt_write32bitreg(SYS_STATUS_ID, SYS_STATUS_ALL_RX_ERR); /* Clear RX error events in the DW1000 status register. */
 
-			} else if (status_reg & SYS_STATUS_RXFCG) {
-
-				LOG<< " Received " <<FLUSH;
-
-				frame_seq_nb++; /* Increment frame sequence number after transmission of the poll message (modulo 256). */
-				uint32 frame_len;
-
-				/* Clear good RX frame event and TX frame sent in the DW1000 status register. */
-				dwt_write32bitreg(SYS_STATUS_ID,
-						SYS_STATUS_RXFCG | SYS_STATUS_TXFRS);
-
-				/* A frame has been received, read it into the local buffer. */
-				frame_len =
-				dwt_read32bitreg(RX_FINFO_ID) & RX_FINFO_RXFLEN_MASK;
-				if (frame_len <= RX_BUF_LEN) {
-					dwt_readrxdata(rx_buffer, frame_len, 0);
-				}
-
-				/* Check that the frame is the expected response from the companion "DS TWR responder" example.
-				 * As the sequence number field of the frame is not relevant, it is cleared to simplify the validation of the frame. */
-				rx_buffer[ALL_MSG_SN_IDX] = 0;
-				if (memcmp(rx_buffer, rx_resp_msg, ALL_MSG_COMMON_LEN) == 0) {
-					uint32 final_tx_time;
-
-					/* Retrieve poll transmission and response reception timestamp. */
-					poll_tx_ts = get_tx_timestamp_u64();
-					resp_rx_ts = get_rx_timestamp_u64();
-
-					/* Compute final message transmission time. See NOTE 9 below. */
-					final_tx_time = (resp_rx_ts
-							+ (RESP_RX_TO_FINAL_TX_DLY_UUS * UUS_TO_DWT_TIME))
-					>> 8;
-					dwt_setdelayedtrxtime(final_tx_time);
-
-					/* Final TX timestamp is the transmission time we programmed plus the TX antenna delay. */
-					final_tx_ts = (((uint64) (final_tx_time & 0xFFFFFFFE)) << 8)
-					+ TX_ANT_DLY;
-
-					/* Write all timestamps in the final message. See NOTE 10 below. */
-					final_msg_set_ts(&tx_final_msg[FINAL_MSG_POLL_TX_TS_IDX],
-							poll_tx_ts);
-					final_msg_set_ts(&tx_final_msg[FINAL_MSG_RESP_RX_TS_IDX],
-							resp_rx_ts);
-					final_msg_set_ts(&tx_final_msg[FINAL_MSG_FINAL_TX_TS_IDX],
-							final_tx_ts);
-
-					/* Write and send final message. See NOTE 7 below. */
-					tx_final_msg[ALL_MSG_SN_IDX] = frame_seq_nb;
-					dwt_writetxdata(sizeof(tx_final_msg), tx_final_msg, 0);
-					dwt_writetxfctrl(sizeof(tx_final_msg), 0);
-					dwt_starttx(DWT_START_TX_DELAYED);
-
-					/* Poll DW1000 until TX frame sent event set. See NOTE 8 below. */
-					timeout(100);
-					PT_YIELD_UNTIL((dwt_read32bitreg(SYS_STATUS_ID) & SYS_STATUS_TXFRS) || timeout());;
-					/* Clear TXFRS event. */
-					dwt_write32bitreg(SYS_STATUS_ID, SYS_STATUS_TXFRS);
-
-					/* Increment frame sequence number after transmission of the final message (modulo 256). */
-					frame_seq_nb++;
-				}
-			} else {
-				INFO(" not expected response ");
 			}
-			timeout(RNG_DELAY_MS); /* Execute a delay between ranging exchanges. */
-			PT_YIELD_UNTIL(timeout());
-//			deca_sleep(RNG_DELAY_MS);
 		}
+
+	}
+	RESP_RECEIVED: {
+
+		LOG<< " Received " <<FLUSH;
+
+		frame_seq_nb++; /* Increment frame sequence number after transmission of the poll message (modulo 256). */
+		uint32 frame_len;
+
+		/* Clear good RX frame event and TX frame sent in the DW1000 status register. */
+		dwt_write32bitreg(SYS_STATUS_ID,
+				SYS_STATUS_RXFCG | SYS_STATUS_TXFRS);
+
+		/* A frame has been received, read iCHANGEt into the local buffer. */
+		frame_len =
+		dwt_read32bitreg(RX_FINFO_ID) & RX_FINFO_RXFLEN_MASK;
+		if (frame_len <= RX_BUF_LEN) {
+			dwt_readrxdata(rx_buffer, frame_len, 0);
+		}
+
+		/* Check that the frame is the expected response from the companion "DS TWR responder" example.
+		 * As the sequence number field of the frame is not relevant, it is cleared to simplify the validation of the frame. */
+		rx_buffer[ALL_MSG_SN_IDX] = 0;
+		if (memcmp(rx_buffer, rx_resp_msg, ALL_MSG_COMMON_LEN) == 0) {
+			uint32 final_tx_time;
+
+			/* Retrieve poll transmission and response reception timestamp. */
+			poll_tx_ts = get_tx_timestamp_u64();
+			resp_rx_ts = get_rx_timestamp_u64();
+
+			/* Compute final message transmission time. See NOTE 9 below. */
+			final_tx_time = (resp_rx_ts
+					+ (RESP_RX_TO_FINAL_TX_DLY_UUS * UUS_TO_DWT_TIME))
+			>> 8;
+			dwt_setdelayedtrxtime(final_tx_time);
+
+			/* Final TX timestamp is the transmission time we programmed plus the TX antenna delay. */
+			final_tx_ts = (((uint64) (final_tx_time & 0xFFFFFFFE)) << 8)
+			+ TX_ANT_DLY;
+
+			/* Write all timestamps in the final message. See NOTE 10 below. */
+			final_msg_set_ts(&tx_final_msg[FINAL_MSG_POLL_TX_TS_IDX],
+					poll_tx_ts);
+			final_msg_set_ts(&tx_final_msg[FINAL_MSG_RESP_RX_TS_IDX],
+					resp_rx_ts);
+			final_msg_set_ts(&tx_final_msg[FINAL_MSG_FINAL_TX_TS_IDX],
+					final_tx_ts);
+
+			/* Write and send final message. See NOTE 7 below. */
+			tx_final_msg[ALL_MSG_SN_IDX] = frame_seq_nb;
+			dwt_writetxdata(sizeof(tx_final_msg), tx_final_msg, 0);
+			dwt_writetxfctrl(sizeof(tx_final_msg), 0);
+			dwt_starttx(DWT_START_TX_DELAYED);
+
+			/* Poll DW1000 until TX frame sent event set. See NOTE 8 below. */
+			timeout(100);
+			PT_YIELD_UNTIL((dwt_read32bitreg(SYS_STATUS_ID) & SYS_STATUS_TXFRS) || timeout());;
+			/* Clear TXFRS event. */
+			dwt_write32bitreg(SYS_STATUS_ID, SYS_STATUS_TXFRS);
+
+			/* Increment frame sequence number after transmission of the final message (modulo 256). */
+			frame_seq_nb++;
+		} else {
+			INFO(" not expected response ");
+		}
+//			deca_sleep(RNG_DELAY_MS);
 	}
 
-PT_END()
-;
-return false;
+	PT_END()
+	;
+	return false;
 }
 
 /*! ------------------------------------------------------------------------------------------------------------------
@@ -354,15 +360,15 @@ return false;
  * @return  64-bit value of the read time-stamp.
  */
 static uint64 get_tx_timestamp_u64(void) {
-uint8 ts_tab[5];
-uint64 ts = 0;
-int i;
-dwt_readtxtimestamp(ts_tab);
-for (i = 4; i >= 0; i--) {
-	ts <<= 8;
-	ts |= ts_tab[i];
-}
-return ts;
+	uint8 ts_tab[5];
+	uint64 ts = 0;
+	int i;
+	dwt_readtxtimestamp(ts_tab);
+	for (i = 4; i >= 0; i--) {
+		ts <<= 8;
+		ts |= ts_tab[i];
+	}
+	return ts;
 }
 
 /*! ------------------------------------------------------------------------------------------------------------------
@@ -376,15 +382,15 @@ return ts;
  * @return  64-bit value of the read time-stamp.
  */
 static uint64 get_rx_timestamp_u64(void) {
-uint8 ts_tab[5];
-uint64 ts = 0;
-int i;
-dwt_readrxtimestamp(ts_tab);
-for (i = 4; i >= 0; i--) {
-	ts <<= 8;
-	ts |= ts_tab[i];
-}
-return ts;
+	uint8 ts_tab[5];
+	uint64 ts = 0;
+	int i;
+	dwt_readrxtimestamp(ts_tab);
+	for (i = 4; i >= 0; i--) {
+		ts <<= 8;
+		ts |= ts_tab[i];
+	}
+	return ts;
 }
 
 /*! ------------------------------------------------------------------------------------------------------------------
@@ -399,11 +405,11 @@ return ts;
  * @return none
  */
 static void final_msg_get_ts(const uint8 *ts_field, uint32 *ts) {
-int i;
-*ts = 0;
-for (i = 0; i < FINAL_MSG_TS_LEN; i++) {
-	*ts += ts_field[i] << (i * 8);
-}
+	int i;
+	*ts = 0;
+	for (i = 0; i < FINAL_MSG_TS_LEN; i++) {
+		*ts += ts_field[i] << (i * 8);
+	}
 }
 
 /*! ------------------------------------------------------------------------------------------------------------------
@@ -418,11 +424,11 @@ for (i = 0; i < FINAL_MSG_TS_LEN; i++) {
  * @return none
  */
 static void final_msg_set_ts(uint8 *ts_field, uint64 ts) {
-int i;
-for (i = 0; i < FINAL_MSG_TS_LEN; i++) {
-	ts_field[i] = (uint8) ts;
-	ts >>= 8;
-}
+	int i;
+	for (i = 0; i < FINAL_MSG_TS_LEN; i++) {
+		ts_field[i] = (uint8) ts;
+		ts >>= 8;
+	}
 }
 
 /*****************************************************************************************************************************************************

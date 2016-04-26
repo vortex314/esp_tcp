@@ -156,6 +156,29 @@ void DWM1000_Anchor::resetChip() {
 	os_delay_us(10000);// 10ms
 	digitalWrite(pin, 1);// PUT HIGH
 }
+//_________________________________________________ IRQ handler
+//
+bool DWM1000_Anchor::interrupt_detected = false;
+void DWM1000_Anchor::my_dwt_isr() {
+	interrupt_detected = true;
+}
+
+bool DWM1000_Anchor::isInterruptDetected() {
+	return interrupt_detected;
+}
+
+bool DWM1000_Anchor::clearInterrupt(){
+	interrupt_detected=false;
+}
+
+//_________________________________________________ Configure IRQ pin
+//
+void DWM1000_Anchor::enableIsr() {
+	LOG<< " IRQ SET "<<FLUSH;
+	int pin = D2;	// RESET PIN == D1 == GPIO5
+	pinMode(pin, 0);// INPUT
+	attachInterrupt(pin,my_dwt_isr,CHANGE);
+}
 //_________________________________________________ INITIALIZE SPI
 //
 void DWM1000_Anchor::initSpi() {
@@ -191,6 +214,7 @@ void DWM1000_Anchor::init() {
 
 	resetChip();
 	initSpi();
+	enableIsr();
 
 
 	uint64_t eui = 0xF1F2F3F4F5F6F7F;
@@ -261,7 +285,7 @@ bool DWM1000_Anchor::dispatch(Msg& msg) {
 		while (true) { /* Poll for reception of a frame or error/timeout. See NOTE 7 below. */
 			timeout(1000);/* This is the delay from the end of the frame transmission to the enable of the receiver, as programmed for the DW1000's wait for response feature. */
 
-			PT_YIELD_UNTIL(timeout());
+			PT_YIELD_UNTIL(timeout()  || isInterruptDetected());
 			status_reg = dwt_read32bitreg(SYS_STATUS_ID);
 			LOG<< HEX << " status reg.:" << status_reg << FLUSH;
 			if (status_reg & (SYS_STATUS_RXFCG | SYS_STATUS_ALL_RX_ERR))
@@ -307,7 +331,7 @@ bool DWM1000_Anchor::dispatch(Msg& msg) {
 				 * See NOTE 7 below. */
 //				while (true) { /* Poll for reception of a frame or error/timeout. See NOTE 7 below. */
 					timeout(100);
-					PT_YIELD_UNTIL(timeout());
+					PT_YIELD_UNTIL(timeout() || isInterruptDetected());
 					status_reg = dwt_read32bitreg(SYS_STATUS_ID);
 					LOG<< HEX << " status reg2:" << status_reg << FLUSH;
 //					if (status_reg & (SYS_STATUS_RXFCG | SYS_STATUS_ALL_RX_ERR))

@@ -296,8 +296,8 @@ extern "C" IROM void MsgInit() {
 
 	gpioFlash = new Gpio(0);
 
-//	dwm1000Anchor = new DWM1000_Anchor();
-	dwm1000Tag = new DWM1000_Tag();
+	dwm1000Anchor = new DWM1000_Anchor();
+//	dwm1000Tag = new DWM1000_Tag();
 
 	task_start();
 

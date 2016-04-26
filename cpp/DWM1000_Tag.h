@@ -19,6 +19,11 @@ public:
 	void init();
 	void resetChip();
 	void initSpi();
+	static bool interrupt_detected;
+	static void my_dwt_isr();
+	bool isInterruptDetected();
+	bool clearInterrupt();
+	void enableIsr();
 	bool dispatch(Msg& msg);
 };
 
