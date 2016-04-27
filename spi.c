@@ -492,8 +492,8 @@ char* bytesToHex(uint8_t* pb, uint32_t len) {
 int writetospi(uint16 hLen, const uint8 *hbuff, uint32 bLen,
 		const uint8 *buffer) {
 
-	INFO("head : %s", bytesToHex(hbuff, hLen));
-	INFO("data : %s", bytesToHex(buffer, bLen));
+//	INFO("head : %s", bytesToHex(hbuff, hLen));
+//	INFO("data : %s", bytesToHex(buffer, bLen));
 	uint32_t i;
 	spi_set_hw_cs(false);
 	spi_cs_select();
@@ -513,7 +513,7 @@ int writetospi(uint16 hLen, const uint8 *hbuff, uint32 bLen,
 
 int readfromspi(uint16 hLen, const uint8 *hbuff, uint32 bLen, uint8 *buffer) {
 	uint32_t i;
-	INFO("head : %s", bytesToHex(hbuff, hLen));
+//	INFO("head : %s", bytesToHex(hbuff, hLen));
 	spi_set_hw_cs(false);
 	spi_cs_select();
 	for (i = 0; i < hLen; i++)
@@ -522,7 +522,7 @@ int readfromspi(uint16 hLen, const uint8 *hbuff, uint32 bLen, uint8 *buffer) {
 		buffer[i] = spi_transaction(HSPI, 0, 0, 0, 0, 0, 0, 8, 0);
 	os_delay_us(100);
 	spi_cs_deselect();
-	INFO("data : %s", bytesToHex(buffer, bLen));
+//	INFO("data : %s", bytesToHex(buffer, bLen));
 	return 0;
 }
 //////////////////////////////////////////////////////////////////////////////////

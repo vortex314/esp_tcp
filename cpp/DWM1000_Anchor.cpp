@@ -117,7 +117,6 @@ typedef unsigned long long uint64;
 #define RESP_TX_TO_FINAL_RX_DLY_UUS 500 /* This is the delay from the end of the frame transmission to the enable of the receiver, as programmed for the DW1000's wait for response feature. */
 #define FINAL_RX_TIMEOUT_UUS 3300	/* Receive final timeout. See NOTE 5 below. */
 
-
 /* Timestamps of frames transmission/reception.
  * As they are 40-bit wide, we need to define a 64-bit int type to handle them. */
 typedef signed long long int64;
@@ -167,8 +166,8 @@ bool DWM1000_Anchor::isInterruptDetected() {
 	return interrupt_detected;
 }
 
-bool DWM1000_Anchor::clearInterrupt(){
-	interrupt_detected=false;
+bool DWM1000_Anchor::clearInterrupt() {
+	interrupt_detected = false;
 }
 
 //_________________________________________________ Configure IRQ pin
@@ -216,7 +215,6 @@ void DWM1000_Anchor::init() {
 	initSpi();
 	enableIsr();
 
-
 	uint64_t eui = 0xF1F2F3F4F5F6F7F;
 	dwt_seteui((uint8_t*) &eui);
 	dwt_geteui((uint8_t*) &eui);
@@ -228,14 +226,14 @@ void DWM1000_Anchor::init() {
 //	dwt_softreset();
 	deca_sleep(100);
 
-    while ( dwt_initialise(DWT_LOADUCODE)) {
-    	LOG << " dwt_initialise failed " << FLUSH;
-    }
-    LOG << " dwt_initialise done." << FLUSH;
-    while ( dwt_configure(&config)) {
-    	LOG << " dwt_configure failed " << FLUSH;
-    }
-    LOG << " dwt_configure done." << FLUSH;
+	while (dwt_initialise(DWT_LOADUCODE)) {
+		LOG<< " dwt_initialise failed " << FLUSH;
+	}
+	LOG<< " dwt_initialise done." << FLUSH;
+	while (dwt_configure(&config)) {
+		LOG<< " dwt_configure failed " << FLUSH;
+	}
+	LOG<< " dwt_configure done." << FLUSH;
 
 	uint32_t device_id = dwt_readdevid();
 	uint32_t part_id = dwt_getpartid();
@@ -252,9 +250,7 @@ void DWM1000_Anchor::init() {
 	dwt_setrxaftertxdelay(POLL_TX_TO_RESP_RX_DLY_UUS);
 	dwt_setrxtimeout(RESP_RX_TIMEOUT_UUS);
 
-    dwt_initialise(DWT_LOADUCODE);
-
-
+	dwt_initialise(DWT_LOADUCODE);
 
 	_count = 0;
 }
@@ -277,21 +273,22 @@ bool DWM1000_Anchor::dispatch(Msg& msg) {
 	init();
 	while (true) {
 
-		timeout(100);					// try every 100 msec
-		PT_YIELD_UNTIL(timeout());
+		WAIT_POLL: {
+			dwt_setrxtimeout(0); /* Clear reception timeout to start next ranging process. */
+			dwt_rxenable(0); /* Activate reception immediately. */
+			while (true) { /* Poll for reception of a frame or error/timeout. See NOTE 7 below. */
+				timeout(1000);/* This is the delay from the end of the frame transmission to the enable of the receiver, as programmed for the DW1000's wait for response feature. */
 
-		dwt_setrxtimeout(0); /* Clear reception timeout to start next ranging process. */
-		dwt_rxenable(0); /* Activate reception immediately. */
-		while (true) { /* Poll for reception of a frame or error/timeout. See NOTE 7 below. */
-			timeout(1000);/* This is the delay from the end of the frame transmission to the enable of the receiver, as programmed for the DW1000's wait for response feature. */
-
-			PT_YIELD_UNTIL(timeout()  || isInterruptDetected());
-			status_reg = dwt_read32bitreg(SYS_STATUS_ID);
-			LOG<< HEX << " status reg.:" << status_reg << FLUSH;
-			if (status_reg & (SYS_STATUS_RXFCG | SYS_STATUS_ALL_RX_ERR))
-				break;
+				dwt_setinterrupt(DWT_INT_RFCG, 1);	// enable
+				clearInterrupt();
+				PT_YIELD_UNTIL(timeout() || isInterruptDetected());
+				status_reg = dwt_read32bitreg(SYS_STATUS_ID);
+				LOG<< HEX << " status reg.:" << status_reg << FLUSH;
+				if (status_reg & (SYS_STATUS_RXFCG | SYS_STATUS_ALL_RX_ERR))
+					break;
+			}
+			LOG<< " $$$$$$$$$$$$$$$$$ DATA RECEIVED "<<FLUSH;
 		}
-		LOG<< " $$$$$$$$$$$$$$$$$ DATA RECEIVED "<<FLUSH;
 		///____________________________________________________________________________
 
 		if (status_reg & SYS_STATUS_RXFCG) {
@@ -330,15 +327,17 @@ bool DWM1000_Anchor::dispatch(Msg& msg) {
 				/* We assume that the transmission is achieved correctly, now poll for reception of expected "final" frame or error/timeout.
 				 * See NOTE 7 below. */
 //				while (true) { /* Poll for reception of a frame or error/timeout. See NOTE 7 below. */
-					timeout(100);
-					PT_YIELD_UNTIL(timeout() || isInterruptDetected());
-					status_reg = dwt_read32bitreg(SYS_STATUS_ID);
-					LOG<< HEX << " status reg2:" << status_reg << FLUSH;
+				timeout(10);
+				dwt_setinterrupt(DWT_INT_RFCG, 1);	// enable
+				clearInterrupt();
+				PT_YIELD_UNTIL(timeout() || isInterruptDetected());
+				status_reg = dwt_read32bitreg(SYS_STATUS_ID);
+				LOG<< HEX << " status reg2:" << status_reg << FLUSH;
 //					if (status_reg & (SYS_STATUS_RXFCG | SYS_STATUS_ALL_RX_ERR))
 //						break;
 //				}
-				//               while (!((status_reg = dwt_read32bitreg(SYS_STATUS_ID)) & (SYS_STATUS_RXFCG | SYS_STATUS_ALL_RX_ERR)))
-				//               { };
+//               while (!((status_reg = dwt_read32bitreg(SYS_STATUS_ID)) & (SYS_STATUS_RXFCG | SYS_STATUS_ALL_RX_ERR)))
+//               { };
 
 				/* Increment frame sequence number after transmission of the response message (modulo 256). */
 				frame_seq_nb++;

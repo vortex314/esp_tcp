@@ -249,7 +249,7 @@ bool DWM1000_Tag::dispatch(Msg& msg) {
 			/* Start transmission, indicating that a response is expected so that reception is enabled automatically after the frame is sent and the delay
 			 * set by dwt_setrxaftertxdelay() has elapsed. */
 			LOG<< " Start TXF " << FLUSH;
-			dwt_starttx(DWT_START_TX_IMMEDIATE | DWT_RESPONSE_EXPECTED);
+			dwt_starttx(DWT_START_TX_IMMEDIATE | DWT_RESPONSE_EXPECTED);				// SEND POLL MSG
 			dwt_setinterrupt(DWT_INT_TFRS, 0);
 			dwt_setinterrupt(DWT_INT_RFCG, 1);	// enable
 			clearInterrupt();
@@ -257,9 +257,11 @@ bool DWM1000_Tag::dispatch(Msg& msg) {
 
 			/* We assume that the transmission is achieved correctly, poll for reception of a frame or error/timeout. See NOTE 8 below. */
 			timeout(10);
-			PT_YIELD_UNTIL(timeout() || isInterruptDetected());
+			PT_YIELD_UNTIL(timeout() || isInterruptDetected());							// WAIT RESP MSG
+
 			if (isInterruptDetected())
 				LOG<< " INTERRUPT DETECTED " << FLUSH;
+
 			status_reg = dwt_read32bitreg(SYS_STATUS_ID);
 			LOG<< HEX <<" SYS_STATUS " << status_reg << FLUSH;
 			if (status_reg == 0xDEADDEAD) {
@@ -299,7 +301,7 @@ bool DWM1000_Tag::dispatch(Msg& msg) {
 		/* Check that the frame is the expected response from the companion "DS TWR responder" example.
 		 * As the sequence number field of the frame is not relevant, it is cleared to simplify the validation of the frame. */
 		rx_buffer[ALL_MSG_SN_IDX] = 0;
-		if (memcmp(rx_buffer, rx_resp_msg, ALL_MSG_COMMON_LEN) == 0) {
+		if (memcmp(rx_buffer, rx_resp_msg, ALL_MSG_COMMON_LEN) == 0) {		// CHECK RESP MSG
 			uint32 final_tx_time;
 
 			/* Retrieve poll transmission and response reception timestamp. */
@@ -328,10 +330,10 @@ bool DWM1000_Tag::dispatch(Msg& msg) {
 			tx_final_msg[ALL_MSG_SN_IDX] = frame_seq_nb;
 			dwt_writetxdata(sizeof(tx_final_msg), tx_final_msg, 0);
 			dwt_writetxfctrl(sizeof(tx_final_msg), 0);
-			dwt_starttx(DWT_START_TX_DELAYED);
+			dwt_starttx(DWT_START_TX_DELAYED);							// SEND FINAL MSG
 
 			/* Poll DW1000 until TX frame sent event set. See NOTE 8 below. */
-			timeout(100);
+			timeout(10);
 			PT_YIELD_UNTIL((dwt_read32bitreg(SYS_STATUS_ID) & SYS_STATUS_TXFRS) || timeout());;
 			/* Clear TXFRS event. */
 			dwt_write32bitreg(SYS_STATUS_ID, SYS_STATUS_TXFRS);
@@ -343,6 +345,7 @@ bool DWM1000_Tag::dispatch(Msg& msg) {
 		}
 //			deca_sleep(RNG_DELAY_MS);
 	}
+	goto POLL_SEND;
 
 	PT_END()
 	;
